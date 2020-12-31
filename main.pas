@@ -650,7 +650,7 @@ begin
     Handle,
     PChar(Format('%s'#13#10 +
     'Version ' + I_VersionBuilt + #13#10 +
-    'Copyright (c) 2018, jvalavanis@gmail.com'#13#10 +
+    'Copyright (c) 2018-2020, jvalavanis@gmail.com'#13#10 +
     #13#10'A tool to create procedural tree models.'#13#10#13#10 +
         copyright1 + #13#10 +
         copyright2 + #13#10 +
@@ -750,7 +750,8 @@ procedure TForm1.Idle(Sender: TObject; var Done: Boolean);
 begin
   if closing then
     Exit;
-    
+
+  Sleep(1);
   UpdateEnable;
 
   Done := False;
