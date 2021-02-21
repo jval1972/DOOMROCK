@@ -87,8 +87,9 @@ type
     function CheckOKtoGO: boolean;
   public
     { Public declarations }
-    twigtex, trunktex: TBitmap;
     tree: tree_t;
+    twigtex, trunktex: TBitmap;
+    procedure PrepareTextures;
     procedure DoExportSpriteWAD;
   end;
 
@@ -385,6 +386,34 @@ end;
 procedure TExportSpriteForm.ScriptRadioGroupClick(Sender: TObject);
 begin
   ScriptParametersGroupBox.Visible := ScriptRadioGroup.ItemIndex <> 2;
+end;
+
+procedure TExportSpriteForm.PrepareTextures;
+var
+  y: integer;
+  x: integer;
+  ln: PIUINT32Array;
+  r, g, b: byte;
+begin
+  twigtex.PixelFormat := pf32bit;
+  trunktex.PixelFormat := pf32bit;
+  for y := 0 to trunktex.Height - 1 do
+  begin
+    ln := trunktex.ScanLine[y];
+    for x := 0 to trunktex.Width - 1 do
+    begin
+      r := GetRValue(ln[x]);
+      g := GetGValue(ln[x]);
+      b := GetBValue(ln[x]);
+      if r < 16 then
+        r := 16;
+      if g < 16 then
+        g := 16;
+      if b < 16 then
+        b := 16;
+      ln[x] := RGB(r, g, b);
+    end;
+  end;
 end;
 
 procedure TExportSpriteForm.DoExportSpriteWAD;

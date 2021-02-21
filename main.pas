@@ -1379,6 +1379,7 @@ begin
     f.tree := tree;
     f.twigtex.Canvas.StretchDraw(Rect(0, 0, f.twigtex.Width, f.twigtex.Height), TwigImage.Picture.Bitmap);
     f.trunktex.Canvas.StretchDraw(Rect(0, 0, f.trunktex.Width, f.trunktex.Height), TrunkImage.Picture.Bitmap);
+    f.PrepareTextures;
     f.ShowModal;
     if f.ModalResult = mrOK then
       f.DoExportSpriteWAD;
