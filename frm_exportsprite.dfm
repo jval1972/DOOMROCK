@@ -1,9 +1,11 @@
 object ExportSpriteForm: TExportSpriteForm
   Left = 211
   Top = 202
-  Width = 663
-  Height = 445
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsDialog
   Caption = 'Export Sprite'
+  ClientHeight = 391
+  ClientWidth = 766
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12844,6 +12846,8 @@ object ExportSpriteForm: TExportSpriteForm
     0000000000000000000000000000000000000000000000000000000000000000
     000000000000}
   OldCreateOrder = False
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -12854,19 +12858,21 @@ object ExportSpriteForm: TExportSpriteForm
     Caption = 'File: '
   end
   object SelectFileButton: TSpeedButton
-    Left = 472
+    Left = 712
     Top = 16
     Width = 23
     Height = 22
     Caption = '...'
     Flat = True
+    OnClick = SelectFileButtonClick
   end
   object FileNameEdit: TEdit
     Left = 56
     Top = 16
-    Width = 417
+    Width = 649
     Height = 21
     TabOrder = 0
+    OnChange = FileNameEditChange
   end
   object GroupBox2: TGroupBox
     Left = 16
@@ -12950,17 +12956,17 @@ object ExportSpriteForm: TExportSpriteForm
     TabOrder = 4
   end
   object GroupBox3: TGroupBox
-    Left = 411
+    Left = 427
     Top = 48
-    Width = 236
-    Height = 209
+    Width = 326
+    Height = 281
     Caption = ' Preview '
     TabOrder = 5
     object Panel3: TPanel
       Left = 2
       Top = 15
-      Width = 232
-      Height = 192
+      Width = 322
+      Height = 264
       Align = alClient
       BevelOuter = bvNone
       BorderWidth = 4
@@ -12969,16 +12975,17 @@ object ExportSpriteForm: TExportSpriteForm
       object PaintBox1: TPaintBox
         Left = 4
         Top = 4
-        Width = 184
-        Height = 184
+        Width = 256
+        Height = 256
         Cursor = crCross
         Align = alLeft
+        OnPaint = PaintBox1Paint
       end
       object Panel4: TPanel
-        Left = 188
+        Left = 260
         Top = 4
-        Width = 40
-        Height = 184
+        Width = 58
+        Height = 256
         Align = alClient
         BevelOuter = bvNone
         Caption = ' '
@@ -13011,15 +13018,15 @@ object ExportSpriteForm: TExportSpriteForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 357
-    Width = 647
+    Top = 342
+    Width = 766
     Height = 49
     Align = alBottom
     BevelOuter = bvNone
     Caption = ' '
     TabOrder = 6
     object Panel2: TPanel
-      Left = 344
+      Left = 463
       Top = 0
       Width = 303
       Height = 49
@@ -13049,5 +13056,12 @@ object ExportSpriteForm: TExportSpriteForm
         TabOrder = 1
       end
     end
+  end
+  object SaveDialog1: TSaveDialog
+    DefaultExt = 'wad'
+    Filter = 'WAD Files (*.wad)|*.wad'
+    Options = [ofHideReadOnly, ofPathMustExist, ofEnableSizing]
+    Left = 552
+    Top = 40
   end
 end
