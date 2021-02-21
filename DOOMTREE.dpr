@@ -33,7 +33,8 @@ uses
   zlibpas in 'zlibpas.pas',
   proctree_helpers in 'proctree_helpers.pas',
   dt_slider in 'dt_slider.pas',
-  dt_soft3d in 'dt_soft3d.pas';
+  dt_soft3d in 'dt_soft3d.pas',
+  frm_spriteprefix in 'frm_spriteprefix.pas' {SpritePrefixForm};
 
 {$R *.res}
 
