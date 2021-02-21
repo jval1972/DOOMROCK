@@ -71,6 +71,7 @@ type
     procedure Theta2DecButton1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure CheckNumericEdit(Sender: TObject; var Key: Char);
+    procedure ScriptRadioGroupClick(Sender: TObject);
   private
     { Private declarations }
     needs3dupdate: boolean;
@@ -88,6 +89,7 @@ type
     { Public declarations }
     twigtex, trunktex: TBitmap;
     tree: tree_t;
+    procedure DoExportSpriteWAD;
   end;
 
 implementation
@@ -98,6 +100,9 @@ uses
   Math,
   dt_defs,
   dt_utils,
+  dt_wadwriter,
+  dt_doompatch,
+  dt_palettes,
   frm_spriteprefix;
 
 const
@@ -357,6 +362,19 @@ begin
     Exit;
   end;
 
+  if Pos(' ', s) > 0 then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+
+  if Length(Trim(ActorNameEdit.Text)) = 0 then
+  begin
+    Result := False;
+    Exit;
+  end;
+
   Result := True;
 end;
 
@@ -373,6 +391,83 @@ begin
     Key := #0;
     Exit;
   end;
+end;
+
+procedure TExportSpriteForm.ScriptRadioGroupClick(Sender: TObject);
+begin
+  ScriptParametersGroupBox.Visible := ScriptRadioGroup.ItemIndex <> 2;
+end;
+
+procedure TExportSpriteForm.DoExportSpriteWAD;
+var
+  wad: TWADWriter;
+  script: TStringList;
+  name: string;
+  stmp: string;
+  i: integer;
+  ms: TMemoryStream;
+  b: TBitmap;
+begin
+  Screen.Cursor := crHourGlass;
+  wad := TWADWriter.Create;
+  try
+    script := TStringList.Create;
+    try
+      if ScriptRadioGroup.ItemIndex <> 2 then
+      begin
+        stmp := Trim(ActorNameEdit.Text);
+        name := '';
+        for i := 1 to Length(stmp) do
+          if stmp[i] <> ' ' then
+            name := name + stmp[i];
+        script.Add('ACTOR ' + stmp + ' ' + EditorNumberEdit.Text);
+        script.Add('{');
+        script.Add('  Health 10000');
+        script.Add('  Radius ' + RadiusEdit.Text);
+        script.Add('  Height ' + HeightEdit.Text);
+        script.Add('  Mass 100000');
+        script.Add('  +SOLID');
+        script.Add('  States');
+        script.Add('  {');
+        script.Add('  Spawn:');
+        stmp := PrefixEdit.Text;
+        script.Add('    ' + stmp[1] + stmp[2] + stmp[3] + stmp[4] + ' ' + stmp[5] + ' -1');
+        script.Add('  }');
+        script.Add('}');
+        if ScriptRadioGroup.ItemIndex = 0 then
+          wad.AddStringList('ACTORDEF', script)
+        else
+          wad.AddStringList('DECORATE', script);
+      end;
+    finally
+      script.Free;
+    end;
+    wad.AddSeparator('S_START');
+
+    b := TBitmap.Create;
+    b.Width := 256;
+    b.Height := 255;
+    b.PixelFormat := pf32bit;
+    b.Canvas.Draw(0, 0, buffer);
+    for i := 0 to 255 do
+      b.Canvas.Pixels[i, 0] := RGB(0, 0, 0);
+    case PatchRadioGroup.ItemIndex of
+    0: ms := BmpAsPatch(b, @DoomPaletteRaw);
+    1: ms := BmpAsPatch(b, @HereticPaletteRaw);
+    2: ms := BmpAsPatch(b, @HexenPaletteRaw);
+    3: ms := BmpAsPatch(b, @StrifePaletteRaw);
+    else
+      ms := BmpAsPatch(b, @RadixPaletteRaw);
+    end;
+    wad.AddData(PrefixEdit.Text + '0', ms.Memory, ms.Size);
+    ms.Free;
+    b.Free;
+    wad.AddSeparator('S_END');
+    wad.SaveToFile(FileNameEdit.Text);
+  finally
+    wad.Free;
+  end;
+  Screen.Cursor := crDefault;
 end;
 
 end.

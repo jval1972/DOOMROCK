@@ -12880,6 +12880,7 @@ object ExportSpriteForm: TExportSpriteForm
     Height = 21
     TabOrder = 0
     OnChange = FileNameEditChange
+    OnDblClick = SelectFileButtonClick
   end
   object GeneralGroupBox: TGroupBox
     Left = 16
@@ -12924,7 +12925,6 @@ object ExportSpriteForm: TExportSpriteForm
     Caption = ' Patch Palette '
     ItemIndex = 0
     Items.Strings = (
-      'True Color (PNG)'
       'Doom'
       'Heretic'
       'Hexen'
@@ -13095,7 +13095,7 @@ object ExportSpriteForm: TExportSpriteForm
     end
     object Label4: TLabel
       Left = 16
-      Top = 48
+      Top = 54
       Width = 73
       Height = 13
       Caption = 'Editor Number: '
@@ -13103,7 +13103,7 @@ object ExportSpriteForm: TExportSpriteForm
     end
     object Label6: TLabel
       Left = 16
-      Top = 72
+      Top = 84
       Width = 39
       Height = 13
       Caption = 'Radius: '
@@ -13111,7 +13111,7 @@ object ExportSpriteForm: TExportSpriteForm
     end
     object HeightLabel: TLabel
       Left = 16
-      Top = 96
+      Top = 114
       Width = 37
       Height = 13
       Caption = 'Height: '
@@ -13128,7 +13128,7 @@ object ExportSpriteForm: TExportSpriteForm
     end
     object EditorNumberEdit: TEdit
       Left = 104
-      Top = 48
+      Top = 54
       Width = 65
       Height = 21
       MaxLength = 5
@@ -13138,7 +13138,7 @@ object ExportSpriteForm: TExportSpriteForm
     end
     object RadiusEdit: TEdit
       Left = 104
-      Top = 72
+      Top = 84
       Width = 65
       Height = 21
       MaxLength = 3
@@ -13148,7 +13148,7 @@ object ExportSpriteForm: TExportSpriteForm
     end
     object HeightEdit: TEdit
       Left = 104
-      Top = 96
+      Top = 114
       Width = 65
       Height = 21
       MaxLength = 3
@@ -13169,6 +13169,7 @@ object ExportSpriteForm: TExportSpriteForm
       'DECORATE (ZDoom)'
       'None')
     TabOrder = 2
+    OnClick = ScriptRadioGroupClick
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = 'wad'
