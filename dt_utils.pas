@@ -68,6 +68,8 @@ type
     constructor Create(const astring: string);
   end;
 
+function GetIntegerInRange(const val, f1, f2: integer): integer;
+
 implementation
 
 uses
@@ -366,6 +368,16 @@ end;
 constructor TString.Create(const astring: string);
 begin
   str := astring;
+end;
+
+function GetIntegerInRange(const val, f1, f2: integer): integer;
+begin
+  if val < f1 then
+    result := f1
+  else if val > f2 then
+    result := f2
+  else
+    result := val;
 end;
 
 end.
