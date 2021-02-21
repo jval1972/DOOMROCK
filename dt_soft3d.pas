@@ -15,6 +15,9 @@ unit dt_soft3d;
 
 interface
 
+uses
+  Windows, SysUtils, Classes, Graphics, Math;
+
 type
   IUINT32 = LongWord;
   IUINT32Array = array[0..$FF] of IUINT32;
@@ -37,10 +40,96 @@ type
   end;
   Pvector_t = ^vector_t;
 
-implementation
+type
+  transform_t = record
+    world: matrix_t;
+    view: matrix_t;
+    projection: matrix_t;
+    transform: matrix_t;  // transform = world * view * projection
+    w, h: float;
+  end;
+  Ptransform_t = ^transform_t;
 
-uses
-  Windows, SysUtils, Classes, Graphics, Math;
+type
+  color_t = record
+    r, g, b: float;
+  end;
+  Pcolor_t = ^color_t;
+
+  texcoord_t = record
+    u, v: float;
+  end;
+  Ptexcoord_t = ^texcoord_t;
+
+  vertex_t = record
+    pos: vector_t;
+    tc: texcoord_t;
+    color: color_t;
+    rhw: float;
+  end;
+  Pvertex_t = ^vertex_t;
+
+  edge_t = record
+    v, v1, v2: vertex_t;
+  end;
+  Pedge_t = ^edge_t;
+
+  trapezoid_t = record
+    top, bottom: float;
+    left, right: edge_t;
+  end;
+  Ptrapezoid_t = ^trapezoid_t;
+  trapezoid_tArray = array[0..1] of trapezoid_t;
+  Ptrapezoid_tArray = ^trapezoid_tArray;
+
+  scanline_t = record
+    v, step: vertex_t;
+    x, y, w: integer;
+  end;
+  Pscanline_t = ^scanline_t;
+
+type
+  device_t = record
+    transform: transform_t;
+    width: integer;
+    height: integer;
+    bframebuffer: TBitmap;
+    bzbuffer: TBitmap;
+    bztexture: TBitmap;
+    framebuffer: PIUINT32PArray;
+    zbuffer: PfloatPArray;
+    texture: PIUINT32PArray;
+    tex_width: integer;
+    tex_height: integer;
+    max_u: float; // tex_width - 1
+    max_v: float; // tex_height - 1
+    render_state: integer;
+    background: IUINT32;
+    foreground: IUINT32;
+  end;
+  Pdevice_t = ^device_t;
+
+const
+  RENDER_STATE_WIREFRAME = 1;
+  RENDER_STATE_TEXTURE = 2;
+  RENDER_STATE_COLOR = 4;
+
+const
+  TEXTURESIZE = 256;
+
+procedure device_init(const device: Pdevice_t; const width, height: integer);
+
+procedure camera_at_zero(const device: Pdevice_t; const x, y, z: float);
+
+procedure device_set_texture(const device: Pdevice_t; const tex: TBitmap);
+
+procedure device_clear(const device: Pdevice_t; const mode: integer);
+
+procedure device_destroy(const device: Pdevice_t);
+
+procedure device_draw_primitive(const device: Pdevice_t; const v1, v2, v3: Pvertex_t);
+
+implementation
 
 function CMID(const x: integer; const amin, amax: integer): integer;
 begin
@@ -312,17 +401,6 @@ begin
   m[2][3] := 1.0;
 end;
 
-
-type
-  transform_t = record
-    world: matrix_t;
-    view: matrix_t;
-    projection: matrix_t;
-    transform: matrix_t;  // transform = world * view * projection
-    w, h: float;
-  end;
-  Ptransform_t = ^transform_t;
-
 procedure transform_update(const ts: Ptransform_t);
 var
   m: matrix_t;
@@ -373,44 +451,6 @@ begin
   y.z := x.z * rhw;
   y.w := 1.0;
 end;
-
-type
-  color_t = record
-    r, g, b: float;
-  end;
-  Pcolor_t = ^color_t;
-
-  texcoord_t = record
-    u, v: float;
-  end;
-  Ptexcoord_t = ^texcoord_t;
-
-  vertex_t = record
-    pos: vector_t;
-    tc: texcoord_t;
-    color: color_t;
-    rhw: float;
-  end;
-  Pvertex_t = ^vertex_t;
-
-  edge_t = record
-    v, v1, v2: vertex_t;
-  end;
-  Pedge_t = ^edge_t;
-
-  trapezoid_t = record
-    top, bottom: float;
-    left, right: edge_t;
-  end;
-  Ptrapezoid_t = ^trapezoid_t;
-  trapezoid_tArray = array[0..1] of trapezoid_t;
-  Ptrapezoid_tArray = ^trapezoid_tArray;
-
-  scanline_t = record
-    v, step: vertex_t;
-    x, y, w: integer;
-  end;
-  Pscanline_t = ^scanline_t;
 
 procedure vertex_rhw_init(v: Pvertex_t);
 var
@@ -603,35 +643,6 @@ begin
     scanline.w := 0;
   vertex_division(@scanline.step, @trap.left.v, @trap.right.v, width);
 end;
-
-type
-  device_t = record
-    transform: transform_t;
-    width: integer;
-    height: integer;
-    bframebuffer: TBitmap;
-    bzbuffer: TBitmap;
-    bztexture: TBitmap;
-    framebuffer: PIUINT32PArray;
-    zbuffer: PfloatPArray;
-    texture: PIUINT32PArray;
-    tex_width: integer;
-    tex_height: integer;
-    max_u: float; // tex_width - 1
-    max_v: float; // tex_height - 1
-    render_state: integer;
-    background: IUINT32;
-    foreground: IUINT32;
-  end;
-  Pdevice_t = ^device_t;
-
-const
-  RENDER_STATE_WIREFRAME = 1;
-  RENDER_STATE_TEXTURE = 2;
-  RENDER_STATE_COLOR = 4;
-
-const
-  TEXTURESIZE = 256;
 
 procedure device_init(const device: Pdevice_t; const width, height: integer);
 var
