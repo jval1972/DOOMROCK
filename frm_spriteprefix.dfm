@@ -1,6 +1,6 @@
 object SpritePrefixForm: TSpritePrefixForm
-  Left = 613
-  Top = 386
+  Left = 385
+  Top = 190
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Sprite Prefix'

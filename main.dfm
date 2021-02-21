@@ -1,8 +1,8 @@
 object Form1: TForm1
-  Left = 149
-  Top = 101
-  Width = 652
-  Height = 567
+  Left = 128
+  Top = 147
+  Width = 914
+  Height = 657
   Caption = 'DOOMTREE Sprite Generator'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12859,12 +12859,12 @@ object Form1: TForm1
   object Splitter1: TSplitter
     Left = 265
     Top = 40
-    Height = 449
+    Height = 539
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 489
-    Width = 636
+    Top = 579
+    Width = 898
     Height = 19
     Panels = <
       item
@@ -12877,7 +12877,7 @@ object Form1: TForm1
   object ToolBar1: TToolBar
     Left = 0
     Top = 0
-    Width = 636
+    Width = 898
     Height = 40
     ButtonHeight = 34
     Caption = 'ToolBar1'
@@ -13700,7 +13700,7 @@ object Form1: TForm1
     Left = 0
     Top = 40
     Width = 265
-    Height = 449
+    Height = 539
     Align = alLeft
     BevelOuter = bvNone
     Caption = ' '
@@ -13709,7 +13709,7 @@ object Form1: TForm1
       Left = 0
       Top = 0
       Width = 265
-      Height = 449
+      Height = 539
       ActivePage = TabSheet2
       Align = alClient
       TabOrder = 0
@@ -26544,8 +26544,8 @@ object Form1: TForm1
   object OpenGLScrollBox: TScrollBox
     Left = 268
     Top = 40
-    Width = 368
-    Height = 449
+    Width = 630
+    Height = 539
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone

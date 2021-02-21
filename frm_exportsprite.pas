@@ -463,6 +463,7 @@ begin
     ms.Free;
     b.Free;
     wad.AddSeparator('S_END');
+    BackupFile(FileNameEdit.Text);
     wad.SaveToFile(FileNameEdit.Text);
   finally
     wad.Free;
