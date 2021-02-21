@@ -39,7 +39,7 @@ uses
 
 begin
   Application.Initialize;
-  Application.Title := 'Doom Tree Sprite Generator';
+  Application.Title := 'DOOMTREE Sprite Generator';
   Application.CreateForm(TForm1, Form1);
   Application.Run;
 end.

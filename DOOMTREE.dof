@@ -125,13 +125,13 @@ Locale=1033
 CodePage=1252
 [Version Info Keys]
 CompanyName=Jim Valavanis
-FileDescription=Doom Tree Sprite Generator
+FileDescription=DOOMTREE Sprite Generator
 FileVersion=1.0.2.11
 InternalName=DOOMTREE
 LegalCopyright=© 2021, jvalavanis@gmail.com
 LegalTrademarks=© 2021, jvalavanis@gmail.com
 OriginalFilename=DOOMTREE.exe
-ProductName=Doom Tree Sprite Generator
+ProductName=DOOMTREE Sprite Generator
 ProductVersion=1.0
 [HistoryLists\hlDebugSourcePath]
 Count=2

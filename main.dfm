@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 101
   Width = 652
   Height = 567
-  Caption = 'Procedural Tree Generator'
+  Caption = 'DOOMTREE Sprite Generator'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

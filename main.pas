@@ -268,7 +268,7 @@ uses
 {$R *.dfm}
 
 resourcestring
-  rsTitle = 'Procedural Tree Generator';
+  rsTitle = 'DOOMTREE Sprite Generator';
 
 procedure TForm1.FormCreate(Sender: TObject);
 var
@@ -650,8 +650,8 @@ begin
     Handle,
     PChar(Format('%s'#13#10 +
     'Version ' + I_VersionBuilt + #13#10 +
-    'Copyright (c) 2018-2020, jvalavanis@gmail.com'#13#10 +
-    #13#10'A tool to create procedural tree models.'#13#10#13#10 +
+    'Copyright (c) 2021, jvalavanis@gmail.com'#13#10 +
+    #13#10'A tool to create tree sprites for Doom.'#13#10#13#10 +
         copyright1 + #13#10 +
         copyright2 + #13#10 +
         copyright3,
