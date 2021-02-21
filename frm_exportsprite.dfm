@@ -1,12 +1,14 @@
 object ExportSpriteForm: TExportSpriteForm
-  Left = -6
-  Top = 0
+  Left = 284
+  Top = 204
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Export Sprite'
-  ClientHeight = 318
-  ClientWidth = 636
+  ClientHeight = 450
+  ClientWidth = 764
   Color = clBtnFace
+  Constraints.MinHeight = 480
+  Constraints.MinWidth = 770
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -13039,15 +13041,15 @@ object ExportSpriteForm: TExportSpriteForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 269
-    Width = 636
+    Top = 401
+    Width = 764
     Height = 49
     Align = alBottom
     BevelOuter = bvNone
     Caption = ' '
     TabOrder = 6
     object Panel2: TPanel
-      Left = 333
+      Left = 461
       Top = 0
       Width = 303
       Height = 49
