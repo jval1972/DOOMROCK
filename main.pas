@@ -156,6 +156,8 @@ type
     TruncLengthPaintBox: TPaintBox;
     TruncLengthLabel: TLabel;
     SaveDialog2: TSaveDialog;
+    LoadTrunkBitBtn1: TBitBtn;
+    LoadTwigBitBtn1: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure NewButton1Click(Sender: TObject);

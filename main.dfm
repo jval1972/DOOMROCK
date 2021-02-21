@@ -13710,7 +13710,7 @@ object Form1: TForm1
       Top = 0
       Width = 265
       Height = 449
-      ActivePage = TabSheet1
+      ActivePage = TabSheet3
       Align = alClient
       TabOrder = 0
       object TabSheet1: TTabSheet
@@ -14204,7 +14204,7 @@ object Form1: TForm1
         ImageIndex = 1
         object TrunkImage: TImage
           Left = 0
-          Top = 0
+          Top = 32
           Width = 256
           Height = 256
           Hint = 'Trunk Texture (double click to change)'
@@ -20359,13 +20359,22 @@ object Form1: TForm1
           Stretch = True
           OnDblClick = TrunkImageDblClick
         end
+        object LoadTrunkBitBtn1: TBitBtn
+          Left = 8
+          Top = 2
+          Width = 75
+          Height = 25
+          Caption = 'Load'
+          TabOrder = 0
+          OnClick = TrunkImageDblClick
+        end
       end
       object TabSheet3: TTabSheet
         Caption = 'Twig Texture'
         ImageIndex = 2
         object TwigImage: TImage
           Left = 0
-          Top = 0
+          Top = 32
           Width = 256
           Height = 256
           Hint = 'Twig Texture (double click to change)'
@@ -26519,6 +26528,15 @@ object Form1: TForm1
             0000}
           Stretch = True
           OnDblClick = TwigImageDblClick
+        end
+        object LoadTwigBitBtn1: TBitBtn
+          Left = 8
+          Top = 2
+          Width = 75
+          Height = 25
+          Caption = 'Load'
+          TabOrder = 0
+          OnClick = TwigImageDblClick
         end
       end
     end
