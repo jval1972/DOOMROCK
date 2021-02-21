@@ -205,6 +205,7 @@ type
   private
     { Private declarations }
     ffilename: string;
+    savepicturedata: boolean;
     changed: Boolean;
     tree: tree_t;
     rc: HGLRC;   // Rendering Context
@@ -289,6 +290,8 @@ begin
 
   closing := False;
 
+  savepicturedata := False;
+
   PageControl1.ActivePageIndex := 0;
 
   undoManager := TUndoRedoManager.Create;
@@ -322,6 +325,13 @@ begin
   sdir := ExtractFilePath(ParamStr(0));
   if sdir <> '' then
   begin
+    if DirectoryExists(sdir) then
+    begin
+      SaveDialog1.InitialDir := sdir;
+      SaveDialog2.InitialDir := sdir;
+      SavePictureDialog1.InitialDir := sdir;
+      OpenDialog1.InitialDir := sdir;
+    end;
     if sdir[Length(sdir)] <> '\' then
       sdir := sdir + '\';
     if DirectoryExists(sdir + 'Data\Trunk') then
@@ -564,12 +574,42 @@ end;
 procedure TForm1.DoSaveTree(const fname: string);
 var
   fs: TFileStream;
+  m: TMemoryStream;
+  sz: integer;
+  z: TZBitmap;
 begin
   SetFileName(fname);
 
   fs := TFileStream.Create(fname, fmCreate);
   try
     PT_SavePropertiesBinary(tree.mProperties, fs);
+
+    if savepicturedata then
+    begin
+      m := TMemoryStream.Create;
+      z := TZBitmap.Create;
+      z.Assign(TrunkImage.Picture.Bitmap);
+      z.PixelFormat := pf24bit;
+      z.SaveToStream(m);
+      z.Free;
+      sz := m.size;
+      fs.Write(sz, SizeOf(Integer));
+      m.Position := 0;
+      fs.CopyFrom(m, sz);
+      m.Free;
+
+      m := TMemoryStream.Create;
+      z := TZBitmap.Create;
+      z.Assign(TwigImage.Picture.Bitmap);
+      z.PixelFormat := pf24bit;
+      z.SaveToStream(m);
+      z.Free;
+      sz := m.size;
+      fs.Write(sz, SizeOf(Integer));
+      m.Position := 0;
+      fs.CopyFrom(m, sz);
+      m.Free;
+    end;
   finally
     fs.Free;
   end;
@@ -581,6 +621,10 @@ function TForm1.DoLoadTree(const fname: string): boolean;
 var
   fs: TFileStream;
   s: string;
+  sz: integer;
+  m: TMemoryStream;
+  z: TZBitmap;
+  oldp: integer;
 begin
   if not FileExists(fname) then
   begin
@@ -595,10 +639,59 @@ begin
   fs := TFileStream.Create(fname, fmOpenRead or fmShareDenyWrite);
   try
     PT_LoadPropertiesBinary(tree.mProperties, fs);
+
+    if savepicturedata then
+    begin
+      oldp := fs.Position;
+      if oldp < fs.Size then
+      begin
+        fs.Read(sz, SizeOf(Integer));
+        if sz > 0 then
+        begin
+          m := TMemoryStream.Create;
+          m.CopyFrom(fs, sz);
+          m.Position := 0;
+          z := TZBitmap.Create;
+          z.LoadFromStream(m);
+          z.PixelFormat := pf32bit;
+          TrunkImage.Picture.Bitmap.Assign(z);
+          z.Free;
+          m.Free;
+        end;
+        fs.Position := oldp + sz + SizeOf(Integer);
+      end;
+      oldp := fs.Position;
+      if oldp < fs.Size then
+      begin
+        fs.Read(sz, SizeOf(Integer));
+        if sz > 0 then
+        begin
+          m := TMemoryStream.Create;
+          m.CopyFrom(fs, sz);
+          m.Position := 0;
+          z := TZBitmap.Create;
+          z.LoadFromStream(m);
+          z.PixelFormat := pf32bit;
+          TwigImage.Picture.Bitmap.Assign(z);
+          z.Free;
+          m.Free;
+        end;
+      end;
+    end;
+
   finally
     fs.Free;
   end;
 
+  if savepicturedata then
+  begin
+    // Recreate OpenGL Textures
+    glDeleteTextures(1, @trunktexture);
+    trunktexture := gld_CreateTexture(TrunkImage.Picture, False);
+    glDeleteTextures(1, @twigtexture);
+    twigtexture := gld_CreateTexture(TwigImage.Picture, True);
+  end;
+  
   TreeToControls;
   filemenuhistory.AddPath(fname);
   SetFileName(fname);
@@ -1028,6 +1121,7 @@ begin
     TrunkImage.Picture.LoadFromFile(OpenPictureDialog1.FileName);
     glDeleteTextures(1, @trunktexture);
     trunktexture := gld_CreateTexture(TrunkImage.Picture, False);
+    changed := True;
   end;
 end;
 
@@ -1038,6 +1132,7 @@ begin
     TwigImage.Picture.LoadFromFile(OpenPictureDialog2.FileName);
     glDeleteTextures(1, @twigtexture);
     twigtexture := gld_CreateTexture(TwigImage.Picture, True);
+    changed := True;
   end;
 end;
 
