@@ -1269,6 +1269,9 @@ var
 begin
   f := TExportSpriteForm.Create(nil);
   try
+    f.tree := tree;
+    f.twigtex.Canvas.StretchDraw(Rect(0, 0, f.twigtex.Width, f.twigtex.Height), TwigImage.Picture.Bitmap);
+    f.trunktex.Canvas.StretchDraw(Rect(0, 0, f.trunktex.Width, f.trunktex.Height), TrunkImage.Picture.Bitmap);
     f.ShowModal;
   finally
     f.Free;
