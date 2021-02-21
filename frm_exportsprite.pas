@@ -98,6 +98,7 @@ implementation
 
 uses
   Math,
+  proctree_helpers,
   dt_defs,
   dt_utils,
   dt_wadwriter,
@@ -225,8 +226,6 @@ end;
 
 procedure TExportSpriteForm.DoUpdate3d;
 var
-  x, y: integer;
-  src, dest: PIUINT32Array;
   c, m, m2: matrix_t;
 begin
   device_clear(@device);
@@ -248,16 +247,6 @@ begin
 
   buffer.Canvas.StretchDraw(Rect(0, 0, buffer.Width, buffer.Height), device.bframebuffer);
   needs3dupdate := False;
-{  buffer.Width := device.width;
-  buffer.Height := device.Height;
-  buffer.PixelFormat := pf32bit;
-  for y := 0 to device.height - 1 do
-  begin
-    dest := buffer.ScanLine[y];
-    src := device.framebuffer[y];
-    for x := 0 to device.width - 1 do
-      dest[x] := src[x];
-  end;}
 end;
 
 procedure TExportSpriteForm.PaintBox1Paint(Sender: TObject);
@@ -413,6 +402,15 @@ begin
   try
     script := TStringList.Create;
     try
+
+      ms := TMemoryStream.Create;
+      try
+        PT_SavePropertiesBinary(tree.mProperties, ms);
+        wad.AddData('DOOMTREE', ms.Memory, ms.Size);
+      finally
+        ms.Free;
+      end;
+
       if ScriptRadioGroup.ItemIndex <> 2 then
       begin
         stmp := Trim(ActorNameEdit.Text);
@@ -445,23 +443,27 @@ begin
     wad.AddSeparator('S_START');
 
     b := TBitmap.Create;
-    b.Width := 256;
-    b.Height := 255;
-    b.PixelFormat := pf32bit;
-    b.Canvas.Draw(0, 0, buffer);
-    for i := 0 to 255 do
-      b.Canvas.Pixels[i, 0] := RGB(0, 0, 0);
-    case PatchRadioGroup.ItemIndex of
-    0: ms := BmpAsPatch(b, @DoomPaletteRaw);
-    1: ms := BmpAsPatch(b, @HereticPaletteRaw);
-    2: ms := BmpAsPatch(b, @HexenPaletteRaw);
-    3: ms := BmpAsPatch(b, @StrifePaletteRaw);
-    else
-      ms := BmpAsPatch(b, @RadixPaletteRaw);
+    try
+      b.Width := 256;
+      b.Height := 255;
+      b.PixelFormat := pf32bit;
+      b.Canvas.Draw(0, 0, buffer);
+      for i := 0 to 255 do
+        b.Canvas.Pixels[i, 0] := RGB(0, 0, 0);
+      case PatchRadioGroup.ItemIndex of
+      0: ms := BmpAsPatch(b, @DoomPaletteRaw);
+      1: ms := BmpAsPatch(b, @HereticPaletteRaw);
+      2: ms := BmpAsPatch(b, @HexenPaletteRaw);
+      3: ms := BmpAsPatch(b, @StrifePaletteRaw);
+      else
+        ms := BmpAsPatch(b, @RadixPaletteRaw);
+      end;
+      wad.AddData(PrefixEdit.Text + '0', ms.Memory, ms.Size);
+      ms.Free;
+    finally
+      b.Free;
     end;
-    wad.AddData(PrefixEdit.Text + '0', ms.Memory, ms.Size);
-    ms.Free;
-    b.Free;
+
     wad.AddSeparator('S_END');
     BackupFile(FileNameEdit.Text);
     wad.SaveToFile(FileNameEdit.Text);
