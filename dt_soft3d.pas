@@ -134,6 +134,12 @@ procedure matrix_set_rotate(const m: Pmatrix_t; x, y, z: float; const theta: flo
 
 procedure transform_update(const ts: Ptransform_t);
 
+procedure matrix_add(const c: Pmatrix_t; const a, b: Pmatrix_t);
+
+procedure matrix_sub(const c: Pmatrix_t; const a, b: Pmatrix_t);
+
+procedure matrix_mul(const c: Pmatrix_t; const a, b: Pmatrix_t);
+
 implementation
 
 function CMID(const x: integer; const amin, amax: integer): integer;
