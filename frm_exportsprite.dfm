@@ -12866,6 +12866,13 @@ object ExportSpriteForm: TExportSpriteForm
     Flat = True
     OnClick = SelectFileButtonClick
   end
+  object Label5: TLabel
+    Left = 24
+    Top = 56
+    Width = 73
+    Height = 13
+    Caption = 'Editor Number: '
+  end
   object FileNameEdit: TEdit
     Left = 56
     Top = 16
@@ -12874,11 +12881,11 @@ object ExportSpriteForm: TExportSpriteForm
     TabOrder = 0
     OnChange = FileNameEditChange
   end
-  object GroupBox2: TGroupBox
+  object GeneralGroupBox: TGroupBox
     Left = 16
     Top = 48
     Width = 193
-    Height = 81
+    Height = 65
     Caption = ' General '
     TabOrder = 1
     object Label2: TLabel
@@ -12906,57 +12913,26 @@ object ExportSpriteForm: TExportSpriteForm
       CharCase = ecUpperCase
       MaxLength = 5
       TabOrder = 0
-      Text = 'AAAAA'
-    end
-    object HQCheckBox: TCheckBox
-      Left = 16
-      Top = 56
-      Width = 145
-      Height = 17
-      Caption = 'High quality rotation'
-      TabOrder = 1
+      Text = 'TREEA'
     end
   end
   object PatchRadioGroup: TRadioGroup
     Left = 224
-    Top = 136
+    Top = 48
     Width = 193
-    Height = 121
+    Height = 185
     Caption = ' Patch Palette '
     ItemIndex = 0
     Items.Strings = (
+      'True Color (PNG)'
       'Doom'
       'Heretic'
       'Hexen'
       'Strife'
       'Radix')
-    TabOrder = 2
-  end
-  object AnglesRadioGroup: TRadioGroup
-    Left = 16
-    Top = 136
-    Width = 193
-    Height = 121
-    Caption = ' Angles '
-    Items.Strings = (
-      '1 (All source ports)'
-      '8 (All source ports)'
-      '16 (DelphiDoom/Zdoom/EDGE)'
-      '32 (DelphiDoom)')
-    TabOrder = 3
-  end
-  object SpriteFormatRadioGroup: TRadioGroup
-    Left = 224
-    Top = 48
-    Width = 193
-    Height = 81
-    Caption = ' Sprite Format '
-    Items.Strings = (
-      'Doom Patch (All source ports)'
-      'PNG (DelphiDoom/Zdoom/EDGE)')
     TabOrder = 4
   end
-  object GroupBox3: TGroupBox
+  object PreviewGroupBox: TGroupBox
     Left = 427
     Top = 48
     Width = 326
@@ -13014,6 +12990,7 @@ object ExportSpriteForm: TExportSpriteForm
           Height = 22
           Caption = '+'
           Flat = True
+          Visible = False
           OnClick = ZoomInSpeedButtonClick
         end
         object ZoomOutSpeedButton: TSpeedButton
@@ -13023,6 +13000,7 @@ object ExportSpriteForm: TExportSpriteForm
           Height = 22
           Caption = '-'
           Flat = True
+          Visible = False
           OnClick = ZoomOutSpeedButtonClick
         end
         object HourglassLabel: TLabel
@@ -13034,9 +13012,9 @@ object ExportSpriteForm: TExportSpriteForm
         end
         object ZoomTrackBar: TTrackBar
           Left = 8
-          Top = 48
+          Top = 0
           Width = 45
-          Height = 209
+          Height = 257
           Max = 160
           Min = 10
           Orientation = trVertical
@@ -13047,9 +13025,9 @@ object ExportSpriteForm: TExportSpriteForm
         end
       end
       object RotateTrackBar: TTrackBar
-        Left = 8
+        Left = 0
         Top = 272
-        Width = 257
+        Width = 268
         Height = 41
         Max = 120
         Position = 60
@@ -13100,11 +13078,109 @@ object ExportSpriteForm: TExportSpriteForm
       end
     end
   end
+  object ScriptParametersGroupBox: TGroupBox
+    Left = 16
+    Top = 248
+    Width = 401
+    Height = 145
+    Caption = ' Script Parameters '
+    TabOrder = 3
+    object Label3: TLabel
+      Left = 16
+      Top = 24
+      Width = 34
+      Height = 13
+      Caption = 'Name: '
+      FocusControl = ActorNameEdit
+    end
+    object Label4: TLabel
+      Left = 16
+      Top = 48
+      Width = 73
+      Height = 13
+      Caption = 'Editor Number: '
+      FocusControl = EditorNumberEdit
+    end
+    object Label6: TLabel
+      Left = 16
+      Top = 72
+      Width = 39
+      Height = 13
+      Caption = 'Radius: '
+      FocusControl = RadiusEdit
+    end
+    object HeightLabel: TLabel
+      Left = 16
+      Top = 96
+      Width = 37
+      Height = 13
+      Caption = 'Height: '
+      FocusControl = HeightEdit
+    end
+    object ActorNameEdit: TEdit
+      Left = 104
+      Top = 24
+      Width = 169
+      Height = 21
+      MaxLength = 25
+      TabOrder = 0
+      Text = 'Tree1'
+    end
+    object EditorNumberEdit: TEdit
+      Left = 104
+      Top = 48
+      Width = 65
+      Height = 21
+      MaxLength = 5
+      TabOrder = 1
+      Text = '10000'
+      OnKeyPress = CheckNumericEdit
+    end
+    object RadiusEdit: TEdit
+      Left = 104
+      Top = 72
+      Width = 65
+      Height = 21
+      MaxLength = 3
+      TabOrder = 2
+      Text = '32'
+      OnKeyPress = CheckNumericEdit
+    end
+    object HeightEdit: TEdit
+      Left = 104
+      Top = 96
+      Width = 65
+      Height = 21
+      MaxLength = 3
+      TabOrder = 3
+      Text = '128'
+      OnKeyPress = CheckNumericEdit
+    end
+  end
+  object ScriptRadioGroup: TRadioGroup
+    Left = 16
+    Top = 128
+    Width = 193
+    Height = 105
+    Caption = ' Script '
+    ItemIndex = 0
+    Items.Strings = (
+      'ACTORDEF (DelphiDoom/RAD)'
+      'DECORATE (ZDoom)'
+      'None')
+    TabOrder = 2
+  end
   object SaveDialog1: TSaveDialog
     DefaultExt = 'wad'
     Filter = 'WAD Files (*.wad)|*.wad'
     Options = [ofHideReadOnly, ofPathMustExist, ofEnableSizing]
     Left = 552
     Top = 40
+  end
+  object Timer1: TTimer
+    Interval = 200
+    OnTimer = Timer1Timer
+    Left = 512
+    Top = 384
   end
 end

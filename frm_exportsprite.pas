@@ -24,15 +24,12 @@ type
     Label1: TLabel;
     FileNameEdit: TEdit;
     SelectFileButton: TSpeedButton;
-    GroupBox2: TGroupBox;
+    GeneralGroupBox: TGroupBox;
     Label2: TLabel;
     SpritePrefixButton: TSpeedButton;
     PrefixEdit: TEdit;
-    HQCheckBox: TCheckBox;
     PatchRadioGroup: TRadioGroup;
-    AnglesRadioGroup: TRadioGroup;
-    SpriteFormatRadioGroup: TRadioGroup;
-    GroupBox3: TGroupBox;
+    PreviewGroupBox: TGroupBox;
     Panel3: TPanel;
     PaintBox1: TPaintBox;
     Panel4: TPanel;
@@ -48,6 +45,18 @@ type
     RotateTrackBar: TTrackBar;
     Theta2IncButton1: TSpeedButton;
     Theta2DecButton1: TSpeedButton;
+    ScriptParametersGroupBox: TGroupBox;
+    ScriptRadioGroup: TRadioGroup;
+    Label3: TLabel;
+    ActorNameEdit: TEdit;
+    Label4: TLabel;
+    EditorNumberEdit: TEdit;
+    Label5: TLabel;
+    Label6: TLabel;
+    RadiusEdit: TEdit;
+    HeightLabel: TLabel;
+    HeightEdit: TEdit;
+    Timer1: TTimer;
     procedure SpritePrefixButtonClick(Sender: TObject);
     procedure SelectFileButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -60,6 +69,8 @@ type
     procedure RotateTrackBarChange(Sender: TObject);
     procedure Theta2IncButton1Click(Sender: TObject);
     procedure Theta2DecButton1Click(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+    procedure CheckNumericEdit(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     needs3dupdate: boolean;
@@ -72,6 +83,7 @@ type
       const mFace: array of ivec3_t; const tex: TBitmap);
     procedure DoUpdate3d;
     procedure UpdateControls;
+    function CheckOKtoGO: boolean;
   public
     { Public declarations }
     twigtex, trunktex: TBitmap;
@@ -136,9 +148,23 @@ begin
   trunktex.Height := 256;
   trunktex.PixelFormat := pf32bit;
 
-  fviewdist := 6.0;
-  ftheta := PI;
-  ftheta2 := PI / 8;
+  fviewdist := opt_viewdist / OPT_TO_FLOAT;
+  if fviewdist < MINVIEWDIST then
+    fviewdist := MINVIEWDIST
+  else if fviewdist > MAXVIEWDIST then
+    fviewdist := MAXVIEWDIST;
+
+  ftheta := opt_theta1 / OPT_TO_FLOAT;
+  if ftheta < 0.0 then
+    ftheta := 0.0
+  else if ftheta > 2 * PI then
+    ftheta := 2 * PI;
+
+  ftheta2 := opt_theta2 / OPT_TO_FLOAT;
+  if ftheta2 < 0.0 then
+    ftheta2 := 0.0
+  else if ftheta2 > PI / 4 then
+    ftheta2 := PI / 4;
 
   UpdateControls;
 end;
@@ -149,11 +175,16 @@ begin
   twigtex.Free;
   trunktex.Free;
   buffer.Free;
+
+  opt_viewdist := Round(fviewdist * OPT_TO_FLOAT);
+  opt_theta1 := Round(ftheta * OPT_TO_FLOAT);
+  opt_theta2 := Round(ftheta2 * OPT_TO_FLOAT);
 end;
 
 procedure TExportSpriteForm.FileNameEditChange(Sender: TObject);
 begin
-  Button1.Enabled := FileNameEdit.Text <> '';
+  if Trim(FileNameEdit.Text) = '' then
+    Button1.Enabled := False;
 end;
 
 procedure TExportSpriteForm.RenderFaces(const mVertCount, mFaceCount: integer;
@@ -300,6 +331,47 @@ begin
     needs3dupdate := True;
     UpdateControls;
     PaintBox1.Invalidate;
+  end;
+end;
+
+function TExportSpriteForm.CheckOKtoGO: boolean;
+var
+  s: string;
+begin
+  if Trim(FileNameEdit.Text) = '' then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  if Length(Trim(PrefixEdit.Text)) <> 5 then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  s := Trim(PrefixEdit.Text);
+  if Pos(s[5], 'ABCDEFGHIJKLMNOPQRSTUVWXYZ\[]') = 0 then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  Result := True;
+end;
+
+procedure TExportSpriteForm.Timer1Timer(Sender: TObject);
+begin
+  Button1.Enabled := CheckOKtoGO;
+end;
+
+procedure TExportSpriteForm.CheckNumericEdit(Sender: TObject;
+  var Key: Char);
+begin
+  if not (Key in [#8, '0'..'9']) then
+  begin
+    Key := #0;
+    Exit;
   end;
 end;
 

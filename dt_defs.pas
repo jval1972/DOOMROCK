@@ -26,6 +26,9 @@ type
   bigstring_t = array[0..MAXHISTORYPATH - 1] of char;
   bigstring_p = ^bigstring_t;
 
+const
+  OPT_TO_FLOAT = 10000;
+
 var
   opt_renderevniroment: Boolean = True;
   opt_renderwireframe: Boolean = False;
@@ -40,6 +43,9 @@ var
   opt_filemenuhistory7: bigstring_t;
   opt_filemenuhistory8: bigstring_t;
   opt_filemenuhistory9: bigstring_t;
+  opt_viewdist: integer = 60000;
+  opt_theta1: integer = 31416;
+  opt_theta2: integer = 3926;
 
 function bigstringtostring(const bs: bigstring_p): string;
 
@@ -60,7 +66,7 @@ type
   end;
 
 const
-  NUMSETTINGS = 15;
+  NUMSETTINGS = 19;
 
 var
   Settings: array[0..NUMSETTINGS - 1] of TSettingItem = (
@@ -138,6 +144,26 @@ var
       desc: 'FILEMENUHISTORY9';
       typeof: tstBigString;
       location: @opt_filemenuhistory9;
+    ),
+    (
+      desc: '[Sprite Export]';
+      typeof: tstDevider;
+      location: nil;
+    ),
+    (
+      desc: 'VIEWDISTANCE';
+      typeof: tstInteger;
+      location: @opt_viewdist;
+    ),
+    (
+      desc: 'THETA1';
+      typeof: tstInteger;
+      location: @opt_theta1;
+    ),
+    (
+      desc: 'THETA2';
+      typeof: tstInteger;
+      location: @opt_theta2;
     )
   );
 
