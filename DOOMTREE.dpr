@@ -38,7 +38,8 @@ uses
   frm_spriteprefix in 'frm_spriteprefix.pas' {SpritePrefixForm},
   dt_palettes in 'dt_palettes.pas',
   dt_wadwriter in 'dt_wadwriter.pas',
-  dt_wad in 'dt_wad.pas';
+  dt_wad in 'dt_wad.pas',
+  dt_doompatch in 'dt_doompatch.pas';
 
 {$R *.res}
 
