@@ -1,3 +1,16 @@
+//------------------------------------------------------------------------------
+//
+//  DOOMTREE: Doom Tree Sprite Generator
+//  Copyright (C) 2021 by Jim Valavanis
+//
+// DESCRIPTION:
+//  Software Rendering Library
+//
+//------------------------------------------------------------------------------
+//  E-Mail: jimmyvalavanis@yahoo.gr
+//  Site  : https://sourceforge.net/projects/doom-tree/
+//------------------------------------------------------------------------------
+
 unit dt_soft3d;
 
 interface
@@ -23,9 +36,6 @@ type
     x, y, z, w: float;
   end;
   Pvector_t = ^vector_t;
-
-const
-  st_PI = 3.1415926;  
 
 implementation
 
@@ -328,7 +338,7 @@ begin
   aspect := width / height;
   matrix_set_identity(@ts.world);
   matrix_set_identity(@ts.view);
-  matrix_set_perspective(@ts.projection, st_PI * 0.5, aspect, 1.0, 500.0);
+  matrix_set_perspective(@ts.projection, PI * 0.5, aspect, 1.0, 500.0);
   ts.w := width;
   ts.h := height;
   transform_update(ts);
