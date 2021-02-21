@@ -111,8 +111,9 @@ type
 
 const
   RENDER_STATE_WIREFRAME = 1;
-  RENDER_STATE_TEXTURE = 2;
-  RENDER_STATE_COLOR = 4;
+  RENDER_STATE_COLOR = 2;
+  RENDER_STATE_TEXTURE_SOLID = 4;
+  RENDER_STATE_TEXTURE_ALPHAZERO = 8;
 
 const
   TEXTURESIZE = 256;
@@ -690,7 +691,7 @@ begin
   device.width := width;
   device.height := height;
   transform_init(@device.transform, width, height);
-  device.render_state := RENDER_STATE_TEXTURE;
+  device.render_state := RENDER_STATE_TEXTURE_SOLID;
 end;
 
 procedure device_destroy(const device: Pdevice_t);
@@ -715,6 +716,7 @@ begin
   tex.PixelFormat := pf32bit;
   device.bztexture.width := tex.Width;
   device.bztexture.height := tex.Height;
+  device.bztexture.Canvas.Draw(0, 0, tex);
   device.tex_width := tex.Width;
   device.tex_height := tex.Height;
   device.max_u := tex.Width - 1.0;
@@ -882,6 +884,7 @@ var
   r, g, b: float;
   RR, GG, BB: integer;
   u, v: float;
+  cc: IUINT32;
 begin
   framebuffer := device.framebuffer[scanline.y];
   zbuffer := device.zbuffer[scanline.y];
@@ -897,7 +900,6 @@ begin
       if rhw >= zbuffer[x] then
       begin
         invrhw := 1.0 / rhw;
-        zbuffer[x] := rhw;
         if render_state and RENDER_STATE_COLOR <> 0 then
         begin
           r := scanline.v.color.r * invrhw;
@@ -910,13 +912,28 @@ begin
           GG := CMID(GG, 0, 255);
           BB := CMID(BB, 0, 255);
           framebuffer[x] := (RR shl 16) or (GG shl 8) or (BB);
+          zbuffer[x] := rhw;
         end;
-        if render_state and RENDER_STATE_TEXTURE <> 0 then
+        if render_state and RENDER_STATE_TEXTURE_SOLID <> 0 then
         begin
           u := scanline.v.tc.u * invrhw;
           v := scanline.v.tc.v * invrhw;
           framebuffer[x] := device_texture_read(device, u, v);
-        end;
+          zbuffer[x] := rhw;
+        end
+        else if render_state and RENDER_STATE_TEXTURE_ALPHAZERO <> 0 then
+        begin
+          u := scanline.v.tc.u * invrhw;
+          v := scanline.v.tc.v * invrhw;
+          cc := device_texture_read(device, u, v);
+          if cc <> 0 then
+          begin
+            framebuffer[x] := cc;
+            zbuffer[x] := rhw;
+          end;
+        end
+        else if render_state and RENDER_STATE_WIREFRAME <> 0 then
+          zbuffer[x] := rhw;
       end;
     end;
     vertex_add(@scanline.v, @scanline.step);
@@ -970,7 +987,7 @@ begin
   transform_homogenize(@device.transform, @p2, @c2);
   transform_homogenize(@device.transform, @p3, @c3);
 
-  if render_state and (RENDER_STATE_TEXTURE or RENDER_STATE_COLOR) <> 0 then
+  if render_state and (RENDER_STATE_TEXTURE_SOLID or RENDER_STATE_TEXTURE_ALPHAZERO or RENDER_STATE_COLOR) <> 0 then
   begin
     t1 := v1^;
     t2 := v2^;
