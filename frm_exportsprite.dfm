@@ -4,7 +4,7 @@ object ExportSpriteForm: TExportSpriteForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Export Sprite'
-  ClientHeight = 391
+  ClientHeight = 454
   ClientWidth = 766
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12923,6 +12923,7 @@ object ExportSpriteForm: TExportSpriteForm
     Width = 193
     Height = 121
     Caption = ' Patch Palette '
+    ItemIndex = 0
     Items.Strings = (
       'Doom'
       'Heretic'
@@ -12959,14 +12960,14 @@ object ExportSpriteForm: TExportSpriteForm
     Left = 427
     Top = 48
     Width = 326
-    Height = 281
+    Height = 345
     Caption = ' Preview '
     TabOrder = 5
     object Panel3: TPanel
       Left = 2
       Top = 15
       Width = 322
-      Height = 264
+      Height = 328
       Align = alClient
       BevelOuter = bvNone
       BorderWidth = 4
@@ -12978,33 +12979,51 @@ object ExportSpriteForm: TExportSpriteForm
         Width = 256
         Height = 256
         Cursor = crCross
-        Align = alLeft
         OnPaint = PaintBox1Paint
+      end
+      object Theta2IncButton1: TSpeedButton
+        Left = 273
+        Top = 264
+        Width = 36
+        Height = 22
+        Caption = '+'
+        Flat = True
+        OnClick = Theta2IncButton1Click
+      end
+      object Theta2DecButton1: TSpeedButton
+        Left = 273
+        Top = 288
+        Width = 36
+        Height = 22
+        Caption = '-'
+        Flat = True
+        OnClick = Theta2DecButton1Click
       end
       object Panel4: TPanel
         Left = 260
         Top = 4
         Width = 58
         Height = 256
-        Align = alClient
         BevelOuter = bvNone
         Caption = ' '
         TabOrder = 0
         object ZoomInSpeedButton: TSpeedButton
           Left = 9
           Top = 0
-          Width = 23
+          Width = 36
           Height = 22
           Caption = '+'
           Flat = True
+          OnClick = ZoomInSpeedButtonClick
         end
         object ZoomOutSpeedButton: TSpeedButton
           Left = 9
           Top = 24
-          Width = 23
+          Width = 36
           Height = 22
           Caption = '-'
           Flat = True
+          OnClick = ZoomOutSpeedButtonClick
         end
         object HourglassLabel: TLabel
           Left = 8
@@ -13013,12 +13032,36 @@ object ExportSpriteForm: TExportSpriteForm
           Height = 13
           Caption = '   '
         end
+        object ZoomTrackBar: TTrackBar
+          Left = 8
+          Top = 48
+          Width = 45
+          Height = 209
+          Max = 160
+          Min = 10
+          Orientation = trVertical
+          Position = 60
+          TabOrder = 0
+          TickMarks = tmBoth
+          OnChange = ZoomTrackBarChange
+        end
+      end
+      object RotateTrackBar: TTrackBar
+        Left = 8
+        Top = 272
+        Width = 257
+        Height = 41
+        Max = 120
+        Position = 60
+        TabOrder = 1
+        TickMarks = tmBoth
+        OnChange = RotateTrackBarChange
       end
     end
   end
   object Panel1: TPanel
     Left = 0
-    Top = 342
+    Top = 405
     Width = 766
     Height = 49
     Align = alBottom
