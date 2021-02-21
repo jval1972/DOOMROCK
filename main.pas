@@ -158,6 +158,8 @@ type
     SaveDialog2: TSaveDialog;
     LoadTrunkBitBtn1: TBitBtn;
     LoadTwigBitBtn1: TBitBtn;
+    Sprite1: TMenuItem;
+    N1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure NewButton1Click(Sender: TObject);
@@ -199,6 +201,7 @@ type
     procedure SeedEditChange(Sender: TObject);
     procedure ExportObjModel1Click(Sender: TObject);
     procedure ExportScreenshot1Click(Sender: TObject);
+    procedure Sprite1Click(Sender: TObject);
   private
     { Private declarations }
     ffilename: string;
@@ -265,7 +268,8 @@ uses
   dt_gl,
   dt_defs,
   dt_utils,
-  proctree_helpers;
+  proctree_helpers,
+  frm_exportsprite;
 
 {$R *.dfm}
 
@@ -1256,6 +1260,18 @@ begin
     finally
       b.Free;
     end;
+  end;
+end;
+
+procedure TForm1.Sprite1Click(Sender: TObject);
+var
+  f: TExportSpriteForm;
+begin
+  f := TExportSpriteForm.Create(nil);
+  try
+    f.ShowModal;
+  finally
+    f.Free;
   end;
 end;
 

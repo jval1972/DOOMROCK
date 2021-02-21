@@ -26603,6 +26603,13 @@ object Form1: TForm1
       end
       object Export1: TMenuItem
         Caption = '&Export'
+        object Sprite1: TMenuItem
+          Caption = 'Sprite'
+          OnClick = Sprite1Click
+        end
+        object N1: TMenuItem
+          Caption = '-'
+        end
         object ExportObjModel1: TMenuItem
           Caption = 'Obj model'
           OnClick = ExportObjModel1Click
