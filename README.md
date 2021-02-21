@@ -1,11 +1,13 @@
-# PTree
-Procedural Tree Generator (PTree) is an application that generates tree models based on various input parameters.
+# DOOMTREE
+Doom Tree Sprite Generator (DOOMTREE) is an application that generates tree sprites for the Doom series games based on various input parameters.
 
-It is based on [proctree](https://github.com/supereggbert/proctree.js/)
+It's development is a continuation of [PTree][https://github.com/jval1972/PTree] and it is based on [proctree](https://github.com/supereggbert/proctree.js/)
 
 
 ## Features
 Random mesh generation
+
+Export Sprite in Doom sprite format
 
 Export model in .obj format
 

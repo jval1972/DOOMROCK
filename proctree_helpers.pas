@@ -1,3 +1,16 @@
+//------------------------------------------------------------------------------
+//
+//  DOOMTREE: Doom Tree Sprite Generator
+//  Copyright (C) 2021 by Jim Valavanis
+//
+// DESCRIPTION:
+//  Utility functions
+//
+//------------------------------------------------------------------------------
+//  E-Mail: jimmyvalavanis@yahoo.gr
+//  Site  : https://sourceforge.net/projects/doom-tree/
+//------------------------------------------------------------------------------
+
 unit proctree_helpers;
 
 interface

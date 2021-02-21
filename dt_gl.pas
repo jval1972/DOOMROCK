@@ -1,17 +1,17 @@
 //------------------------------------------------------------------------------
 //
-//  PTREE: Procedural Tree Generator
-//  Copyright (C) 2018 by Jim Valavanis
+//  DOOMTREE: Doom Tree Sprite Generator
+//  Copyright (C) 2021 by Jim Valavanis
 //
 // DESCRIPTION:
 //  OpenGL Rendering
 //
 //------------------------------------------------------------------------------
 //  E-Mail: jimmyvalavanis@yahoo.gr
-//  Site  : https://sourceforge.net/projects/procedural-tree-generator/
+//  Site  : https://sourceforge.net/projects/doom-tree/
 //------------------------------------------------------------------------------
 
-unit pt_gl;
+unit dt_gl;
 
 interface
 
@@ -59,7 +59,7 @@ uses
   SysUtils,
   Classes,
   Math,
-  pt_defs;
+  dt_defs;
 
 procedure ResetCamera;
 begin

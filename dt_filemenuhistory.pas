@@ -1,20 +1,17 @@
 //------------------------------------------------------------------------------
 //
-//  PTREE: Procedural Tree Generator
-//  Copyright (C) 2018 by Jim Valavanis
+//  DOOMTREE: Doom Tree Sprite Generator
+//  Copyright (C) 2021 by Jim Valavanis
 //
 // DESCRIPTION:
 //  File Menu History
-//  Based on my very old TFileMenuHistory component
-//  Original version can still be found at:
-//  http://www.geocities.ws/jimmyvalavanis/programming/delphi/index.html
 //
 //------------------------------------------------------------------------------
 //  E-Mail: jimmyvalavanis@yahoo.gr
-//  Site  : https://sourceforge.net/projects/procedural-tree-generator/
+//  Site  : https://sourceforge.net/projects/doom-tree/
 //------------------------------------------------------------------------------
 
-unit pt_filemenuhistory;
+unit dt_filemenuhistory;
 
 interface
 
@@ -73,7 +70,7 @@ type
 implementation
 
 uses
-  pt_utils;
+  dt_utils;
 
 resourceString
   rsRangeCheckError = 'Index out of range.';

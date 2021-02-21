@@ -1,21 +1,21 @@
 //------------------------------------------------------------------------------
 //
-//  PTREE: Procedural Tree Generator
-//  Copyright (C) 2018 by Jim Valavanis
+//  DOOMTREE: Doom Tree Sprite Generator
+//  Copyright (C) 2021 by Jim Valavanis
 //
 // DESCRIPTION:
-//  Undo/Redo Manager 
+//  Undo/Redo manager
 //
 //------------------------------------------------------------------------------
 //  E-Mail: jimmyvalavanis@yahoo.gr
-//  Site  : https://sourceforge.net/projects/procedural-tree-generator/
+//  Site  : https://sourceforge.net/projects/doom-tree/
 //------------------------------------------------------------------------------
 
-unit pt_undo;
+unit dt_undo;
 
 interface
 
-uses Windows, SysUtils, Classes, pt_binary, zLibPas;
+uses Windows, SysUtils, Classes, dt_binary, zLibPas;
 
 type
   TStreamType = (sstMemory, sstFile);

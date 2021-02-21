@@ -1,14 +1,14 @@
 //------------------------------------------------------------------------------
 //
-//  PTREE: Procedural Tree Generator
-//  Copyright (C) 2018 by Jim Valavanis
+//  DOOMTREE: Doom Tree Sprite Generator
+//  Copyright (C) 2021 by Jim Valavanis
 //
 // DESCRIPTION:
 //  Main Form
 //
 //------------------------------------------------------------------------------
 //  E-Mail: jimmyvalavanis@yahoo.gr
-//  Site  : https://sourceforge.net/projects/procedural-tree-generator/
+//  Site  : https://sourceforge.net/projects/doom-tree/
 //------------------------------------------------------------------------------
 
 unit main;
@@ -18,8 +18,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, pngimage, xTGA, jpeg, zBitmap, ComCtrls, ExtCtrls, Buttons, Menus,
-  StdCtrls, AppEvnts, ExtDlgs, clipbrd, ToolWin, dglOpenGL, proctree, pt_undo,
-  pt_filemenuhistory, pt_slider;
+  StdCtrls, AppEvnts, ExtDlgs, clipbrd, ToolWin, dglOpenGL, proctree, dt_undo,
+  dt_filemenuhistory, dt_slider;
 
 type
   TForm1 = class(TForm)
@@ -260,9 +260,9 @@ var
 implementation
 
 uses
-  pt_gl,
-  pt_defs,
-  pt_utils,
+  dt_gl,
+  dt_defs,
+  dt_utils,
   proctree_helpers;
 
 {$R *.dfm}
