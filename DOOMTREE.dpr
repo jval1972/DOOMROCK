@@ -35,7 +35,8 @@ uses
   dt_slider in 'dt_slider.pas',
   dt_soft3d in 'dt_soft3d.pas',
   frm_exportsprite in 'frm_exportsprite.pas' {ExportSpriteForm},
-  frm_spriteprefix in 'frm_spriteprefix.pas' {SpritePrefixForm};
+  frm_spriteprefix in 'frm_spriteprefix.pas' {SpritePrefixForm},
+  dt_palettes in 'dt_palettes.pas';
 
 {$R *.res}
 
