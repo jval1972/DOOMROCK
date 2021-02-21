@@ -123,11 +123,15 @@ procedure camera_at_zero(const device: Pdevice_t; const x, y, z: float);
 
 procedure device_set_texture(const device: Pdevice_t; const tex: TBitmap);
 
-procedure device_clear(const device: Pdevice_t; const mode: integer);
+procedure device_clear(const device: Pdevice_t);
 
 procedure device_destroy(const device: Pdevice_t);
 
 procedure device_draw_primitive(const device: Pdevice_t; const v1, v2, v3: Pvertex_t);
+
+procedure matrix_set_rotate(const m: Pmatrix_t; x, y, z: float; const theta: float);
+
+procedure transform_update(const ts: Ptransform_t);
 
 implementation
 
@@ -722,7 +726,7 @@ begin
     device.texture[j] := PIUINT32Array(device.bztexture.scanline[j]);
 end;
 
-procedure device_clear(const device: Pdevice_t; const mode: integer);
+procedure device_clear(const device: Pdevice_t);
 var
   x, y: integer;
   idst: PIUINT32Array;
