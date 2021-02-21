@@ -281,15 +281,16 @@ var
   pfd: TPIXELFORMATDESCRIPTOR;
   pf: Integer;
   doCreate: boolean;
+  sdir: string;
 begin
   Randomize;
-  
+
   pt_LoadSettingFromFile(ChangeFileExt(ParamStr(0), '.ini'));
 
   closing := False;
 
   PageControl1.ActivePageIndex := 0;
-  
+
   undoManager := TUndoRedoManager.Create;
   undoManager.OnLoadFromStream := DoLoadTreeBinaryUndo;
   undoManager.OnSaveToStream := DoSaveTreeBinaryUndo;
@@ -317,6 +318,17 @@ begin
   filemenuhistory.AddPath(bigstringtostring(@opt_filemenuhistory2));
   filemenuhistory.AddPath(bigstringtostring(@opt_filemenuhistory1));
   filemenuhistory.AddPath(bigstringtostring(@opt_filemenuhistory0));
+
+  sdir := ExtractFilePath(ParamStr(0));
+  if sdir <> '' then
+  begin
+    if sdir[Length(sdir)] <> '\' then
+      sdir := sdir + '\';
+    if DirectoryExists(sdir + 'Data\Trunk') then
+      OpenPictureDialog1.InitialDir := sdir + 'Data\Trunk';
+    if DirectoryExists(sdir + 'Data\Twig') then
+      OpenPictureDialog2.InitialDir := sdir + 'Data\Twig';
+  end;
 
   tree := tree_t.Create;
 
