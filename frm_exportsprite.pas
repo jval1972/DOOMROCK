@@ -228,6 +228,9 @@ end;
 procedure TExportSpriteForm.DoUpdate3d;
 var
   c, m, m2: matrix_t;
+  x, y: integer;
+  cc: LongWord;
+  ln: PIUINT32Array;
 begin
   device_clear(@device);
   camera_at_zero(@device, fviewdist, 0, 0);
@@ -247,6 +250,20 @@ begin
   end;
 
   buffer.Canvas.StretchDraw(Rect(0, 0, buffer.Width, buffer.Height), device.bframebuffer);
+  buffer.Canvas.StretchDraw(Rect(0, 0, buffer.Width, buffer.Height), device.bzbuffer);
+
+  for y := 0 to buffer.Height - 1 do
+  begin
+    ln := buffer.ScanLine[y];
+    for x := 0 to buffer.Width - 1 do
+    begin
+      cc := Round(Pfloat(@ln[x])^ * 256);
+      cc := cc and $FF;
+//      cc := (cc shr 8) and $FF;
+      ln[x] := cc or (cc shl 8) or (cc shl 16);
+    end;
+  end;
+
   needs3dupdate := False;
 end;
 

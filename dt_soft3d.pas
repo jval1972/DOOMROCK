@@ -26,6 +26,7 @@ type
   PIUINT32PArray = ^IUINT32PArray;
 
   float = single;
+  Pfloat = ^float;
   floatArray = array[0..$FF] of float;
   PfloatArray = ^floatArray;
   floatPArray = array[0..$FF] of PfloatArray;
