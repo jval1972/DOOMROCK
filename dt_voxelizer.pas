@@ -46,7 +46,7 @@ type
 
 
 procedure DT_VoxelizeTri(const tri: Pmeshtriangle_t; const tex: TBitmap;
-  const vox: voxelbuffer_p; const voxsize: integer);
+  const vox: voxelbuffer_p; const voxsize: integer; const opaque: boolean);
 
 implementation
 
@@ -121,7 +121,7 @@ begin
 end;
 
 procedure DT_VoxelizeTri(const tri: Pmeshtriangle_t; const tex: TBitmap;
-  const vox: voxelbuffer_p; const voxsize: integer);
+  const vox: voxelbuffer_p; const voxsize: integer; const opaque: boolean);
 var
   points: tri3i_t;
   i: integer;
@@ -156,6 +156,9 @@ begin
               iu := Round(tex.Width * tri[0].u) mod tex.Width;
               iv := Round(tex.Height * tri[0].v) mod tex.Height;
               vox[points[0].x, points[0].y, points[0].z] := tex.Canvas.Pixels[iu, iv];
+              if opaque then
+                if vox[points[0].x, points[0].y, points[0].z] = 0 then
+                  vox[points[0].x, points[0].y, points[0].z] := 1;
             end;
         Exit; // Nothing else to do
       end;
@@ -185,11 +188,11 @@ begin
       tri1[0] := tri[0];
       tri1[1] := v;
       tri1[2] := tri[2];
-      DT_VoxelizeTri(@tri1, tex, vox, voxsize);
+      DT_VoxelizeTri(@tri1, tex, vox, voxsize, opaque);
       tri1[0] := tri[2];
       tri1[1] := v;
       tri1[2] := tri[1];
-      DT_VoxelizeTri(@tri1, tex, vox, voxsize);
+      DT_VoxelizeTri(@tri1, tex, vox, voxsize, opaque);
     end;
   1: // Split line 1-2
     begin
@@ -197,11 +200,11 @@ begin
       tri1[0] := tri[0];
       tri1[1] := tri[1];
       tri1[1] := v;
-      DT_VoxelizeTri(@tri1, tex, vox, voxsize);
+      DT_VoxelizeTri(@tri1, tex, vox, voxsize, opaque);
       tri1[0] := tri[0];
       tri1[1] := v;
       tri1[2] := tri[2];
-      DT_VoxelizeTri(@tri1, tex, vox, voxsize);
+      DT_VoxelizeTri(@tri1, tex, vox, voxsize, opaque);
     end;
   2:  // Split line 2-0
     begin
@@ -209,11 +212,11 @@ begin
       tri1[0] := tri[0];
       tri1[1] := tri[1];
       tri1[1] := v;
-      DT_VoxelizeTri(@tri1, tex, vox, voxsize);
+      DT_VoxelizeTri(@tri1, tex, vox, voxsize, opaque);
       tri1[0] := tri[1];
       tri1[1] := v;
       tri1[2] := tri[2];
-      DT_VoxelizeTri(@tri1, tex, vox, voxsize);
+      DT_VoxelizeTri(@tri1, tex, vox, voxsize, opaque);
     end;
   end;
 end;
