@@ -125,11 +125,35 @@ procedure DT_VoxelizeTri(const tri: Pmeshtriangle_t; const tex: TBitmap;
 var
   points: tri3i_t;
   i: integer;
-  iu, iv: integer;
   dist01, dist12, dist20, maxdist: double;
   maxdistidx: integer;
   tri1: meshtriangle_t;
   v: meshvertex_t;
+
+  procedure _draw_voxel_item(const idx: integer);
+  var
+    x, y, z: integer;
+    iu, iv: integer;
+    pv: voxelitem_p;
+  begin
+    x := points[idx].x;
+    y := points[idx].y;
+    z := points[idx].z;
+    // Check to see if it is inside the voxel
+    if IsIntInRange(x, 0, voxsize - 1) then
+      if IsIntInRange(y, 0, voxsize - 1) then
+        if IsIntInRange(z, 0, voxsize - 1) then
+        begin
+          iu := Round(tex.Width * tri[idx].u) mod tex.Width;
+          iv := Round(tex.Height * tri[idx].v) mod tex.Height;
+          pv := @vox[x, y, z];
+          pv^ := tex.Canvas.Pixels[iu, iv];
+          if opaque then
+            if pv^ = 0 then
+              pv^ := 1;
+        end;
+  end;
+
 begin
   // Convert to integer
   for i := 0 to 2 do
@@ -148,21 +172,23 @@ begin
       if (points[0].z = points[1].z) and (points[0].z = points[2].z) then
       begin
         // The triangle occupies excactly 1 voxel item, time to draw it!
-        // First check to see if it is inside the voxel
-        if IsIntInRange(points[0].x, 0, voxsize - 1) then
-          if IsIntInRange(points[0].y, 0, voxsize - 1) then
-            if IsIntInRange(points[0].z, 0, voxsize - 1) then
-            begin
-              iu := Round(tex.Width * tri[0].u) mod tex.Width;
-              iv := Round(tex.Height * tri[0].v) mod tex.Height;
-              vox[points[0].x, points[0].y, points[0].z] := tex.Canvas.Pixels[iu, iv];
-              if opaque then
-                if vox[points[0].x, points[0].y, points[0].z] = 0 then
-                  vox[points[0].x, points[0].y, points[0].z] := 1;
-            end;
+        _draw_voxel_item(0);
         Exit; // Nothing else to do
       end;
 
+  if abs(points[0].x - points[1].x) < 2 then
+    if abs(points[0].x - points[2].x) < 2 then
+      if abs(points[0].y - points[1].y) < 2 then
+        if abs(points[0].y - points[2].y) < 2 then
+          if abs(points[0].z - points[1].z) < 2 then
+            if abs(points[0].z - points[2].z) < 2 then
+            begin
+              // The triangle occupies neighbor voxel items, time to draw it!
+              _draw_voxel_item(0);
+              _draw_voxel_item(1);
+              _draw_voxel_item(2);
+              Exit;
+            end;
 
   // Find the biggest triangle line and slpit it
   dist01 := vert_sq_distance(@tri[0], @tri[1]);
@@ -199,7 +225,7 @@ begin
       vert_half(@tri[1], @tri[2], v);
       tri1[0] := tri[0];
       tri1[1] := tri[1];
-      tri1[1] := v;
+      tri1[2] := v;
       DT_VoxelizeTri(@tri1, tex, vox, voxsize, opaque);
       tri1[0] := tri[0];
       tri1[1] := v;
@@ -211,7 +237,7 @@ begin
       vert_half(@tri[2], @tri[0], v);
       tri1[0] := tri[0];
       tri1[1] := tri[1];
-      tri1[1] := v;
+      tri1[2] := v;
       DT_VoxelizeTri(@tri1, tex, vox, voxsize, opaque);
       tri1[0] := tri[1];
       tri1[1] := v;
