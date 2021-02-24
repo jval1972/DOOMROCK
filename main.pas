@@ -160,6 +160,8 @@ type
     LoadTwigBitBtn1: TBitBtn;
     Sprite1: TMenuItem;
     N1: TMenuItem;
+    Voxel1: TMenuItem;
+    SaveVoxelDialog: TSaveDialog;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure NewButton1Click(Sender: TObject);
@@ -202,6 +204,7 @@ type
     procedure ExportObjModel1Click(Sender: TObject);
     procedure ExportScreenshot1Click(Sender: TObject);
     procedure Sprite1Click(Sender: TObject);
+    procedure Voxel1Click(Sender: TObject);
   private
     { Private declarations }
     ffilename: string;
@@ -269,6 +272,9 @@ uses
   dt_gl,
   dt_defs,
   dt_utils,
+  dt_voxels,
+  dt_voxelexport,
+  dt_palettes,
   proctree_helpers,
   frm_exportsprite;
 
@@ -329,6 +335,7 @@ begin
     begin
       SaveDialog1.InitialDir := sdir;
       SaveDialog2.InitialDir := sdir;
+      SaveVoxelDialog.InitialDir := sdir;
       SavePictureDialog1.InitialDir := sdir;
       OpenDialog1.InitialDir := sdir;
     end;
@@ -1377,8 +1384,6 @@ begin
   f := TExportSpriteForm.Create(nil);
   try
     f.tree := tree;
-    f.twigtex.Canvas.StretchDraw(Rect(0, 0, f.twigtex.Width, f.twigtex.Height), TwigImage.Picture.Bitmap);
-    f.trunktex.Canvas.StretchDraw(Rect(0, 0, f.trunktex.Width, f.trunktex.Height), TrunkImage.Picture.Bitmap);
     f.twigtex.Canvas.StretchDraw(Rect(0, 0, f.twigtex.Width, f.twigtex.Height), TwigImage.Picture.Graphic);
     f.trunktex.Canvas.StretchDraw(Rect(0, 0, f.trunktex.Width, f.trunktex.Height), TrunkImage.Picture.Graphic);
     f.PrepareTextures;
@@ -1387,6 +1392,44 @@ begin
       f.DoExportSpriteWAD;
   finally
     f.Free;
+  end;
+end;
+
+procedure TForm1.Voxel1Click(Sender: TObject);
+var
+  buf: voxelbuffer_p;
+  ename: string;
+  vox_typ: string;
+  twigtex, trunktex: TBitmap;
+begin
+  if SaveVoxelDialog.Execute then
+  begin
+    GetMem(buf, SizeOf(voxelbuffer_t));
+    Screen.Cursor := crHourglass;
+    try
+      ename := SaveVoxelDialog.FileName;
+      vox_typ := UpperCase(ExtractFileExt(ename));
+      twigtex := TBitmap.Create;
+      twigtex.Width := 256;
+      twigtex.Height := 256;
+      twigtex.PixelFormat := pf32bit;
+      trunktex := TBitmap.Create;
+      trunktex.Width := 256;
+      trunktex.Height := 256;
+      trunktex.PixelFormat := pf32bit;
+      twigtex.Canvas.StretchDraw(Rect(0, 0, twigtex.Width, twigtex.Height), TwigImage.Picture.Graphic);
+      trunktex.Canvas.StretchDraw(Rect(0, 0, trunktex.Width, trunktex.Height), TrunkImage.Picture.Graphic);
+      DT_CreateVoxelFromTree(tree, buf, 256, trunktex, twigtex);
+      if vox_typ = '.VOX' then
+        VXE_ExportVoxelToSlab6VOX(buf, 256, @DoomPaletteRaw, ename)
+      else
+        VXE_ExportVoxelToDDVOX(buf, 256, ename);
+      twigtex.Free;
+      trunktex.Free;
+    finally
+      Screen.Cursor := crDefault;
+    end;
+    FreeMem(buf, SizeOf(voxelbuffer_t));
   end;
 end;
 

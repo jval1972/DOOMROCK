@@ -26607,6 +26607,10 @@ object Form1: TForm1
           Caption = 'Sprite'
           OnClick = Sprite1Click
         end
+        object Voxel1: TMenuItem
+          Caption = 'Voxel'
+          OnClick = Voxel1Click
+        end
         object N1: TMenuItem
           Caption = '-'
         end
@@ -26762,7 +26766,14 @@ object Form1: TForm1
     DefaultExt = 'obj'
     Filter = 'Obj Models (*.obj)|*.obj'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
-    Left = 532
+    Left = 524
+    Top = 88
+  end
+  object SaveVoxelDialog: TSaveDialog
+    DefaultExt = 'ddvox'
+    Filter = 'DelphiDOOM Voxel (*.ddvox)|*.ddvox|Slab6 voxel (*.vox)|*.vox'
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
+    Left = 585
     Top = 88
   end
 end
