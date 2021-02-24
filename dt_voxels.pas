@@ -370,7 +370,7 @@ begin
       skip := 0;
       for zz := 0 to voxelsize - 1 do
       begin
-        if voxelbuffer[xx, yy, zz] = 0 then
+        if voxelbuffer[xx, yy, zz] and $FFFFFF = 0 then
         begin
           Inc(skip);
           if zz = voxelsize - 1 then
@@ -384,9 +384,9 @@ begin
             skip := 0;
           end;
           if zz = voxelsize - 1 then
-            Writeln(t, voxelbuffer[xx, yy, zz])
+            Writeln(t, voxelbuffer[xx, yy, zz] and $FFFFFF)
           else
-            Write(t, voxelbuffer[xx, yy, zz], ', ');
+            Write(t, voxelbuffer[xx, yy, zz] and $FFFFFF, ', ');
         end;
       end;
     end;
