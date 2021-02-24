@@ -40,7 +40,8 @@ uses
   dt_wadwriter in 'dt_wadwriter.pas',
   dt_wad in 'dt_wad.pas',
   dt_doompatch in 'dt_doompatch.pas',
-  dt_defs in 'dt_defs.pas';
+  dt_defs in 'dt_defs.pas',
+  dt_voxelizer in 'dt_voxelizer.pas';
 
 {$R *.res}
 
