@@ -25,6 +25,8 @@ function GetGray256Color(const c: TColor): integer;
 
 function GetIntInRange(const x: Integer; const amin, amax: Integer): Integer;
 
+function IsIntInRange(const x: Integer; const amin, amax: Integer): Integer;
+
 function MaxI(const a, b: Integer): Integer;
 
 function MinI(const a, b: Integer): Integer;
@@ -123,6 +125,11 @@ begin
     Result := amin
   else if Result > amax then
     Result := amax;
+end;
+
+function IsIntInRange(const x: Integer; const amin, amax: Integer): Integer;
+begin
+  Result := (x >= amin) and (x <= amax); // Assuming that amin <= amax
 end;
 
 function MaxI(const a, b: Integer): Integer;
