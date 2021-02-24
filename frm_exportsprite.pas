@@ -210,7 +210,6 @@ var
     p.tc.v := mUV[r].v;
     p.color.r := 1.0;
     p.color.g := 1.0;
-    p.color.g := 1.0;
     p.color.b := 1.0;
     p.rhw := 1.0;
   end;
