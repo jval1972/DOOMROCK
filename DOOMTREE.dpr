@@ -41,7 +41,8 @@ uses
   dt_wad in 'dt_wad.pas',
   dt_doompatch in 'dt_doompatch.pas',
   dt_defs in 'dt_defs.pas',
-  dt_voxelizer in 'dt_voxelizer.pas';
+  dt_voxelizer in 'dt_voxelizer.pas',
+  dt_voxels in 'dt_voxels.pas';
 
 {$R *.res}
 
