@@ -46,6 +46,8 @@ var
   opt_viewdist: integer = 60000;
   opt_theta1: integer = 31416;
   opt_theta2: integer = 3926;
+  opt_voxsize: integer = 128;
+  opt_voxpal: integer = 0;
 
 function bigstringtostring(const bs: bigstring_p): string;
 
@@ -66,7 +68,7 @@ type
   end;
 
 const
-  NUMSETTINGS = 19;
+  NUMSETTINGS = 22;
 
 var
   Settings: array[0..NUMSETTINGS - 1] of TSettingItem = (
@@ -164,6 +166,21 @@ var
       desc: 'THETA2';
       typeof: tstInteger;
       location: @opt_theta2;
+    ),
+    (
+      desc: '[Voxel Export]';
+      typeof: tstDevider;
+      location: nil;
+    ),
+    (
+      desc: 'VOXELSIZE';
+      typeof: tstInteger;
+      location: @opt_voxsize;
+    ),
+    (
+      desc: 'VOXELPALETTE';
+      typeof: tstInteger;
+      location: @opt_voxpal;
     )
   );
 

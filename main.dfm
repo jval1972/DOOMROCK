@@ -26769,11 +26769,4 @@ object Form1: TForm1
     Left = 524
     Top = 88
   end
-  object SaveVoxelDialog: TSaveDialog
-    DefaultExt = 'ddvox'
-    Filter = 'DelphiDOOM Voxel (*.ddvox)|*.ddvox|Slab6 voxel (*.vox)|*.vox'
-    Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
-    Left = 585
-    Top = 88
-  end
 end

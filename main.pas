@@ -161,7 +161,6 @@ type
     Sprite1: TMenuItem;
     N1: TMenuItem;
     Voxel1: TMenuItem;
-    SaveVoxelDialog: TSaveDialog;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure NewButton1Click(Sender: TObject);
@@ -273,10 +272,10 @@ uses
   dt_defs,
   dt_utils,
   dt_voxels,
-  dt_voxelexport,
   dt_palettes,
   proctree_helpers,
-  frm_exportsprite;
+  frm_exportsprite,
+  frm_exportvoxel;
 
 {$R *.dfm}
 
@@ -335,7 +334,6 @@ begin
     begin
       SaveDialog1.InitialDir := sdir;
       SaveDialog2.InitialDir := sdir;
-      SaveVoxelDialog.InitialDir := sdir;
       SavePictureDialog1.InitialDir := sdir;
       OpenDialog1.InitialDir := sdir;
     end;
@@ -1400,15 +1398,15 @@ var
   buf: voxelbuffer_p;
   ename: string;
   vox_typ: string;
+  sz: integer;
   twigtex, trunktex: TBitmap;
+  f: TExportVoxelForm;
 begin
-  if SaveVoxelDialog.Execute then
-  begin
-    GetMem(buf, SizeOf(voxelbuffer_t));
-    Screen.Cursor := crHourglass;
+  GetMem(buf, SizeOf(voxelbuffer_t));
+  Screen.Cursor := crHourglass;
+  try
+    f := TExportVoxelForm.Create(nil);
     try
-      ename := SaveVoxelDialog.FileName;
-      vox_typ := UpperCase(ExtractFileExt(ename));
       twigtex := TBitmap.Create;
       twigtex.Width := 256;
       twigtex.Height := 256;
@@ -1419,18 +1417,36 @@ begin
       trunktex.PixelFormat := pf32bit;
       twigtex.Canvas.StretchDraw(Rect(0, 0, twigtex.Width, twigtex.Height), TwigImage.Picture.Graphic);
       trunktex.Canvas.StretchDraw(Rect(0, 0, trunktex.Width, trunktex.Height), TrunkImage.Picture.Graphic);
-      DT_CreateVoxelFromTree(tree, buf, 256, trunktex, twigtex);
-      if vox_typ = '.VOX' then
-        VXE_ExportVoxelToSlab6VOX(buf, 256, @DoomPaletteRaw, ename)
-      else
-        VXE_ExportVoxelToDDVOX(buf, 256, ename);
+      f.SetTreeVoxelParams(tree, buf, twigtex, trunktex);
+      f.ShowModal;
+      if f.ModalResult = mrOK then
+      begin
+        ename := f.FileNameEdit.Text;
+        sz := f.voxsize;
+        vox_typ := UpperCase(ExtractFileExt(ename));
+        if vox_typ = '.VOX' then
+        begin
+          case f.PatchRadioGroup.ItemIndex of
+          0: VXE_ExportVoxelToSlab6VOX(buf, sz, @DoomPaletteRaw, ename);
+          1: VXE_ExportVoxelToSlab6VOX(buf, sz, @HereticPaletteRaw, ename);
+          2: VXE_ExportVoxelToSlab6VOX(buf, sz, @HexenPaletteRaw, ename);
+          3: VXE_ExportVoxelToSlab6VOX(buf, sz, @StrifePaletteRaw, ename);
+          else
+            VXE_ExportVoxelToSlab6VOX(buf, sz, @RadixPaletteRaw, ename);
+          end;
+        end
+        else
+          VXE_ExportVoxelToDDVOX(buf, sz, ename);
+      end;
       twigtex.Free;
       trunktex.Free;
     finally
-      Screen.Cursor := crDefault;
+      f.Free;
     end;
-    FreeMem(buf, SizeOf(voxelbuffer_t));
+  finally
+    Screen.Cursor := crDefault;
   end;
+  FreeMem(buf, SizeOf(voxelbuffer_t));
 end;
 
 end.

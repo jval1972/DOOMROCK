@@ -43,7 +43,8 @@ uses
   dt_defs in 'dt_defs.pas',
   dt_voxelizer in 'dt_voxelizer.pas',
   dt_voxels in 'dt_voxels.pas',
-  dt_voxelexport in 'dt_voxelexport.pas';
+  dt_voxelexport in 'dt_voxelexport.pas',
+  frm_exportvoxel in 'frm_exportvoxel.pas' {ExportVoxelForm};
 
 {$R *.res}
 

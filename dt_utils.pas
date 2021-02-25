@@ -19,6 +19,10 @@ uses
   Windows,
   Graphics;
 
+type
+  PLongWordArray = ^TLongWordArray;
+  TLongWordArray = array[0..$FFFF] of LongWord;
+
 function StretchClipboardToBitmap(const b: TBitmap): boolean;
 
 function GetGray256Color(const c: TColor): integer;
