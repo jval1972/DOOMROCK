@@ -13083,7 +13083,7 @@ object ExportSpriteForm: TExportSpriteForm
   object ScriptParametersGroupBox: TGroupBox
     Left = 16
     Top = 248
-    Width = 401
+    Width = 193
     Height = 145
     Caption = ' Script Parameters '
     TabOrder = 3
@@ -13120,16 +13120,16 @@ object ExportSpriteForm: TExportSpriteForm
       FocusControl = HeightEdit
     end
     object ActorNameEdit: TEdit
-      Left = 104
+      Left = 88
       Top = 24
-      Width = 169
+      Width = 89
       Height = 21
       MaxLength = 25
       TabOrder = 0
       Text = 'Tree1'
     end
     object EditorNumberEdit: TEdit
-      Left = 104
+      Left = 88
       Top = 54
       Width = 65
       Height = 21
@@ -13139,7 +13139,7 @@ object ExportSpriteForm: TExportSpriteForm
       OnKeyPress = CheckNumericEdit
     end
     object RadiusEdit: TEdit
-      Left = 104
+      Left = 88
       Top = 84
       Width = 65
       Height = 21
@@ -13149,7 +13149,7 @@ object ExportSpriteForm: TExportSpriteForm
       OnKeyPress = CheckNumericEdit
     end
     object HeightEdit: TEdit
-      Left = 104
+      Left = 88
       Top = 114
       Width = 65
       Height = 21
@@ -13172,6 +13172,52 @@ object ExportSpriteForm: TExportSpriteForm
       'None')
     TabOrder = 2
     OnClick = ScriptRadioGroupClick
+  end
+  object VoxelGroupBox: TGroupBox
+    Left = 224
+    Top = 248
+    Width = 193
+    Height = 145
+    Caption = ' Voxel '
+    TabOrder = 7
+    object GenerateVoxelCheckBox: TCheckBox
+      Left = 16
+      Top = 24
+      Width = 97
+      Height = 17
+      Caption = 'Generate voxel'
+      TabOrder = 0
+      OnClick = GenerateVoxelCheckBoxClick
+    end
+    object voxRadioButton64x64: TRadioButton
+      Left = 16
+      Top = 52
+      Width = 113
+      Height = 17
+      Caption = '64 x 64'
+      TabOrder = 1
+      OnClick = voxRadioButton64x64Click
+    end
+    object voxRadioButton128x128: TRadioButton
+      Left = 16
+      Top = 82
+      Width = 113
+      Height = 17
+      Caption = '128 x 128'
+      TabOrder = 2
+      OnClick = voxRadioButton128x128Click
+    end
+    object voxRadioButton256x256: TRadioButton
+      Left = 16
+      Top = 112
+      Width = 113
+      Height = 17
+      Caption = '256 x 256'
+      Checked = True
+      TabOrder = 3
+      TabStop = True
+      OnClick = voxRadioButton256x256Click
+    end
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = 'wad'

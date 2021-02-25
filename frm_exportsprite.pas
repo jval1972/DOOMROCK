@@ -57,6 +57,11 @@ type
     HeightLabel: TLabel;
     HeightEdit: TEdit;
     Timer1: TTimer;
+    VoxelGroupBox: TGroupBox;
+    GenerateVoxelCheckBox: TCheckBox;
+    voxRadioButton64x64: TRadioButton;
+    voxRadioButton128x128: TRadioButton;
+    voxRadioButton256x256: TRadioButton;
     procedure SpritePrefixButtonClick(Sender: TObject);
     procedure SelectFileButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -72,6 +77,10 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure CheckNumericEdit(Sender: TObject; var Key: Char);
     procedure ScriptRadioGroupClick(Sender: TObject);
+    procedure GenerateVoxelCheckBoxClick(Sender: TObject);
+    procedure voxRadioButton64x64Click(Sender: TObject);
+    procedure voxRadioButton128x128Click(Sender: TObject);
+    procedure voxRadioButton256x256Click(Sender: TObject);
   private
     { Private declarations }
     needs3dupdate: boolean;
@@ -105,6 +114,8 @@ uses
   dt_wadwriter,
   dt_doompatch,
   dt_palettes,
+  dt_voxels,
+  dt_voxelexport,
   frm_spriteprefix;
 
 const
@@ -286,6 +297,9 @@ procedure TExportSpriteForm.UpdateControls;
 begin
   ZoomTrackBar.Position := GetIntegerInRange(Round(fviewdist * 10), ZoomTrackBar.Min, ZoomTrackBar.Max);
   RotateTrackBar.Position := GetIntegerInRange(Round(ftheta / (2 * pi) * RotateTrackBar.Max), RotateTrackBar.Min, RotateTrackBar.Max);
+  voxRadioButton64x64.Visible := GenerateVoxelCheckBox.Checked;
+  voxRadioButton128x128.Visible := GenerateVoxelCheckBox.Checked;
+  voxRadioButton256x256.Visible := GenerateVoxelCheckBox.Checked;
 end;
 
 procedure TExportSpriteForm.ZoomTrackBarChange(Sender: TObject);
@@ -424,6 +438,8 @@ var
   i: integer;
   ms: TMemoryStream;
   b: TBitmap;
+  vox: voxelbuffer_p;
+  voxsize: integer;
 begin
   Screen.Cursor := crHourGlass;
   wad := TWADWriter.Create;
@@ -493,12 +509,84 @@ begin
     end;
 
     wad.AddSeparator('S_END');
+
+    if GenerateVoxelCheckBox.Checked then
+    begin
+      GetMem(vox, SizeOf(voxelbuffer_t));
+
+      if voxRadioButton64x64.Checked then
+        voxsize := 64
+      else if voxRadioButton128x128.Checked then
+        voxsize := 128
+      else
+        voxsize := 256;
+
+      DT_CreateVoxelFromTree(tree, vox, voxsize, trunktex, twigtex);
+
+      if ScriptRadioGroup.ItemIndex = 0 then
+      begin
+        VXE_ExportVoxelToDDVOX(vox, voxsize, 'vxtmp');
+        wad.AddFile(PrefixEdit.Text, 'vxtmp');
+        DeleteFile('vxtmp');
+        wad.AddString('PK3ENTRY', PrefixEdit.Text + '=' + PrefixEdit.Text + '.DDVOX');
+        wad.AddString('VOXELDEF', 'voxeldef ' + PrefixEdit.Text + '.ddvox replace sprite ' + PrefixEdit.Text);
+      end
+      else
+      begin
+        wad.AddSeparator('VX_START');
+        if voxsize = 256 then
+          voxsize := 254;
+        case PatchRadioGroup.ItemIndex of
+        0: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @DoomPaletteRaw, 'vxtmp');
+        1: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @HereticPaletteRaw, 'vxtmp');
+        2: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @HexenPaletteRaw, 'vxtmp');
+        3: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @StrifePaletteRaw, 'vxtmp');
+        else
+          VXE_ExportVoxelToSlab6VOX(vox, voxsize, @RadixPaletteRaw, 'vxtmp');
+        end;
+        wad.AddFile(PrefixEdit.Text, 'vxtmp');
+        DeleteFile('vxtmp');
+        wad.AddSeparator('VX_END');
+        wad.AddString('VOXELDEF', PrefixEdit.Text + '="' + PrefixEdit.Text + '.vox"{'#13#10'}');
+      end;
+
+      FreeMem(vox, SizeOf(voxelbuffer_t));
+    end;
+
     BackupFile(FileNameEdit.Text);
     wad.SaveToFile(FileNameEdit.Text);
   finally
     wad.Free;
   end;
   Screen.Cursor := crDefault;
+end;
+
+procedure TExportSpriteForm.GenerateVoxelCheckBoxClick(Sender: TObject);
+begin
+  voxRadioButton64x64.Visible := GenerateVoxelCheckBox.Checked;
+  voxRadioButton128x128.Visible := GenerateVoxelCheckBox.Checked;
+  voxRadioButton256x256.Visible := GenerateVoxelCheckBox.Checked;
+end;
+
+procedure TExportSpriteForm.voxRadioButton64x64Click(Sender: TObject);
+begin
+  voxRadioButton64x64.Checked := True;
+  voxRadioButton128x128.Checked := False;
+  voxRadioButton256x256.Checked := False;
+end;
+
+procedure TExportSpriteForm.voxRadioButton128x128Click(Sender: TObject);
+begin
+  voxRadioButton64x64.Checked := False;
+  voxRadioButton128x128.Checked := True;
+  voxRadioButton256x256.Checked := False;
+end;
+
+procedure TExportSpriteForm.voxRadioButton256x256Click(Sender: TObject);
+begin
+  voxRadioButton64x64.Checked := False;
+  voxRadioButton128x128.Checked := False;
+  voxRadioButton256x256.Checked := True;
 end;
 
 end.
