@@ -345,6 +345,8 @@ begin
           inc(i);
         end;
     fs.Write(voxdata^, voxsize);
+    for i := 0 to 767 do
+      dpal[i] := dpal[i] div 4;
     fs.Write(dpal, 768);
   finally
     fs.Free;
