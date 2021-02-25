@@ -13204,7 +13204,9 @@ object ExportSpriteForm: TExportSpriteForm
       Width = 113
       Height = 17
       Caption = '128 x 128'
+      Checked = True
       TabOrder = 2
+      TabStop = True
       OnClick = voxRadioButton128x128Click
     end
     object voxRadioButton256x256: TRadioButton
@@ -13213,9 +13215,7 @@ object ExportSpriteForm: TExportSpriteForm
       Width = 113
       Height = 17
       Caption = '256 x 256'
-      Checked = True
       TabOrder = 3
-      TabStop = True
       OnClick = voxRadioButton256x256Click
     end
   end

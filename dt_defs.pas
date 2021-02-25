@@ -46,6 +46,10 @@ var
   opt_viewdist: integer = 60000;
   opt_theta1: integer = 31416;
   opt_theta2: integer = 3926;
+  opt_spritepal: integer = 0;
+  opt_spritescript: integer = 0;
+  opt_spritevox: integer = 128;
+  opt_dospritevox: integer = 0;
   opt_voxsize: integer = 128;
   opt_voxpal: integer = 0;
 
@@ -68,7 +72,7 @@ type
   end;
 
 const
-  NUMSETTINGS = 22;
+  NUMSETTINGS = 26;
 
 var
   Settings: array[0..NUMSETTINGS - 1] of TSettingItem = (
@@ -166,6 +170,26 @@ var
       desc: 'THETA2';
       typeof: tstInteger;
       location: @opt_theta2;
+    ),
+    (
+      desc: 'SPRITEPALETTE';
+      typeof: tstInteger;
+      location: @opt_spritepal;
+    ),
+    (
+      desc: 'SPRITESCRIPT';
+      typeof: tstInteger;
+      location: @opt_spritescript;
+    ),
+    (
+      desc: 'SPRITEDOVOXEL';
+      typeof: tstInteger;
+      location: @opt_dospritevox;
+    ),
+    (
+      desc: 'SPRITEVOXEL';
+      typeof: tstInteger;
+      location: @opt_spritevox;
     ),
     (
       desc: '[Voxel Export]';

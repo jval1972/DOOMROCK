@@ -184,6 +184,18 @@ begin
   else if ftheta2 > PI / 4 then
     ftheta2 := PI / 4;
 
+  if opt_spritepal in [0..4] then
+    PatchRadioGroup.ItemIndex := opt_spritepal;
+
+  if opt_spritescript in [0..2] then
+    ScriptRadioGroup.ItemIndex := opt_spritescript;
+
+  GenerateVoxelCheckBox.Checked := opt_dospritevox = 1;
+
+  voxRadioButton64x64.Checked := opt_spritevox = 64;
+  voxRadioButton128x128.Checked := opt_spritevox = 128;
+  voxRadioButton256x256.Checked := opt_spritevox = 256;
+
   UpdateControls;
 end;
 
@@ -197,6 +209,18 @@ begin
   opt_viewdist := Round(fviewdist * OPT_TO_FLOAT);
   opt_theta1 := Round(ftheta * OPT_TO_FLOAT);
   opt_theta2 := Round(ftheta2 * OPT_TO_FLOAT);
+  opt_spritepal := PatchRadioGroup.ItemIndex;
+  opt_spritescript := ScriptRadioGroup.ItemIndex;
+  if GenerateVoxelCheckBox.Checked then
+    opt_dospritevox := 1
+  else
+    opt_dospritevox := 0;
+  if voxRadioButton64x64.Checked then
+    opt_spritevox := 64
+  else if voxRadioButton128x128.Checked then
+    opt_spritevox := 128
+  else if voxRadioButton256x256.Checked then
+    opt_spritevox := 256;
 end;
 
 procedure TExportSpriteForm.FileNameEditChange(Sender: TObject);
