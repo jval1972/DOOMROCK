@@ -125,6 +125,9 @@ end;
 
 procedure TExportVoxelForm.CreateVoxel;
 begin
+  if (tree = nil) or (vox = nil) or (trunktex = nil) or (twigtex = nil) then
+    Exit;
+
   Screen.Cursor := crHourglass;
   try
     case SizeRadioGroup.ItemIndex of
@@ -160,6 +163,9 @@ var
   x, y: integer;
   ln: PLongWordArray;
 begin
+  if (tree = nil) or (vox = nil) or (trunktex = nil) or (twigtex = nil) then
+    Exit;
+
   b := TBitmap.Create;
   try
     b.Width := 256;
