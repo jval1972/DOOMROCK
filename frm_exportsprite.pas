@@ -399,6 +399,7 @@ end;
 procedure TExportSpriteForm.ScriptRadioGroupClick(Sender: TObject);
 begin
   ScriptParametersGroupBox.Visible := ScriptRadioGroup.ItemIndex <> 2;
+  VoxelGroupBox.Visible := ScriptRadioGroup.ItemIndex = 0;
 end;
 
 procedure TExportSpriteForm.PrepareTextures;
@@ -510,48 +511,49 @@ begin
 
     wad.AddSeparator('S_END');
 
-    if GenerateVoxelCheckBox.Checked then
-    begin
-      GetMem(vox, SizeOf(voxelbuffer_t));
-
-      if voxRadioButton64x64.Checked then
-        voxsize := 64
-      else if voxRadioButton128x128.Checked then
-        voxsize := 128
-      else
-        voxsize := 256;
-
-      DT_CreateVoxelFromTree(tree, vox, voxsize, trunktex, twigtex);
-
-      if ScriptRadioGroup.ItemIndex = 0 then
+    if ScriptRadioGroup.ItemIndex = 0 then
+      if GenerateVoxelCheckBox.Checked then
       begin
-        VXE_ExportVoxelToDDVOX(vox, voxsize, 'vxtmp');
-        wad.AddFile(PrefixEdit.Text, 'vxtmp');
-        DeleteFile('vxtmp');
-        wad.AddString('PK3ENTRY', PrefixEdit.Text + '=' + PrefixEdit.Text + '.DDVOX');
-        wad.AddString('VOXELDEF', 'voxeldef ' + PrefixEdit.Text + '.ddvox replace sprite ' + PrefixEdit.Text);
-      end
-      else
-      begin
-        wad.AddSeparator('VX_START');
-        if voxsize = 256 then
-          voxsize := 254;
-        case PatchRadioGroup.ItemIndex of
-        0: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @DoomPaletteRaw, 'vxtmp');
-        1: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @HereticPaletteRaw, 'vxtmp');
-        2: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @HexenPaletteRaw, 'vxtmp');
-        3: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @StrifePaletteRaw, 'vxtmp');
+        GetMem(vox, SizeOf(voxelbuffer_t));
+
+        if voxRadioButton64x64.Checked then
+          voxsize := 64
+        else if voxRadioButton128x128.Checked then
+          voxsize := 128
         else
-          VXE_ExportVoxelToSlab6VOX(vox, voxsize, @RadixPaletteRaw, 'vxtmp');
-        end;
-        wad.AddFile(PrefixEdit.Text, 'vxtmp');
-        DeleteFile('vxtmp');
-        wad.AddSeparator('VX_END');
-        wad.AddString('VOXELDEF', PrefixEdit.Text + '="' + PrefixEdit.Text + '.vox"{'#13#10'}');
-      end;
+          voxsize := 256;
 
-      FreeMem(vox, SizeOf(voxelbuffer_t));
-    end;
+        DT_CreateVoxelFromTree(tree, vox, voxsize, trunktex, twigtex);
+
+        if ScriptRadioGroup.ItemIndex = 0 then
+        begin
+          VXE_ExportVoxelToDDVOX(vox, voxsize, 'vxtmp');
+          wad.AddFile(PrefixEdit.Text, 'vxtmp');
+          DeleteFile('vxtmp');
+          wad.AddString('PK3ENTRY', PrefixEdit.Text + '=' + PrefixEdit.Text + '.DDVOX');
+          wad.AddString('VOXELDEF', 'voxeldef ' + PrefixEdit.Text + '.ddvox replace sprite ' + PrefixEdit.Text);
+        end
+        else
+        begin
+          wad.AddSeparator('VX_START');
+          if voxsize = 256 then
+            voxsize := 254;
+          case PatchRadioGroup.ItemIndex of
+          0: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @DoomPaletteRaw, 'vxtmp');
+          1: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @HereticPaletteRaw, 'vxtmp');
+          2: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @HexenPaletteRaw, 'vxtmp');
+          3: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @StrifePaletteRaw, 'vxtmp');
+          else
+            VXE_ExportVoxelToSlab6VOX(vox, voxsize, @RadixPaletteRaw, 'vxtmp');
+          end;
+          wad.AddFile(PrefixEdit.Text, 'vxtmp');
+          DeleteFile('vxtmp');
+          wad.AddSeparator('VX_END');
+          wad.AddString('VOXELDEF', PrefixEdit.Text + '="' + PrefixEdit.Text + '.vox"{'#13#10'}');
+        end;
+
+        FreeMem(vox, SizeOf(voxelbuffer_t));
+      end;
 
     BackupFile(FileNameEdit.Text);
     wad.SaveToFile(FileNameEdit.Text);
