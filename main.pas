@@ -1,14 +1,28 @@
 //------------------------------------------------------------------------------
 //
-//  DOOMTREE: Doom Tree Sprite Generator
+//  DOOMROCK: Doom Rock Sprite Generator
 //  Copyright (C) 2021 by Jim Valavanis
+//
+//  This program is free software; you can redistribute it and/or
+//  modify it under the terms of the GNU General Public License
+//  as published by the Free Software Foundation; either version 2
+//  of the License, or (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program; if not, write to the Free Software
+//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  02111-1307, USA.
 //
 // DESCRIPTION:
 //  Main Form
 //
 //------------------------------------------------------------------------------
-//  E-Mail: jimmyvalavanis@yahoo.gr
-//  Site  : https://sourceforge.net/projects/doom-tree/
+//  Site  : https://sourceforge.net/projects/doom-rock/
 //------------------------------------------------------------------------------
 
 unit main;
@@ -18,7 +32,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, pngimage, xTGA, jpeg, zBitmap, ComCtrls, ExtCtrls, Buttons, Menus,
-  StdCtrls, AppEvnts, ExtDlgs, clipbrd, ToolWin, dglOpenGL, proctree, dr_undo,
+  StdCtrls, AppEvnts, ExtDlgs, clipbrd, ToolWin, dglOpenGL, procrock, dr_undo,
   dr_filemenuhistory, dr_slider;
 
 type
@@ -209,7 +223,7 @@ type
     ffilename: string;
     savepicturedata: boolean;
     changed: Boolean;
-    tree: tree_t;
+    rock: rock_t;
     rc: HGLRC;   // Rendering Context
     dc: HDC;     // Device Context
     glpanx, glpany: integer;
@@ -242,22 +256,22 @@ type
     closing: boolean;
     procedure Idle(Sender: TObject; var Done: Boolean);
     function CheckCanClose: boolean;
-    procedure DoNewTree(const seed: integer);
-    procedure DoSaveTree(const fname: string);
-    function DoLoadTree(const fname: string): boolean;
+    procedure DoNewRock(const seed: integer);
+    procedure DoSaveRock(const fname: string);
+    function DoLoadRock(const fname: string): boolean;
     procedure SetFileName(const fname: string);
-    procedure DoSaveTreeBinaryUndo(s: TStream);
-    procedure DoLoadTreeBinaryUndo(s: TStream);
+    procedure DoSaveRockBinaryUndo(s: TStream);
+    procedure DoLoadRockBinaryUndo(s: TStream);
     procedure SaveUndo;
     procedure UpdateStausbar;
     procedure UpdateEnable;
-    procedure OnLoadTreeFileMenuHistory(Sender: TObject; const fname: string);
+    procedure OnLoadRockFileMenuHistory(Sender: TObject; const fname: string);
     procedure DoRenderGL;
     procedure Get3dPreviewBitmap(const b: TBitmap);
-    procedure TreeToSliders;
+    procedure RockToSliders;
     procedure SlidersToLabels;
-    procedure TreeToControls;
-    procedure ControlsToTree(Sender: TObject);
+    procedure RockToControls;
+    procedure ControlsToRock(Sender: TObject);
   public
     { Public declarations }
   end;
@@ -273,7 +287,7 @@ uses
   dr_utils,
   dr_voxels,
   dr_palettes,
-  proctree_helpers,
+  procrock_helpers,
   frm_exportsprite,
   frm_exportvoxel;
 
@@ -300,8 +314,8 @@ begin
   PageControl1.ActivePageIndex := 0;
 
   undoManager := TUndoRedoManager.Create;
-  undoManager.OnLoadFromStream := DoLoadTreeBinaryUndo;
-  undoManager.OnSaveToStream := DoSaveTreeBinaryUndo;
+  undoManager.OnLoadFromStream := DoLoadRockBinaryUndo;
+  undoManager.OnSaveToStream := DoSaveRockBinaryUndo;
 
   filemenuhistory := TFileMenuHistory.Create(self);
   filemenuhistory.MenuItem0 := HistoryItem0;
@@ -314,7 +328,7 @@ begin
   filemenuhistory.MenuItem7 := HistoryItem7;
   filemenuhistory.MenuItem8 := HistoryItem8;
   filemenuhistory.MenuItem9 := HistoryItem9;
-  filemenuhistory.OnOpen := OnLoadTreeFileMenuHistory;
+  filemenuhistory.OnOpen := OnLoadRockFileMenuHistory;
 
   filemenuhistory.AddPath(bigstringtostring(@opt_filemenuhistory9));
   filemenuhistory.AddPath(bigstringtostring(@opt_filemenuhistory8));
@@ -345,7 +359,7 @@ begin
       OpenPictureDialog2.InitialDir := sdir + 'Data\Twig';
   end;
 
-  tree := tree_t.Create;
+  rock := rock_t.Create;
 
   Scaled := False;
 
@@ -480,14 +494,14 @@ begin
 
   doCreate := True;
   if ParamCount > 0 then
-    if DoLoadTree(ParamStr(1)) then
+    if DoLoadRock(ParamStr(1)) then
       doCreate := False;
 
   if DoCreate then
   begin
     SetFileName('');
     changed := False;
-    TreeToControls;
+    RockToControls;
     glneedsupdate := True;
     needsrecalc := True;
     undoManager.Clear;
@@ -534,16 +548,16 @@ begin
   if not CheckCanClose then
     Exit;
 
-  DoNewTree(random($10000));
+  DoNewRock(random($10000));
   ResetCamera;
 end;
 
-procedure TForm1.DoNewTree(const seed: integer);
+procedure TForm1.DoNewRock(const seed: integer);
 begin
   SetFileName('');
   changed := False;
-  tree.mProperties.DefaultValues(seed);
-  TreeToControls;
+  rock.mProperties.DefaultValues(seed);
+  RockToControls;
   glneedsupdate := True;
   needsrecalc := True;
   undoManager.Clear;
@@ -573,10 +587,10 @@ begin
     end;
   end;
   BackupFile(ffilename);
-  DoSaveTree(ffilename);
+  DoSaveRock(ffilename);
 end;
 
-procedure TForm1.DoSaveTree(const fname: string);
+procedure TForm1.DoSaveRock(const fname: string);
 var
   fs: TFileStream;
   m: TMemoryStream;
@@ -587,7 +601,7 @@ begin
 
   fs := TFileStream.Create(fname, fmCreate);
   try
-    PT_SavePropertiesBinary(tree.mProperties, fs);
+    PT_SavePropertiesBinary(rock.mProperties, fs);
 
     if savepicturedata then
     begin
@@ -622,7 +636,7 @@ begin
   changed := False;
 end;
 
-function TForm1.DoLoadTree(const fname: string): boolean;
+function TForm1.DoLoadRock(const fname: string): boolean;
 var
   fs: TFileStream;
   s: string;
@@ -643,7 +657,7 @@ begin
 
   fs := TFileStream.Create(fname, fmOpenRead or fmShareDenyWrite);
   try
-    PT_LoadPropertiesBinary(tree.mProperties, fs);
+    PT_LoadPropertiesBinary(rock.mProperties, fs);
 
     if savepicturedata then
     begin
@@ -697,7 +711,7 @@ begin
     twigtexture := gld_CreateTexture(TwigImage.Picture, True);
   end;
   
-  TreeToControls;
+  RockToControls;
   filemenuhistory.AddPath(fname);
   SetFileName(fname);
   glneedsupdate := True;
@@ -752,7 +766,7 @@ begin
   TwistsSlider.Free;
   TruncLengthSlider.Free;
 
-  tree.Free;
+  rock.Free;
 end;
 
 procedure TForm1.AboutButton1Click(Sender: TObject);
@@ -774,7 +788,7 @@ begin
   begin
     filemenuhistory.AddPath(SaveDialog1.FileName);
     BackupFile(SaveDialog1.FileName);
-    DoSaveTree(SaveDialog1.FileName);
+    DoSaveRock(SaveDialog1.FileName);
   end;
 end;
 
@@ -790,7 +804,7 @@ begin
 
   if OpenDialog1.Execute then
   begin
-    DoLoadTree(OpenDialog1.FileName);
+    DoLoadRock(OpenDialog1.FileName);
     ResetCamera;
   end;
 end;
@@ -970,15 +984,15 @@ begin
   end;
 end;
 
-procedure TForm1.DoSaveTreeBinaryUndo(s: TStream);
+procedure TForm1.DoSaveRockBinaryUndo(s: TStream);
 begin
-  PT_SavePropertiesBinary(tree.mProperties, s);
+  PT_SavePropertiesBinary(rock.mProperties, s);
 end;
 
-procedure TForm1.DoLoadTreeBinaryUndo(s: TStream);
+procedure TForm1.DoLoadRockBinaryUndo(s: TStream);
 begin
-  PT_LoadPropertiesBinary(tree.mProperties, s);
-  TreeToControls;
+  PT_LoadPropertiesBinary(rock.mProperties, s);
+  RockToControls;
   glneedsupdate := True;
   needsrecalc := True;
 end;
@@ -1012,12 +1026,12 @@ begin
   RedoButton1.Enabled := undoManager.CanRedo;
 end;
 
-procedure TForm1.OnLoadTreeFileMenuHistory(Sender: TObject; const fname: string);
+procedure TForm1.OnLoadRockFileMenuHistory(Sender: TObject; const fname: string);
 begin
   if not CheckCanClose then
     Exit;
 
-  DoLoadTree(fname);
+  DoLoadRock(fname);
   ResetCamera;
 end;
 
@@ -1034,11 +1048,11 @@ begin
     try
       if needsrecalc then
       begin
-        tree.generate;
+        rock.generate;
         needsrecalc := False;
       end;
       glRenderEnviroment;
-      glRenderTree(tree);
+      glRenderRock(rock);
     finally
       glEndScene(dc);
     end;
@@ -1164,7 +1178,7 @@ begin
     Key := #0;
 end;
 
-procedure TForm1.TreeToSliders;
+procedure TForm1.RockToSliders;
 begin
   BranchSegmentsSlider.OnSliderHookChange := nil;
   BranchLevelsSlider.OnSliderHookChange := nil;
@@ -1188,27 +1202,27 @@ begin
   TwistsSlider.OnSliderHookChange := nil;
   TruncLengthSlider.OnSliderHookChange := nil;
 
-  BranchSegmentsSlider.Position := tree.mProperties.mSegments;
-  BranchLevelsSlider.Position := tree.mProperties.mLevels;
-  TruncForksSlider.Position := tree.mProperties.mTreeSteps;
-  TextureVMultiplierSlider.Position := tree.mProperties.mVMultiplier;
-  TwigScaleSlider.Position := tree.mProperties.mTwigScale;
-  InitialLengthSlider.Position := tree.mProperties.mInitialBranchLength;
-  LenFalloffRateSlider.Position := tree.mProperties.mLengthFalloffFactor;
-  LenFalloffPowerSlider.Position := tree.mProperties.mLengthFalloffPower;
-  MaxClumpingSlider.Position := tree.mProperties.mClumpMax;
-  MinClumpingSlider.Position := tree.mProperties.mClumpMin;
-  SymmetrySlider.Position := tree.mProperties.mBranchFactor;
-  DropSlider.Position := tree.mProperties.mDropAmount;
-  GrowthSlider.Position := tree.mProperties.mGrowAmount;
-  SweepSlider.Position := tree.mProperties.mSweepAmount;
-  TruncRadiusSlider.Position := tree.mProperties.mMaxRadius;
-  RadiusFalloffSlider.Position := tree.mProperties.mRadiusFalloffRate;
-  ClimbRateSlider.Position := tree.mProperties.mClimbRate;
-  KinkSlider.Position := tree.mProperties.mTrunkKink;
-  TaperRateSlider.Position := tree.mProperties.mTaperRate;
-  TwistsSlider.Position := tree.mProperties.mRadiusFalloffRate;
-  TruncLengthSlider.Position := tree.mProperties.mTrunkLength;
+  BranchSegmentsSlider.Position := rock.mProperties.mSegments;
+  BranchLevelsSlider.Position := rock.mProperties.mLevels;
+  TruncForksSlider.Position := rock.mProperties.mRockSteps;
+  TextureVMultiplierSlider.Position := rock.mProperties.mVMultiplier;
+  TwigScaleSlider.Position := rock.mProperties.mTwigScale;
+  InitialLengthSlider.Position := rock.mProperties.mInitialBranchLength;
+  LenFalloffRateSlider.Position := rock.mProperties.mLengthFalloffFactor;
+  LenFalloffPowerSlider.Position := rock.mProperties.mLengthFalloffPower;
+  MaxClumpingSlider.Position := rock.mProperties.mClumpMax;
+  MinClumpingSlider.Position := rock.mProperties.mClumpMin;
+  SymmetrySlider.Position := rock.mProperties.mBranchFactor;
+  DropSlider.Position := rock.mProperties.mDropAmount;
+  GrowthSlider.Position := rock.mProperties.mGrowAmount;
+  SweepSlider.Position := rock.mProperties.mSweepAmount;
+  TruncRadiusSlider.Position := rock.mProperties.mMaxRadius;
+  RadiusFalloffSlider.Position := rock.mProperties.mRadiusFalloffRate;
+  ClimbRateSlider.Position := rock.mProperties.mClimbRate;
+  KinkSlider.Position := rock.mProperties.mTrunkKink;
+  TaperRateSlider.Position := rock.mProperties.mTaperRate;
+  TwistsSlider.Position := rock.mProperties.mRadiusFalloffRate;
+  TruncLengthSlider.Position := rock.mProperties.mTrunkLength;
 
   BranchSegmentsPaintBox.Invalidate;
   BranchLevelsPaintBox.Invalidate;
@@ -1232,27 +1246,27 @@ begin
   TwistsPaintBox.Invalidate;
   TruncLengthPaintBox.Invalidate;
 
-  BranchSegmentsSlider.OnSliderHookChange := ControlsToTree;
-  BranchLevelsSlider.OnSliderHookChange := ControlsToTree;
-  TruncForksSlider.OnSliderHookChange := ControlsToTree;
-  TextureVMultiplierSlider.OnSliderHookChange := ControlsToTree;
-  TwigScaleSlider.OnSliderHookChange := ControlsToTree;
-  InitialLengthSlider.OnSliderHookChange := ControlsToTree;
-  LenFalloffRateSlider.OnSliderHookChange := ControlsToTree;
-  LenFalloffPowerSlider.OnSliderHookChange := ControlsToTree;
-  MaxClumpingSlider.OnSliderHookChange := ControlsToTree;
-  MinClumpingSlider.OnSliderHookChange := ControlsToTree;
-  SymmetrySlider.OnSliderHookChange := ControlsToTree;
-  DropSlider.OnSliderHookChange := ControlsToTree;
-  GrowthSlider.OnSliderHookChange := ControlsToTree;
-  SweepSlider.OnSliderHookChange := ControlsToTree;
-  TruncRadiusSlider.OnSliderHookChange := ControlsToTree;
-  RadiusFalloffSlider.OnSliderHookChange := ControlsToTree;
-  ClimbRateSlider.OnSliderHookChange := ControlsToTree;
-  KinkSlider.OnSliderHookChange := ControlsToTree;
-  TaperRateSlider.OnSliderHookChange := ControlsToTree;
-  TwistsSlider.OnSliderHookChange := ControlsToTree;
-  TruncLengthSlider.OnSliderHookChange := ControlsToTree;
+  BranchSegmentsSlider.OnSliderHookChange := ControlsToRock;
+  BranchLevelsSlider.OnSliderHookChange := ControlsToRock;
+  TruncForksSlider.OnSliderHookChange := ControlsToRock;
+  TextureVMultiplierSlider.OnSliderHookChange := ControlsToRock;
+  TwigScaleSlider.OnSliderHookChange := ControlsToRock;
+  InitialLengthSlider.OnSliderHookChange := ControlsToRock;
+  LenFalloffRateSlider.OnSliderHookChange := ControlsToRock;
+  LenFalloffPowerSlider.OnSliderHookChange := ControlsToRock;
+  MaxClumpingSlider.OnSliderHookChange := ControlsToRock;
+  MinClumpingSlider.OnSliderHookChange := ControlsToRock;
+  SymmetrySlider.OnSliderHookChange := ControlsToRock;
+  DropSlider.OnSliderHookChange := ControlsToRock;
+  GrowthSlider.OnSliderHookChange := ControlsToRock;
+  SweepSlider.OnSliderHookChange := ControlsToRock;
+  TruncRadiusSlider.OnSliderHookChange := ControlsToRock;
+  RadiusFalloffSlider.OnSliderHookChange := ControlsToRock;
+  ClimbRateSlider.OnSliderHookChange := ControlsToRock;
+  KinkSlider.OnSliderHookChange := ControlsToRock;
+  TaperRateSlider.OnSliderHookChange := ControlsToRock;
+  TwistsSlider.OnSliderHookChange := ControlsToRock;
+  TruncLengthSlider.OnSliderHookChange := ControlsToRock;
 end;
 
 procedure TForm1.SlidersToLabels;
@@ -1280,45 +1294,45 @@ begin
   TruncLengthLabel.Caption := Format('%1.3f', [TruncLengthSlider.Position]);
 end;
 
-procedure TForm1.TreeToControls;
+procedure TForm1.RockToControls;
 begin
   if closing then
     Exit;
 
-  SeedEdit.Text := IntToStr(tree.mProperties.mSeed);
-  TreeToSliders;
+  SeedEdit.Text := IntToStr(rock.mProperties.mSeed);
+  RockToSliders;
   SlidersToLabels;
 end;
 
-procedure TForm1.ControlsToTree(Sender: TObject);
+procedure TForm1.ControlsToRock(Sender: TObject);
 begin
   if closing then
     Exit;
 
   SaveUndo;
   SlidersToLabels;
-  tree.mProperties.mSeed := StrToIntDef(SeedEdit.Text, 262);
-  tree.mProperties.mSegments := Round(BranchSegmentsSlider.Position / 2) * 2;
-  tree.mProperties.mLevels := Round(BranchLevelsSlider.Position);
-  tree.mProperties.mTreeSteps := Round(TruncForksSlider.Position);
-  tree.mProperties.mVMultiplier := TextureVMultiplierSlider.Position;
-  tree.mProperties.mTwigScale := TwigScaleSlider.Position;
-  tree.mProperties.mInitialBranchLength := InitialLengthSlider.Position;
-  tree.mProperties.mLengthFalloffFactor := LenFalloffRateSlider.Position;
-  tree.mProperties.mLengthFalloffPower := LenFalloffPowerSlider.Position;
-  tree.mProperties.mClumpMax := MaxClumpingSlider.Position;
-  tree.mProperties.mClumpMin := MinClumpingSlider.Position;
-  tree.mProperties.mBranchFactor := SymmetrySlider.Position;
-  tree.mProperties.mDropAmount := DropSlider.Position;
-  tree.mProperties.mGrowAmount := GrowthSlider.Position;
-  tree.mProperties.mSweepAmount := SweepSlider.Position;
-  tree.mProperties.mMaxRadius := TruncRadiusSlider.Position;
-  tree.mProperties.mRadiusFalloffRate := RadiusFalloffSlider.Position;
-  tree.mProperties.mClimbRate := ClimbRateSlider.Position;
-  tree.mProperties.mTrunkKink := KinkSlider.Position;
-  tree.mProperties.mTaperRate := TaperRateSlider.Position;
-  tree.mProperties.mRadiusFalloffRate := TwistsSlider.Position;
-  tree.mProperties.mTrunkLength := TruncLengthSlider.Position;
+  rock.mProperties.mSeed := StrToIntDef(SeedEdit.Text, 262);
+  rock.mProperties.mSegments := Round(BranchSegmentsSlider.Position / 2) * 2;
+  rock.mProperties.mLevels := Round(BranchLevelsSlider.Position);
+  rock.mProperties.mRockSteps := Round(TruncForksSlider.Position);
+  rock.mProperties.mVMultiplier := TextureVMultiplierSlider.Position;
+  rock.mProperties.mTwigScale := TwigScaleSlider.Position;
+  rock.mProperties.mInitialBranchLength := InitialLengthSlider.Position;
+  rock.mProperties.mLengthFalloffFactor := LenFalloffRateSlider.Position;
+  rock.mProperties.mLengthFalloffPower := LenFalloffPowerSlider.Position;
+  rock.mProperties.mClumpMax := MaxClumpingSlider.Position;
+  rock.mProperties.mClumpMin := MinClumpingSlider.Position;
+  rock.mProperties.mBranchFactor := SymmetrySlider.Position;
+  rock.mProperties.mDropAmount := DropSlider.Position;
+  rock.mProperties.mGrowAmount := GrowthSlider.Position;
+  rock.mProperties.mSweepAmount := SweepSlider.Position;
+  rock.mProperties.mMaxRadius := TruncRadiusSlider.Position;
+  rock.mProperties.mRadiusFalloffRate := RadiusFalloffSlider.Position;
+  rock.mProperties.mClimbRate := ClimbRateSlider.Position;
+  rock.mProperties.mTrunkKink := KinkSlider.Position;
+  rock.mProperties.mTaperRate := TaperRateSlider.Position;
+  rock.mProperties.mRadiusFalloffRate := TwistsSlider.Position;
+  rock.mProperties.mTrunkLength := TruncLengthSlider.Position;
   needsrecalc := True;
   changed := True;
 end;
@@ -1326,7 +1340,7 @@ end;
 procedure TForm1.SeedEditChange(Sender: TObject);
 begin
   SaveUndo;
-  tree.mProperties.mSeed := StrToIntDef(SeedEdit.Text, 262);
+  rock.mProperties.mSeed := StrToIntDef(SeedEdit.Text, 262);
   needsrecalc := True;
   changed := True;
 end;
@@ -1341,7 +1355,7 @@ begin
     fs := TFileStream.Create(SaveDialog2.FileName, fmCreate);
     try
 
-      PT_SaveTreeToObj(tree, fs);
+      PT_SaveRockToObj(rock, fs);
     finally
       fs.Free;
     end;
@@ -1373,7 +1387,7 @@ var
 begin
   f := TExportSpriteForm.Create(nil);
   try
-    f.tree := tree;
+    f.rock := rock;
     f.twigtex.Canvas.StretchDraw(Rect(0, 0, f.twigtex.Width, f.twigtex.Height), TwigImage.Picture.Graphic);
     f.trunktex.Canvas.StretchDraw(Rect(0, 0, f.trunktex.Width, f.trunktex.Height), TrunkImage.Picture.Graphic);
     f.PrepareTextures;
@@ -1409,7 +1423,7 @@ begin
       trunktex.PixelFormat := pf32bit;
       twigtex.Canvas.StretchDraw(Rect(0, 0, twigtex.Width, twigtex.Height), TwigImage.Picture.Graphic);
       trunktex.Canvas.StretchDraw(Rect(0, 0, trunktex.Width, trunktex.Height), TrunkImage.Picture.Graphic);
-      f.SetTreeVoxelParams(tree, buf, twigtex, trunktex);
+      f.SetRockVoxelParams(rock, buf, twigtex, trunktex);
       f.ShowModal;
       if f.ModalResult = mrOK then
       begin

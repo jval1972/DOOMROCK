@@ -1,14 +1,28 @@
 //------------------------------------------------------------------------------
 //
-//  DOOMTREE: Doom Tree Sprite Generator
+//  DOOMROCK: Doom Rock Sprite Generator
 //  Copyright (C) 2021 by Jim Valavanis
+//
+//  This program is free software; you can redistribute it and/or
+//  modify it under the terms of the GNU General Public License
+//  as published by the Free Software Foundation; either version 2
+//  of the License, or (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program; if not, write to the Free Software
+//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  02111-1307, USA.
 //
 // DESCRIPTION:
 //  Export Voxel Form
 //
 //------------------------------------------------------------------------------
-//  E-Mail: jimmyvalavanis@yahoo.gr
-//  Site  : https://sourceforge.net/projects/doom-tree/
+//  Site  : https://sourceforge.net/projects/doom-rock/
 //------------------------------------------------------------------------------
 
 unit frm_exportvoxel;
@@ -17,7 +31,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ComCtrls, ExtCtrls, Buttons, proctree, dr_voxels;
+  Dialogs, StdCtrls, ComCtrls, ExtCtrls, Buttons, procrock, dr_voxels;
 
 type
   TExportVoxelForm = class(TForm)
@@ -52,7 +66,7 @@ type
   private
     { Private declarations }
   protected
-    tree: tree_t;
+    rock: rock_t;
     twigtex, trunktex: TBitmap;
     vox: voxelbuffer_p;
     procedure UpdateControls;
@@ -60,7 +74,7 @@ type
   public
     { Public declarations }
     voxsize: integer;
-    procedure SetTreeVoxelParams(const atree: tree_t; const avox: voxelbuffer_p;
+    procedure SetRockVoxelParams(const arock: rock_t; const avox: voxelbuffer_p;
       atwigtex, atrunktex: TBitmap);
   end;
 
@@ -77,7 +91,7 @@ procedure TExportVoxelForm.FormCreate(Sender: TObject);
 var
   i: integer;
 begin
-  tree := nil;
+  rock := nil;
   twigtex := nil;
   trunktex := nil;
   vox := nil;
@@ -112,10 +126,10 @@ begin
     PatchRadioGroup.ItemIndex := 0;
 end;
 
-procedure TExportVoxelForm.SetTreeVoxelParams(const atree: tree_t; const avox: voxelbuffer_p;
+procedure TExportVoxelForm.SetRockVoxelParams(const arock: rock_t; const avox: voxelbuffer_p;
   atwigtex, atrunktex: TBitmap);
 begin
-  tree := atree;
+  rock := arock;
   vox  := avox;
   twigtex := atwigtex;
   trunktex := atrunktex;
@@ -125,7 +139,7 @@ end;
 
 procedure TExportVoxelForm.CreateVoxel;
 begin
-  if (tree = nil) or (vox = nil) or (trunktex = nil) or (twigtex = nil) then
+  if (rock = nil) or (vox = nil) or (trunktex = nil) or (twigtex = nil) then
     Exit;
 
   Screen.Cursor := crHourglass;
@@ -137,7 +151,7 @@ begin
     else
       voxsize := 256;
     end;
-    DT_CreateVoxelFromTree(tree, vox, voxsize, trunktex, twigtex);
+    DT_CreateVoxelFromRock(rock, vox, voxsize, trunktex, twigtex);
   finally
     Screen.Cursor := crDefault;
   end;
@@ -163,7 +177,7 @@ var
   x, y: integer;
   ln: PLongWordArray;
 begin
-  if (tree = nil) or (vox = nil) or (trunktex = nil) or (twigtex = nil) then
+  if (rock = nil) or (vox = nil) or (trunktex = nil) or (twigtex = nil) then
     Exit;
 
   b := TBitmap.Create;

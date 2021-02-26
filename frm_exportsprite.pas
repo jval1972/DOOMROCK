@@ -1,14 +1,28 @@
 //------------------------------------------------------------------------------
 //
-//  DOOMTREE: Doom Tree Sprite Generator
+//  DOOMROCK: Doom Rock Sprite Generator
 //  Copyright (C) 2021 by Jim Valavanis
+//
+//  This program is free software; you can redistribute it and/or
+//  modify it under the terms of the GNU General Public License
+//  as published by the Free Software Foundation; either version 2
+//  of the License, or (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program; if not, write to the Free Software
+//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  02111-1307, USA.
 //
 // DESCRIPTION:
 //  Export Sprite Form
 //
 //------------------------------------------------------------------------------
-//  E-Mail: jimmyvalavanis@yahoo.gr
-//  Site  : https://sourceforge.net/projects/doom-tree/
+//  Site  : https://sourceforge.net/projects/doom-rock/
 //------------------------------------------------------------------------------
 
 unit frm_exportsprite;
@@ -17,7 +31,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, Buttons, dr_soft3d, proctree, ComCtrls;
+  Dialogs, StdCtrls, ExtCtrls, Buttons, dr_soft3d, procrock, ComCtrls;
 
 type
   TExportSpriteForm = class(TForm)
@@ -89,14 +103,13 @@ type
     fdevicewidth, fdeviceheight: integer;
     fviewdist, ftheta, ftheta2: float;
     procedure RenderFaces(const mVertCount, mFaceCount: integer;
-      const mVert, mNormal: array of fvec3_t; const mUV: array of fvec2_t;
-      const mFace: array of ivec3_t; const tex: TBitmap);
+      const mVert: array of fvec5_t; const mFace: array of ivec3_t; const tex: TBitmap);
     procedure DoUpdate3d;
     procedure UpdateControls;
     function CheckOKtoGO: boolean;
   public
     { Public declarations }
-    tree: tree_t;
+    rock: rock_t;
     twigtex, trunktex: TBitmap;
     procedure PrepareTextures;
     procedure DoExportSpriteWAD;
@@ -108,7 +121,7 @@ implementation
 
 uses
   Math,
-  proctree_helpers,
+  procrock_helpers,
   dr_defs,
   dr_utils,
   dr_wadwriter,
@@ -230,8 +243,7 @@ begin
 end;
 
 procedure TExportSpriteForm.RenderFaces(const mVertCount, mFaceCount: integer;
-  const mVert, mNormal: array of fvec3_t; const mUV: array of fvec2_t;
-  const mFace: array of ivec3_t; const tex: TBitmap);
+  const mVert: array of fvec5_t; const mFace: array of ivec3_t; const tex: TBitmap);
 var
   v1, v2, v3: vertex_t;
   i: integer;
@@ -241,8 +253,8 @@ var
     p.pos.y := mVert[r].z;
     p.pos.z := mVert[r].y;
     p.pos.w := 1.0;
-    p.tc.u := mUV[r].u;
-    p.tc.v := mUV[r].v;
+    p.tc.u := mVert[r].u;
+    p.tc.v := mVert[r].v;
     p.color.r := 1.0;
     p.color.g := 1.0;
     p.color.b := 1.0;
@@ -271,14 +283,7 @@ begin
 	device.transform.world := c;
 	transform_update(@device.transform);
   device.render_state := RENDER_STATE_TEXTURE_SOLID;
-  RenderFaces(tree.mVertCount, tree.mFaceCount, tree.mVert, tree.mNormal,
-    tree.mUV, tree.mFace, trunktex);
-  if opt_rendertwig then
-  begin
-    device.render_state := RENDER_STATE_TEXTURE_ALPHAZERO;
-    RenderFaces(tree.mTwigVertCount, tree.mTwigFaceCount, tree.mTwigVert, tree.mTwigNormal,
-      tree.mTwigUV, tree.mTwigFace, twigtex);
-  end;
+  RenderFaces(rock.mVertCount, rock.mFaceCount, rock.mVert, rock.mFace, trunktex);
 
   buffer.Canvas.StretchDraw(Rect(0, 0, buffer.Width, buffer.Height), device.bframebuffer);
   needs3dupdate := False;
@@ -474,8 +479,8 @@ begin
 
       ms := TMemoryStream.Create;
       try
-        PT_SavePropertiesBinary(tree.mProperties, ms);
-        wad.AddData('DOOMTREE', ms.Memory, ms.Size);
+        PT_SavePropertiesBinary(rock.mProperties, ms);
+        wad.AddData('DOOMROCK', ms.Memory, ms.Size);
       finally
         ms.Free;
       end;
@@ -547,7 +552,7 @@ begin
         else
           voxsize := 256;
 
-        DT_CreateVoxelFromTree(tree, vox, voxsize, trunktex, twigtex);
+        DT_CreateVoxelFromRock(rock, vox, voxsize, trunktex, twigtex);
 
         if ScriptRadioGroup.ItemIndex = 0 then
         begin

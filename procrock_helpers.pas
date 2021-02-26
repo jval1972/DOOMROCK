@@ -1,28 +1,42 @@
 //------------------------------------------------------------------------------
 //
-//  DOOMTREE: Doom Tree Sprite Generator
+//  DOOMROCK: Doom Rock Sprite Generator
 //  Copyright (C) 2021 by Jim Valavanis
+//
+//  This program is free software; you can redistribute it and/or
+//  modify it under the terms of the GNU General Public License
+//  as published by the Free Software Foundation; either version 2
+//  of the License, or (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program; if not, write to the Free Software
+//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  02111-1307, USA.
 //
 // DESCRIPTION:
 //  Utility functions
 //
 //------------------------------------------------------------------------------
-//  E-Mail: jimmyvalavanis@yahoo.gr
-//  Site  : https://sourceforge.net/projects/doom-tree/
+//  Site  : https://sourceforge.net/projects/doom-rock/
 //------------------------------------------------------------------------------
 
-unit proctree_helpers;
+unit procrock_helpers;
 
 interface
 
 uses
-  Classes, proctree;
+  Classes, procrock;
 
 procedure PT_SavePropertiesBinary(const p: properties_t; const s: TStream);
 
 procedure PT_LoadPropertiesBinary(const p: properties_t; const s: TStream);
 
-procedure PT_SaveTreeToObj(const t: tree_t; const s: TStream);
+procedure PT_SaveRockToObj(const t: rock_t; const s: TStream);
 
 implementation
 
@@ -42,7 +56,7 @@ begin
     s.Write(mClimbRate, SizeOf(single));
     s.Write(mTrunkKink, SizeOf(single));
     s.Write(mMaxRadius, SizeOf(single));
-    s.Write(mTreeSteps, SizeOf(integer));
+    s.Write(mRockSteps, SizeOf(integer));
     s.Write(mTaperRate, SizeOf(single));
     s.Write(mTwistRate, SizeOf(single));
     s.Write(mSegments, SizeOf(integer));
@@ -72,7 +86,7 @@ begin
     s.Read(mClimbRate, SizeOf(single));
     s.Read(mTrunkKink, SizeOf(single));
     s.Read(mMaxRadius, SizeOf(single));
-    s.Read(mTreeSteps, SizeOf(integer));
+    s.Read(mRockSteps, SizeOf(integer));
     s.Read(mTaperRate, SizeOf(single));
     s.Read(mTwistRate, SizeOf(single));
     s.Read(mSegments, SizeOf(integer));
@@ -89,7 +103,7 @@ begin
   end;
 end;
 
-procedure PT_SaveTreeToObj(const t: tree_t; const s: TStream);
+procedure PT_SaveRockToObj(const t: rock_t; const s: TStream);
 var
   i: integer;
   a, b, c: integer;
@@ -113,26 +127,26 @@ var
 begin
   buf := '';
 
-  Add('mtllib tree.mtl'#13#10);
+  Add('mtllib rock.mtl'#13#10);
   for i := 0 to t.mVertCount - 1 do
     Add('v ' + F2S(t.mVert[i].x) + ' ' + F2S(t.mVert[i].y) + ' ' +  F2S(t.mVert[i].z) + #13#10);
 
-  for i := 0 to t.mTwigVertCount - 1 do
-    Add('v ' + F2S(t.mTwigVert[i].x) + ' ' + F2S(t.mTwigVert[i].y) + ' ' + F2S(t.mTwigVert[i].z) + #13#10);
+{  for i := 0 to t.mTwigVertCount - 1 do
+    Add('v ' + F2S(t.mTwigVert[i].x) + ' ' + F2S(t.mTwigVert[i].y) + ' ' + F2S(t.mTwigVert[i].z) + #13#10);}
+
+{  for i := 0 to t.mVertCount - 1 do
+    Add('vn ' + F2S(t.mNormal[i].x) + ' ' +  F2S(t.mNormal[i].y) + ' ' + F2S(t.mNormal[i].z) + #13#10);}
+
+{  for i := 0 to t.mTwigVertCount - 1 do
+    Add('vn ' + F2S(t.mTwigNormal[i].x) + ' ' + F2S(t.mTwigNormal[i].y) + ' ' + F2S(t.mTwigNormal[i].z) + #13#10);}
 
   for i := 0 to t.mVertCount - 1 do
-    Add('vn ' + F2S(t.mNormal[i].x) + ' ' +  F2S(t.mNormal[i].y) + ' ' + F2S(t.mNormal[i].z) + #13#10);
+    Add('vt ' + F2S(t.mVert[i].u) + ' ' + F2S(t.mVert[i].v) + #13#10);
 
-  for i := 0 to t.mTwigVertCount - 1 do
-    Add('vn ' + F2S(t.mTwigNormal[i].x) + ' ' + F2S(t.mTwigNormal[i].y) + ' ' + F2S(t.mTwigNormal[i].z) + #13#10);
+{  for i := 0 to t.mTwigVertCount - 1 do
+    Add('vt ' + F2S(t.mTwigUV[i].u) + ' ' + F2S(t.mTwigUV[i].v) + #13#10);}
 
-  for i := 0 to t.mVertCount - 1 do
-    Add('vt ' + F2S(t.mUV[i].u) + ' ' + F2S(t.mUV[i].v) + #13#10);
-
-  for i := 0 to t.mTwigVertCount - 1 do
-    Add('vt ' + F2S(t.mTwigUV[i].u) + ' ' + F2S(t.mTwigUV[i].v) + #13#10);
-
-  Add('g tree\nusemtl tree'#13#10);
+  Add('g rock\nusemtl rock'#13#10);
   for i := 0 to t.mFaceCount - 1 do
   begin
     a := t.mFace[i].x + 1;
@@ -141,14 +155,14 @@ begin
     Add(Format('f %d/%d/%d %d/%d/%d %d/%d/%d'#13#10, [a, a, a, b, b, b, c, c, c]));
   end;
 
-  Add('g twig\nusemtl twig'#13#10);
+{  Add('g twig\nusemtl twig'#13#10);
   for i := 0 to t.mTwigFaceCount - 1 do
   begin
     a := t.mTwigFace[i].x + t.mVertCount + 1;
     b := t.mTwigFace[i].y + t.mVertCount + 1;
     c := t.mTwigFace[i].z + t.mVertCount + 1;
     Add(Format('f %d/%d/%d %d/%d/%d %d/%d/%d'#13#10, [a, a, a, b, b, b, c, c, c]));
-  end;
+  end;}
 
   for i := 1 to Length(buf) do
     s.Write(buf[i], SizeOf(char));

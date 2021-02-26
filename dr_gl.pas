@@ -30,7 +30,7 @@ uses
   Windows,
   Graphics,
   dglOpenGL,
-  proctree;
+  procrock;
 
 var
   gld_max_texturesize: integer = 0;
@@ -44,7 +44,7 @@ procedure ResetCamera;
 procedure glBeginScene(const Width, Height: integer);
 procedure glEndScene(dc: HDC);
 procedure glRenderEnviroment;
-procedure glRenderTree(const t: tree_t);
+procedure glRenderRock(const t: rock_t);
 
 type
   TCDCamera = record
@@ -250,13 +250,12 @@ begin
 end;
 
 procedure glRenderFaces(const mVertCount, mFaceCount: integer;
-  const mVert, mNormal: array of fvec3_t; const mUV: array of fvec2_t;
-  const mFace: array of ivec3_t);
+  const mVert: array of fvec5_t; const mFace: array of ivec3_t);
 var
   i: integer;
   procedure _render_rover(const r: integer);
   begin
-    glTexCoord2f(mUV[r].u, mUV[r].v);
+    glTexCoord2f(mVert[r].u, mVert[r].v);
     glvertex3f(mVert[r].x, mVert[r].y, mVert[r].z);
   end;
 begin
@@ -271,7 +270,7 @@ begin
   pt_rendredtriangles := pt_rendredtriangles + mFaceCount;
 end;
 
-procedure glRenderTree(const t: tree_t);
+procedure glRenderRock(const t: rock_t);
 begin
   if opt_renderwireframe then
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE )
@@ -288,16 +287,7 @@ begin
   glBindTexture(GL_TEXTURE_2D, trunktexture);
 
   pt_rendredtriangles := 0;
-  glRenderFaces(t.mVertCount, t.mFaceCount, t.mVert, t.mNormal, t.mUV, t.mFace);
-  if opt_rendertwig then
-  begin
-    glBindTexture(GL_TEXTURE_2D, twigtexture);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GEQUAL, 0.5);
-    glRenderFaces(t.mTwigVertCount, t.mTwigFaceCount, t.mTwigVert, t.mTwigNormal, t.mTwigUV, t.mTwigFace);
-  end;
+  glRenderFaces(t.mVertCount, t.mFaceCount, t.mVert, t.mFace);
 
   glBindTexture(GL_TEXTURE_2D, 0);
   glDisable(GL_TEXTURE_2D);

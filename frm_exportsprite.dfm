@@ -12916,7 +12916,7 @@ object ExportSpriteForm: TExportSpriteForm
       CharCase = ecUpperCase
       MaxLength = 5
       TabOrder = 0
-      Text = 'TREEA'
+      Text = 'ROCKA'
     end
   end
   object PatchRadioGroup: TRadioGroup
@@ -13126,7 +13126,7 @@ object ExportSpriteForm: TExportSpriteForm
       Height = 21
       MaxLength = 25
       TabOrder = 0
-      Text = 'Tree1'
+      Text = 'Rock1'
     end
     object EditorNumberEdit: TEdit
       Left = 88

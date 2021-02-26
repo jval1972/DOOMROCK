@@ -35,10 +35,10 @@ uses
   SysUtils,
   Graphics,
   dr_voxels,
-  proctree,
+  procrock,
   dr_voxelizer;
 
-procedure DT_CreateVoxelFromTree(const t: tree_t; const vox: voxelbuffer_p;
+procedure DT_CreateVoxelFromRock(const t: rock_t; const vox: voxelbuffer_p;
   const voxsize: integer; const trunktex, twigtex: TBitmap);
 
 implementation
@@ -46,9 +46,9 @@ implementation
 uses
   dr_defs;
 
-procedure DT_CreateVoxelFacesFromTree(const mVertCount, mFaceCount: integer;
-  const mVert, mNormal: array of fvec3_t; const mUV: array of fvec2_t;
-  const mFace: array of ivec3_t; const scale: single; const vox: voxelbuffer_p;
+procedure DT_CreateVoxelFacesFromRock(const mVertCount, mFaceCount: integer;
+  const mVert: array of fvec5_t; const mFace: array of ivec3_t;
+  const scale: single; const vox: voxelbuffer_p;
   const voxsize: integer; const tex: TBitmap; const opaque: boolean);
 var
   tri: meshtriangle_t;
@@ -59,8 +59,8 @@ var
     tri[g].x := mVert[r].x * scale + ofs;
     tri[g].y := voxsize - 1.0 - mVert[r].y * scale;
     tri[g].z := mVert[r].z * scale + ofs;
-    tri[g].u := mUV[r].u;
-    tri[g].v := mUV[r].v;
+    tri[g].u := mVert[r].u;
+    tri[g].v := mVert[r].v;
   end;
 begin
   ofs := voxsize div 2;
@@ -73,7 +73,7 @@ begin
   end;
 end;
 
-procedure DT_CreateVoxelFromTree(const t: tree_t; const vox: voxelbuffer_p;
+procedure DT_CreateVoxelFromRock(const t: rock_t; const vox: voxelbuffer_p;
   const voxsize: integer; const trunktex, twigtex: TBitmap);
 var
   xmin, xmax, ymin, ymax, zmin, zmax: single;
@@ -103,21 +103,6 @@ begin
     else if zmax < t.mVert[i].z then
       zmax := t.mVert[i].z;
   end;
-  for i := 0 to t.mTwigVertCount - 1 do
-  begin
-    if xmin > t.mTwigVert[i].x then
-      xmin := t.mTwigVert[i].x
-    else if xmax < t.mTwigVert[i].x then
-      xmax := t.mTwigVert[i].x;
-    if ymin > t.mTwigVert[i].y then
-      ymin := t.mTwigVert[i].y
-    else if ymax < t.mTwigVert[i].y then
-      ymax := t.mTwigVert[i].y;
-    if zmin > t.mTwigVert[i].z then
-      zmin := t.mTwigVert[i].z
-    else if zmax < t.mTwigVert[i].z then
-      zmax := t.mTwigVert[i].z;
-  end;
   ZeroMemory(vox, SizeOf(voxelbuffer_t));
 
   scale := abs(xmin);
@@ -131,15 +116,12 @@ begin
     scale := abs(zmin);
   if abs(zmax) > scale then
     scale := abs(zmax);
+  scale := 2 * scale;
 
   scale := (voxsize - 1) / scale;
 
-  DT_CreateVoxelFacesFromTree(t.mVertCount, t.mFaceCount, t.mVert, t.mNormal,
-    t.mUV, t.mFace, scale, vox, voxsize, trunktex, true);
-
-  if opt_rendertwig then
-    DT_CreateVoxelFacesFromTree(t.mTwigVertCount, t.mTwigFaceCount, t.mTwigVert,
-      t.mTwigNormal, t.mTwigUV, t.mTwigFace, scale, vox, voxsize, twigtex, false);
+  DT_CreateVoxelFacesFromRock(t.mVertCount, t.mFaceCount, t.mVert, t.mFace,
+    scale, vox, voxsize, trunktex, true);
 end;
 
 end.
