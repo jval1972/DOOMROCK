@@ -1,22 +1,33 @@
 //------------------------------------------------------------------------------
 //
-//  DOOMTREE: Doom Tree Sprite Generator
+//  DOOMROCK: Doom Rock Sprite Generator
 //  Copyright (C) 2021 by Jim Valavanis
 //
-// DESCRIPTION:
-//  Doom patch
+//  This program is free software; you can redistribute it and/or
+//  modify it under the terms of the GNU General Public License
+//  as published by the Free Software Foundation; either version 2
+//  of the License, or (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program; if not, write to the Free Software
+//  Foundation, inc., 59 Temple Place - Suite 330, Boston, MA
+//  02111-1307, USA.
 //
 //------------------------------------------------------------------------------
-//  E-Mail: jimmyvalavanis@yahoo.gr
-//  Site  : https://sourceforge.net/projects/doom-tree/
+//  Site  : https://sourceforge.net/projects/doom-rock/
 //------------------------------------------------------------------------------
 
-unit dt_doompatch;
+unit dr_doompatch;
 
 interface
 
 uses
-  Windows, Classes, SysUtils, Graphics, dt_utils;
+  Windows, Classes, SysUtils, Graphics, dr_utils;
 
 function BmpAsPatch(const b: TBitmap; const palarray: PByteArray;
   const offsl: integer = MAXINT; const offst: integer = MAXINT): TMemoryStream;
@@ -24,7 +35,7 @@ function BmpAsPatch(const b: TBitmap; const palarray: PByteArray;
 implementation
 
 uses
-  dt_palettes;
+  dr_palettes;
 
 type
   patch_t = packed record

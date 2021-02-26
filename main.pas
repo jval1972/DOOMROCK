@@ -18,8 +18,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, pngimage, xTGA, jpeg, zBitmap, ComCtrls, ExtCtrls, Buttons, Menus,
-  StdCtrls, AppEvnts, ExtDlgs, clipbrd, ToolWin, dglOpenGL, proctree, dt_undo,
-  dt_filemenuhistory, dt_slider;
+  StdCtrls, AppEvnts, ExtDlgs, clipbrd, ToolWin, dglOpenGL, proctree, dr_undo,
+  dr_filemenuhistory, dr_slider;
 
 type
   TForm1 = class(TForm)
@@ -268,11 +268,11 @@ var
 implementation
 
 uses
-  dt_gl,
-  dt_defs,
-  dt_utils,
-  dt_voxels,
-  dt_palettes,
+  dr_gl,
+  dr_defs,
+  dr_utils,
+  dr_voxels,
+  dr_palettes,
   proctree_helpers,
   frm_exportsprite,
   frm_exportvoxel;
@@ -280,7 +280,7 @@ uses
 {$R *.dfm}
 
 resourcestring
-  rsTitle = 'DOOMTREE Sprite Generator';
+  rsTitle = 'DOOMROCK Sprite Generator';
 
 procedure TForm1.FormCreate(Sender: TObject);
 var
@@ -755,11 +755,6 @@ begin
   tree.Free;
 end;
 
-resourcestring
-  copyright1 = 'proctree.js Copyright (c) 2012, Paul Brunt';
-  copyright2 = 'c++ port Copyright (c) 2015, Jari Komppa';
-  copyright3 = 'Pascal port Copyright (c) 2018, Jim Valavanis';
-
 procedure TForm1.AboutButton1Click(Sender: TObject);
 begin
   MessageBox(
@@ -767,10 +762,7 @@ begin
     PChar(Format('%s'#13#10 +
     'Version ' + I_VersionBuilt + #13#10 +
     'Copyright (c) 2021, jvalavanis@gmail.com'#13#10 +
-    #13#10'A tool to create tree sprites for Doom.'#13#10#13#10 +
-        copyright1 + #13#10 +
-        copyright2 + #13#10 +
-        copyright3,
+    #13#10'A tool to create rock sprites for Doom.'#13#10,
         [rsTitle])),
     PChar(rsTitle),
     MB_OK or MB_ICONINFORMATION or MB_APPLMODAL);

@@ -125,13 +125,13 @@ Locale=1033
 CodePage=1252
 [Version Info Keys]
 CompanyName=Jim Valavanis
-FileDescription=DOOMTREE Sprite Generator
+FileDescription=DOOMROCK Sprite Generator
 FileVersion=1.0.2.17
-InternalName=DOOMTREE
+InternalName=DOOMROCK
 LegalCopyright=© 2021, jvalavanis@gmail.com
 LegalTrademarks=© 2021, jvalavanis@gmail.com
-OriginalFilename=DOOMTREE.exe
-ProductName=DOOMTREE Sprite Generator
+OriginalFilename=DOOMROCK.exe
+ProductName=DOOMROCK Sprite Generator
 ProductVersion=1.0
 [HistoryLists\hlDebugSourcePath]
 Count=2

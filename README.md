@@ -1,8 +1,5 @@
-# DOOMTREE
-Doom Tree Sprite Generator (DOOMTREE) is an application that generates tree sprites for the Doom series games based on various input parameters.
-
-It's development is a continuation of [PTree](https://github.com/jval1972/PTree) and it is based on [proctree](https://github.com/supereggbert/proctree.js/)
-
+# DOOMROCK
+Doom Rock Sprite Generator (DOOMROCK) is an application that generates rock sprites for the Doom series games based on various input parameters.
 
 ## Features
 Random mesh generation

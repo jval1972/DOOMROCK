@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 147
   Width = 914
   Height = 657
-  Caption = 'DOOMTREE Sprite Generator'
+  Caption = 'DOOMROCK Sprite Generator'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13710,7 +13710,7 @@ object Form1: TForm1
       Top = 0
       Width = 265
       Height = 539
-      ActivePage = TabSheet2
+      ActivePage = TabSheet1
       Align = alClient
       TabOrder = 0
       object TabSheet1: TTabSheet

@@ -17,7 +17,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ComCtrls, ExtCtrls, Buttons, proctree, dt_voxels;
+  Dialogs, StdCtrls, ComCtrls, ExtCtrls, Buttons, proctree, dr_voxels;
 
 type
   TExportVoxelForm = class(TForm)
@@ -69,9 +69,9 @@ implementation
 {$R *.dfm}
 
 uses
-  dt_defs,
-  dt_utils,
-  dt_voxelexport;
+  dr_defs,
+  dr_utils,
+  dr_voxelexport;
 
 procedure TExportVoxelForm.FormCreate(Sender: TObject);
 var

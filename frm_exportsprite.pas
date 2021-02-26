@@ -17,7 +17,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, Buttons, dt_soft3d, proctree, ComCtrls;
+  Dialogs, StdCtrls, ExtCtrls, Buttons, dr_soft3d, proctree, ComCtrls;
 
 type
   TExportSpriteForm = class(TForm)
@@ -109,13 +109,13 @@ implementation
 uses
   Math,
   proctree_helpers,
-  dt_defs,
-  dt_utils,
-  dt_wadwriter,
-  dt_doompatch,
-  dt_palettes,
-  dt_voxels,
-  dt_voxelexport,
+  dr_defs,
+  dr_utils,
+  dr_wadwriter,
+  dr_doompatch,
+  dr_palettes,
+  dr_voxels,
+  dr_voxelexport,
   frm_spriteprefix;
 
 const
