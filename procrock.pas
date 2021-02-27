@@ -33,6 +33,7 @@ interface
 type
   fvec5_t = record
     x, y, z, u, v: single;
+    ring: integer;
   end;
   fvec5_p = ^fvec5_t;
   fvec5_a = array[0..$FFFF] of fvec5_t;
@@ -40,6 +41,8 @@ type
 
   ivec3_t = record
     x, y, z: integer;
+    topring: integer;
+    bottomring: integer;
   end;
   ivec3_p = ^ivec3_t;
   ivec3_a = array[0..$FFFF] of ivec3_t;
@@ -325,6 +328,7 @@ const
   EPSILON = 0.000001;
 
 function rock_t.AddVert(const x, y, z, u, v: single): integer;
+function rock_t.AddVert(const x, y, z, u, v: single; const ring: integer): integer;
 var
   i: integer;
 begin
@@ -345,9 +349,28 @@ begin
   mVert[Result].z := z;
   mVert[Result].u := u;
   mVert[Result].v := v;
+  mVert[Result].ring := ring;
 end;
 
-procedure rock_t.generate_sphere;
+function min3i(const x1, x2, x3: integer): integer;
+begin
+  Result := x1;
+  if x2 < Result then
+    Result := x2;
+  if x3 < Result then
+    Result := x3;
+end;
+
+function max3i(const x1, x2, x3: integer): integer;
+begin
+  Result := x1;
+  if x2 > Result then
+    Result := x2;
+  if x3 > Result then
+    Result := x3;
+end;
+
+procedure rock_t.generate_hemisphere;
 var
   ring, seg: integer;
   fDeltaRingAngle: single;
@@ -377,7 +400,7 @@ begin
   idx := 0;
 
   // Generate the group of rings for the hemishere
-  for ring := 0 to NUMRINGS div 2 - 1 do
+  for ring := 0 to numrings div 2 - 1 do
   begin
     r0 := Sin(ring * fDeltaRingAngle);
     y0 := Cos(ring * fDeltaRingAngle);
@@ -400,6 +423,7 @@ begin
       vec.u := -x0 / 2 + 0.5;
       vec.v := -z0 / 2 + 0.5;
       A[idx] := AddVert(vec.x, vec.y, vec.z, vec.u, vec.v);
+      A[idx] := AddVert(vec.x, vec.y, vec.z, vec.u, vec.v, ring);
       inc(idx);
 
       vec.x := x1;
@@ -408,6 +432,7 @@ begin
       vec.u := -x1 / 2 + 0.5;
       vec.v := -z1 / 2 + 0.5;
       A[idx] := AddVert(vec.x, vec.y, vec.z, vec.u, vec.v);
+      A[idx] := AddVert(vec.x, vec.y, vec.z, vec.u, vec.v, ring + 1);
       inc(idx);
     end;
   end;
@@ -427,6 +452,8 @@ begin
     mFace[idx].x := A[idx];
     mFace[idx].y := A[idx + 1];
     mFace[idx].z := A[idx + 2];
+    mFace[idx].topring := min3i(mVert[idx].ring, mVert[idx + 1].ring, mVert[idx + 2].ring);
+    mFace[idx].bottomring := max3i(mVert[idx].ring, mVert[idx + 1].ring, mVert[idx + 2].ring);
   end;
 
   for idx := 0 to mVertCount - 1 do
