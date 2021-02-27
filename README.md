@@ -1,5 +1,5 @@
 # DOOMROCK
-Doom Rock Sprite Generator (DOOMROCK) is an application that generates rock sprites for the Doom series games based on various input parameters.
+DOOMROCK is an application that generates rock sprites and voxels for the Doom series games based on various input parameters.
 
 ## Features
 Random mesh generation
