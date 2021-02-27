@@ -82,6 +82,10 @@ type
     mNumSegments: integer; // Number of segments
     mXOffset: single; // X axis offset
     mZOffset: single; // Z axis offset
+    mPitRate: single; // Pit rate
+    mPitScaleMin: single; // Pit scale minimum
+    mPitScaleMax: single; // Pit scale miximum
+    mGroundLevelFactor: single; // Close to ground level control
     mSeed: integer;
     mRseed: integer;
     constructor CreateDefault; virtual;
@@ -279,6 +283,10 @@ begin
   mNumSegments := 10;
   mXOffset := 0.0;
   mZOffset := 0.0;
+  mPitRate := 0.0;
+  mPitScaleMin := 1.0;
+  mPitScaleMax := 1.0;
+  mGroundLevelFactor := 1.0;
 end;
 
 function properties_t.random(aFixed: single): single;
