@@ -39,7 +39,7 @@ uses
   dr_voxelizer;
 
 procedure DT_CreateVoxelFromRock(const t: rock_t; const vox: voxelbuffer_p;
-  const voxsize: integer; const trunktex, twigtex: TBitmap);
+  const voxsize: integer; const rocktex: TBitmap);
 
 implementation
 
@@ -74,7 +74,7 @@ begin
 end;
 
 procedure DT_CreateVoxelFromRock(const t: rock_t; const vox: voxelbuffer_p;
-  const voxsize: integer; const trunktex, twigtex: TBitmap);
+  const voxsize: integer; const rocktex: TBitmap);
 var
   xmin, xmax, ymin, ymax, zmin, zmax: single;
   i: integer;
@@ -121,7 +121,7 @@ begin
   scale := (voxsize - 1) / scale;
 
   DT_CreateVoxelFacesFromRock(t.mVertCount, t.mFaceCount, t.mVert, t.mFace,
-    scale, vox, voxsize, trunktex, true);
+    scale, vox, voxsize, rocktex, true);
 end;
 
 end.

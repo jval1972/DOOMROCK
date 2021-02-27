@@ -110,7 +110,7 @@ type
   public
     { Public declarations }
     rock: rock_t;
-    twigtex, trunktex: TBitmap;
+    rocktex: TBitmap;
     procedure PrepareTextures;
     procedure DoExportSpriteWAD;
   end;
@@ -170,14 +170,10 @@ begin
   buffer.Height := fdeviceheight;
   buffer.PixelFormat := pf32bit;
   needs3dupdate := True;
-  twigtex := TBitmap.Create;
-  twigtex.Width := 256;
-  twigtex.Height := 256;
-  twigtex.PixelFormat := pf32bit;
-  trunktex := TBitmap.Create;
-  trunktex.Width := 256;
-  trunktex.Height := 256;
-  trunktex.PixelFormat := pf32bit;
+  rocktex := TBitmap.Create;
+  rocktex.Width := 256;
+  rocktex.Height := 256;
+  rocktex.PixelFormat := pf32bit;
 
   fviewdist := opt_viewdist / OPT_TO_FLOAT;
   if fviewdist < MINVIEWDIST then
@@ -215,8 +211,7 @@ end;
 procedure TExportSpriteForm.FormDestroy(Sender: TObject);
 begin
   device_destroy(@device);
-  twigtex.Free;
-  trunktex.Free;
+  rocktex.Free;
   buffer.Free;
 
   opt_viewdist := Round(fviewdist * OPT_TO_FLOAT);
@@ -283,7 +278,7 @@ begin
 	device.transform.world := c;
 	transform_update(@device.transform);
   device.render_state := RENDER_STATE_TEXTURE_SOLID;
-  RenderFaces(rock.mVertCount, rock.mFaceCount, rock.mVert, rock.mFace, trunktex);
+  RenderFaces(rock.mVertCount, rock.mFaceCount, rock.mVert, rock.mFace, rocktex);
 
   buffer.Canvas.StretchDraw(Rect(0, 0, buffer.Width, buffer.Height), device.bframebuffer);
   needs3dupdate := False;
@@ -438,12 +433,11 @@ var
   ln: PIUINT32Array;
   r, g, b: byte;
 begin
-  twigtex.PixelFormat := pf32bit;
-  trunktex.PixelFormat := pf32bit;
-  for y := 0 to trunktex.Height - 1 do
+  rocktex.PixelFormat := pf32bit;
+  for y := 0 to rocktex.Height - 1 do
   begin
-    ln := trunktex.ScanLine[y];
-    for x := 0 to trunktex.Width - 1 do
+    ln := rocktex.ScanLine[y];
+    for x := 0 to rocktex.Width - 1 do
     begin
       r := GetRValue(ln[x]);
       g := GetGValue(ln[x]);
@@ -552,7 +546,7 @@ begin
         else
           voxsize := 256;
 
-        DT_CreateVoxelFromRock(rock, vox, voxsize, trunktex, twigtex);
+        DT_CreateVoxelFromRock(rock, vox, voxsize, rocktex);
 
         if ScriptRadioGroup.ItemIndex = 0 then
         begin

@@ -95,13 +95,11 @@ type
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
-    TabSheet3: TTabSheet;
     ExportScreenshot1: TMenuItem;
     Wireframe1: TMenuItem;
     Twig1: TMenuItem;
     Renderenviroment1: TMenuItem;
-    TrunkImage: TImage;
-    TwigImage: TImage;
+    RockImage: TImage;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -122,59 +120,53 @@ type
     Label18: TLabel;
     Label19: TLabel;
     Label20: TLabel;
-    Label21: TLabel;
-    Label22: TLabel;
     SeedEdit: TEdit;
     SeedSpeedButton1: TSpeedButton;
     SeedSpeedButton2: TSpeedButton;
-    BranchSegmentsPaintBox: TPaintBox;
-    BranchSegmentsLabel: TLabel;
-    BranchLevelsPaintBox: TPaintBox;
-    BranchLevelsLabel: TLabel;
-    TruncForksPaintBox: TPaintBox;
-    TruncForksLabel: TLabel;
-    TextureVMultiplierPaintBox: TPaintBox;
-    TextureVMultiplierLabel: TLabel;
-    TwigScalePaintBox: TPaintBox;
-    TwigScaleLabel: TLabel;
-    InitialLengthPaintBox: TPaintBox;
-    InitialLengthLabel: TLabel;
-    LenFalloffRatePaintBox: TPaintBox;
-    LenFalloffRateLabel: TLabel;
-    LenFalloffPowerPaintBox: TPaintBox;
-    LenFalloffPowerLabel: TLabel;
-    MaxClumpingPaintBox: TPaintBox;
-    MaxClumpingLabel: TLabel;
-    MinClumpingPaintBox: TPaintBox;
-    MinClumpingLabel: TLabel;
-    SymmetryPaintBox: TPaintBox;
-    SymmetryLabel: TLabel;
-    DropPaintBox: TPaintBox;
-    DropLabel: TLabel;
-    GrowthPaintBox: TPaintBox;
-    GrowthLabel: TLabel;
-    SweepPaintBox: TPaintBox;
-    SweepLabel: TLabel;
-    TruncRadiusPaintBox: TPaintBox;
-    TruncRadiusLabel: TLabel;
-    RadiusFalloffPaintBox: TPaintBox;
-    RadiusFalloffLabel: TLabel;
-    ClimbRatePaintBox: TPaintBox;
-    ClimbRateLabel: TLabel;
-    KinkPaintBox: TPaintBox;
-    KinkLabel: TLabel;
-    TaperRatePaintBox: TPaintBox;
-    TaperRateLabel: TLabel;
-    TwistsPaintBox: TPaintBox;
-    TwistsLabel: TLabel;
-    TruncLengthPaintBox: TPaintBox;
-    TruncLengthLabel: TLabel;
+    NumRingsPaintBox: TPaintBox;
+    NumRingsLabel: TLabel;
+    NumSegmentsPaintBox: TPaintBox;
+    NumSegmentsLabel: TLabel;
+    UScalePaintBox: TPaintBox;
+    UScaleLabel: TLabel;
+    VScalePaintBox: TPaintBox;
+    VScaleLabel: TLabel;
+    XScalePaintBox: TPaintBox;
+    XScaleLabel: TLabel;
+    YScalePaintBox: TPaintBox;
+    YScaleLabel: TLabel;
+    ZScalePaintBox: TPaintBox;
+    ZScaleLabel: TLabel;
+    XDeformationPaintBox: TPaintBox;
+    XDeformationLabel: TLabel;
+    YDeformationPaintBox: TPaintBox;
+    YDeformationLabel: TLabel;
+    ZDeformationPaintBox: TPaintBox;
+    ZDeformationLabel: TLabel;
+    XCareenPaintBox: TPaintBox;
+    XCareenLabel: TLabel;
+    YCareenPaintBox: TPaintBox;
+    YCareenLabel: TLabel;
+    ZCareenPaintBox: TPaintBox;
+    ZCareenLabel: TLabel;
+    XOffsetPaintBox: TPaintBox;
+    XOffsetLabel: TLabel;
+    ZOffsetPaintBox: TPaintBox;
+    ZOffsetLabel: TLabel;
+    RDeformationPaintBox: TPaintBox;
+    RDeformationLabel: TLabel;
+    PitRatePaintBox: TPaintBox;
+    PitRateLabel: TLabel;
+    PitElevationPaintBox: TPaintBox;
+    PitElevationLabel: TLabel;
+    GroundLevelHeightPaintBox: TPaintBox;
+    GroundLevelHeightLabel: TLabel;
     SaveDialog2: TSaveDialog;
     LoadTrunkBitBtn1: TBitBtn;
-    LoadTwigBitBtn1: TBitBtn;
     Sprite1: TMenuItem;
     N1: TMenuItem;
     Voxel1: TMenuItem;
+    RecalcUVCheckBox: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure NewButton1Click(Sender: TObject);
@@ -207,8 +199,7 @@ type
     procedure Options1Click(Sender: TObject);
     procedure Wireframe1Click(Sender: TObject);
     procedure Twig1Click(Sender: TObject);
-    procedure TrunkImageDblClick(Sender: TObject);
-    procedure TwigImageDblClick(Sender: TObject);
+    procedure RockImageDblClick(Sender: TObject);
     procedure Renderenviroment1Click(Sender: TObject);
     procedure SeedSpeedButton1Click(Sender: TObject);
     procedure SeedSpeedButton2Click(Sender: TObject);
@@ -218,6 +209,7 @@ type
     procedure ExportScreenshot1Click(Sender: TObject);
     procedure Sprite1Click(Sender: TObject);
     procedure Voxel1Click(Sender: TObject);
+    procedure RecalcUVCheckBoxClick(Sender: TObject);
   private
     { Private declarations }
     ffilename: string;
@@ -232,27 +224,25 @@ type
     filemenuhistory: TFileMenuHistory;
     glneedsupdate: boolean;
     needsrecalc: boolean;
-    BranchSegmentsSlider: TSliderHook;
-    BranchLevelsSlider: TSliderHook;
-    TruncForksSlider: TSliderHook;
-    TextureVMultiplierSlider: TSliderHook;
-    TwigScaleSlider: TSliderHook;
-    InitialLengthSlider: TSliderHook;
-    LenFalloffRateSlider: TSliderHook;
-    LenFalloffPowerSlider: TSliderHook;
-    MaxClumpingSlider: TSliderHook;
-    MinClumpingSlider: TSliderHook;
-    SymmetrySlider: TSliderHook;
-    DropSlider: TSliderHook;
-    GrowthSlider: TSliderHook;
-    SweepSlider: TSliderHook;
-    TruncRadiusSlider: TSliderHook;
-    RadiusFalloffSlider: TSliderHook;
-    ClimbRateSlider: TSliderHook;
-    KinkSlider: TSliderHook;
-    TaperRateSlider: TSliderHook;
-    TwistsSlider: TSliderHook;
-    TruncLengthSlider: TSliderHook;
+    NumRingsSlider: TSliderHook;
+    NumSegmentsSlider: TSliderHook;
+    UScaleSlider: TSliderHook;
+    VScaleSlider: TSliderHook;
+    XScaleSlider: TSliderHook;
+    YScaleSlider: TSliderHook;
+    ZScaleSlider: TSliderHook;
+    XDeformationSlider: TSliderHook;
+    YDeformationSlider: TSliderHook;
+    ZDeformationSlider: TSliderHook;
+    XCareenSlider: TSliderHook;
+    YCareenSlider: TSliderHook;
+    ZCareenSlider: TSliderHook;
+    XOffsetSlider: TSliderHook;
+    ZOffsetSlider: TSliderHook;
+    RDeformationSlider: TSliderHook;
+    PitRateSlider: TSliderHook;
+    PitElevationSlider: TSliderHook;
+    GroundLevelHeightSlider: TSliderHook;
     closing: boolean;
     procedure Idle(Sender: TObject; var Done: Boolean);
     function CheckCanClose: boolean;
@@ -399,8 +389,7 @@ begin
 
   OpenGLPanelResize(sender);    // sets up the perspective
 
-  trunktexture := gld_CreateTexture(TrunkImage.Picture, False);
-  twigtexture := gld_CreateTexture(TwigImage.Picture, True);
+  rocktexture := gld_CreateTexture(RockImage.Picture, False);
 
   glneedsupdate := True;
 
@@ -408,89 +397,81 @@ begin
 
   TabSheet1.DoubleBuffered := True;
 
-  BranchSegmentsSlider := TSliderHook.Create(BranchSegmentsPaintBox);
-  BranchSegmentsSlider.Min := 2;
-  BranchSegmentsSlider.Max := 32;
+  NumRingsSlider := TSliderHook.Create(NumRingsPaintBox);
+  NumRingsSlider.Min := 2;
+  NumRingsSlider.Max := MAXRINGS div 2 - 1;
 
-  BranchLevelsSlider := TSliderHook.Create(BranchLevelsPaintBox);
-  BranchLevelsSlider.Min := 1;
-  BranchLevelsSlider.Max := 10;
+  NumSegmentsSlider := TSliderHook.Create(NumSegmentsPaintBox);
+  NumSegmentsSlider.Min := 3;
+  NumSegmentsSlider.Max := MAXSEGMENTS - 1;
 
-  TruncForksSlider := TSliderHook.Create(TruncForksPaintBox);
-  TruncForksSlider.Min := 0;
-  TruncForksSlider.Max := 32;
+  UScaleSlider := TSliderHook.Create(UScalePaintBox);
+  UScaleSlider.Min := 0.1;
+  UScaleSlider.Max := 4.0;
 
-  TextureVMultiplierSlider := TSliderHook.Create(TextureVMultiplierPaintBox);
-  TextureVMultiplierSlider.Min := 0.010;
-  TextureVMultiplierSlider.Max := 10.000;
+  VScaleSlider := TSliderHook.Create(VScalePaintBox);
+  VScaleSlider.Min := 0.1;
+  VScaleSlider.Max := 4.0;
 
-  TwigScaleSlider := TSliderHook.Create(TwigScalePaintBox);
-  TwigScaleSlider.Min := 0.010;
-  TwigScaleSlider.Max := 2.000;
+  XScaleSlider := TSliderHook.Create(XScalePaintBox);
+  XScaleSlider.Min := 0.5;
+  XScaleSlider.Max := 2.0;
 
-  InitialLengthSlider := TSliderHook.Create(InitialLengthPaintBox);
-  InitialLengthSlider.Min := 0.010;
-  InitialLengthSlider.Max := 5.000;
+  YScaleSlider := TSliderHook.Create(YScalePaintBox);
+  YScaleSlider.Min := 0.5;
+  YScaleSlider.Max := 2.0;
 
-  LenFalloffRateSlider := TSliderHook.Create(LenFalloffRatePaintBox);
-  LenFalloffRateSlider.Min := 0.010;
-  LenFalloffRateSlider.Max := 1.500;
+  ZScaleSlider := TSliderHook.Create(ZScalePaintBox);
+  ZScaleSlider.Min := 0.5;
+  ZScaleSlider.Max := 2.0;
 
-  LenFalloffPowerSlider := TSliderHook.Create(LenFalloffPowerPaintBox);
-  LenFalloffPowerSlider.Min := -2.000;
-  LenFalloffPowerSlider.Max := 2.000;
+  XDeformationSlider := TSliderHook.Create(XDeformationPaintBox);
+  XDeformationSlider.Min := 0.0;
+  XDeformationSlider.Max := 0.2;
 
-  MaxClumpingSlider := TSliderHook.Create(MaxClumpingPaintBox);
-  MaxClumpingSlider.Min := 0.010;
-  MaxClumpingSlider.Max := 10.000;
+  YDeformationSlider := TSliderHook.Create(YDeformationPaintBox);
+  YDeformationSlider.Min := 0.0;
+  YDeformationSlider.Max := 0.2;
 
-  MinClumpingSlider := TSliderHook.Create(MinClumpingPaintBox);
-  MinClumpingSlider.Min := 0.010;
-  MinClumpingSlider.Max := 10.000;
+  ZDeformationSlider := TSliderHook.Create(ZDeformationPaintBox);
+  ZDeformationSlider.Min := 0.0;
+  ZDeformationSlider.Max := 0.2;
 
-  SymmetrySlider := TSliderHook.Create(SymmetryPaintBox);
-  SymmetrySlider.Min := 2.000;
-  SymmetrySlider.Max := 4.000;
+  XCareenSlider := TSliderHook.Create(XCareenPaintBox);
+  XCareenSlider.Min := -0.5;
+  XCareenSlider.Max := 0.5;
 
-  DropSlider := TSliderHook.Create(DropPaintBox);
-  DropSlider.Min := -2.000;
-  DropSlider.Max := 2.000;
+  YCareenSlider := TSliderHook.Create(YCareenPaintBox);
+  YCareenSlider.Min := -0.5;
+  YCareenSlider.Max := 0.5;
 
-  GrowthSlider := TSliderHook.Create(GrowthPaintBox);
-  GrowthSlider.Min := -4.000;
-  GrowthSlider.Max := 4.000;
+  ZCareenSlider := TSliderHook.Create(ZCareenPaintBox);
+  ZCareenSlider.Min := -0.5;
+  ZCareenSlider.Max := 0.5;
 
-  SweepSlider := TSliderHook.Create(SweepPaintBox);
-  SweepSlider.Min := -1.000;
-  SweepSlider.Max := 1.000;
+  XOffsetSlider := TSliderHook.Create(XOffsetPaintBox);
+  XOffsetSlider.Min := -0.5;
+  XOffsetSlider.Max := 0.5;
 
-  TruncRadiusSlider := TSliderHook.Create(TruncRadiusPaintBox);
-  TruncRadiusSlider.Min := 0.010;
-  TruncRadiusSlider.Max := 0.500;
+  ZOffsetSlider := TSliderHook.Create(ZOffsetPaintBox);
+  ZOffsetSlider.Min := -0.5;
+  ZOffsetSlider.Max := 0.5;
 
-  RadiusFalloffSlider := TSliderHook.Create(RadiusFalloffPaintBox);
-  RadiusFalloffSlider.Min := 0.100;
-  RadiusFalloffSlider.Max := 1.000;
+  RDeformationSlider := TSliderHook.Create(RDeformationPaintBox);
+  RDeformationSlider.Min := -0.5;
+  RDeformationSlider.Max := 1.5;
 
-  ClimbRateSlider := TSliderHook.Create(ClimbRatePaintBox);
-  ClimbRateSlider.Min := 0.010;
-  ClimbRateSlider.Max := 1.000;
+  PitRateSlider := TSliderHook.Create(PitRatePaintBox);
+  PitRateSlider.Min := 0.0;
+  PitRateSlider.Max := 1.0;
 
-  KinkSlider := TSliderHook.Create(KinkPaintBox);
-  KinkSlider.Min := -2.000;
-  KinkSlider.Max := 2.000;
+  PitElevationSlider := TSliderHook.Create(PitElevationPaintBox);
+  PitElevationSlider.Min := 0.5;
+  PitElevationSlider.Max := 2.0;
 
-  TaperRateSlider := TSliderHook.Create(TaperRatePaintBox);
-  TaperRateSlider.Min := 0.500;
-  TaperRateSlider.Max := 2.000;
-
-  TwistsSlider := TSliderHook.Create(TwistsPaintBox);
-  TwistsSlider.Min := 0.010;
-  TwistsSlider.Max := 10.000;
-
-  TruncLengthSlider := TSliderHook.Create(TruncLengthPaintBox);
-  TruncLengthSlider.Min := 0.010;
-  TruncLengthSlider.Max := 5.000;
+  GroundLevelHeightSlider := TSliderHook.Create(GroundLevelHeightPaintBox);
+  GroundLevelHeightSlider.Min := 0.0;
+  GroundLevelHeightSlider.Max := 1.0;
 
   doCreate := True;
   if ParamCount > 0 then
@@ -607,19 +588,7 @@ begin
     begin
       m := TMemoryStream.Create;
       z := TZBitmap.Create;
-      z.Assign(TrunkImage.Picture.Bitmap);
-      z.PixelFormat := pf24bit;
-      z.SaveToStream(m);
-      z.Free;
-      sz := m.size;
-      fs.Write(sz, SizeOf(Integer));
-      m.Position := 0;
-      fs.CopyFrom(m, sz);
-      m.Free;
-
-      m := TMemoryStream.Create;
-      z := TZBitmap.Create;
-      z.Assign(TwigImage.Picture.Bitmap);
+      z.Assign(RockImage.Picture.Bitmap);
       z.PixelFormat := pf24bit;
       z.SaveToStream(m);
       z.Free;
@@ -673,28 +642,11 @@ begin
           z := TZBitmap.Create;
           z.LoadFromStream(m);
           z.PixelFormat := pf32bit;
-          TrunkImage.Picture.Bitmap.Assign(z);
+          RockImage.Picture.Bitmap.Assign(z);
           z.Free;
           m.Free;
         end;
         fs.Position := oldp + sz + SizeOf(Integer);
-      end;
-      oldp := fs.Position;
-      if oldp < fs.Size then
-      begin
-        fs.Read(sz, SizeOf(Integer));
-        if sz > 0 then
-        begin
-          m := TMemoryStream.Create;
-          m.CopyFrom(fs, sz);
-          m.Position := 0;
-          z := TZBitmap.Create;
-          z.LoadFromStream(m);
-          z.PixelFormat := pf32bit;
-          TwigImage.Picture.Bitmap.Assign(z);
-          z.Free;
-          m.Free;
-        end;
       end;
     end;
 
@@ -705,10 +657,8 @@ begin
   if savepicturedata then
   begin
     // Recreate OpenGL Textures
-    glDeleteTextures(1, @trunktexture);
-    trunktexture := gld_CreateTexture(TrunkImage.Picture, False);
-    glDeleteTextures(1, @twigtexture);
-    twigtexture := gld_CreateTexture(TwigImage.Picture, True);
+    glDeleteTextures(1, @rocktexture);
+    rocktexture := gld_CreateTexture(RockImage.Picture, False);
   end;
   
   RockToControls;
@@ -727,8 +677,7 @@ begin
   wglMakeCurrent(0, 0);
   wglDeleteContext(rc);
 
-  glDeleteTextures(1, @trunktexture);
-  glDeleteTextures(1, @twigtexture);
+  glDeleteTextures(1, @rocktexture);
 
   stringtobigstring(filemenuhistory.PathStringIdx(0), @opt_filemenuhistory0);
   stringtobigstring(filemenuhistory.PathStringIdx(1), @opt_filemenuhistory1);
@@ -744,27 +693,25 @@ begin
 
   filemenuhistory.Free;
 
-  BranchSegmentsSlider.Free;
-  BranchLevelsSlider.Free;
-  TruncForksSlider.Free;
-  TextureVMultiplierSlider.Free;
-  TwigScaleSlider.Free;
-  InitialLengthSlider.Free;
-  LenFalloffRateSlider.Free;
-  LenFalloffPowerSlider.Free;
-  MaxClumpingSlider.Free;
-  MinClumpingSlider.Free;
-  SymmetrySlider.Free;
-  DropSlider.Free;
-  GrowthSlider.Free;
-  SweepSlider.Free;
-  TruncRadiusSlider.Free;
-  RadiusFalloffSlider.Free;
-  ClimbRateSlider.Free;
-  KinkSlider.Free;
-  TaperRateSlider.Free;
-  TwistsSlider.Free;
-  TruncLengthSlider.Free;
+  NumRingsSlider.Free;
+  NumSegmentsSlider.Free;
+  UScaleSlider.Free;
+  VScaleSlider.Free;
+  XScaleSlider.Free;
+  YScaleSlider.Free;
+  ZScaleSlider.Free;
+  XDeformationSlider.Free;
+  YDeformationSlider.Free;
+  ZDeformationSlider.Free;
+  XCareenSlider.Free;
+  YCareenSlider.Free;
+  ZCareenSlider.Free;
+  XOffsetSlider.Free;
+  ZOffsetSlider.Free;
+  RDeformationSlider.Free;
+  PitRateSlider.Free;
+  PitElevationSlider.Free;
+  GroundLevelHeightSlider.Free;
 
   rock.Free;
 end;
@@ -1125,24 +1072,13 @@ begin
   glneedsupdate := True;
 end;
 
-procedure TForm1.TrunkImageDblClick(Sender: TObject);
+procedure TForm1.RockImageDblClick(Sender: TObject);
 begin
   if OpenPictureDialog1.Execute then
   begin
-    TrunkImage.Picture.LoadFromFile(OpenPictureDialog1.FileName);
-    glDeleteTextures(1, @trunktexture);
-    trunktexture := gld_CreateTexture(TrunkImage.Picture, False);
-    changed := True;
-  end;
-end;
-
-procedure TForm1.TwigImageDblClick(Sender: TObject);
-begin
-  if OpenPictureDialog2.Execute then
-  begin
-    TwigImage.Picture.LoadFromFile(OpenPictureDialog2.FileName);
-    glDeleteTextures(1, @twigtexture);
-    twigtexture := gld_CreateTexture(TwigImage.Picture, True);
+    RockImage.Picture.LoadFromFile(OpenPictureDialog1.FileName);
+    glDeleteTextures(1, @rocktexture);
+    rocktexture := gld_CreateTexture(RockImage.Picture, False);
     changed := True;
   end;
 end;
@@ -1180,118 +1116,110 @@ end;
 
 procedure TForm1.RockToSliders;
 begin
-  BranchSegmentsSlider.OnSliderHookChange := nil;
-  BranchLevelsSlider.OnSliderHookChange := nil;
-  TruncForksSlider.OnSliderHookChange := nil;
-  TextureVMultiplierSlider.OnSliderHookChange := nil;
-  TwigScaleSlider.OnSliderHookChange := nil;
-  InitialLengthSlider.OnSliderHookChange := nil;
-  LenFalloffRateSlider.OnSliderHookChange := nil;
-  LenFalloffPowerSlider.OnSliderHookChange := nil;
-  MaxClumpingSlider.OnSliderHookChange := nil;
-  MinClumpingSlider.OnSliderHookChange := nil;
-  SymmetrySlider.OnSliderHookChange := nil;
-  DropSlider.OnSliderHookChange := nil;
-  GrowthSlider.OnSliderHookChange := nil;
-  SweepSlider.OnSliderHookChange := nil;
-  TruncRadiusSlider.OnSliderHookChange := nil;
-  RadiusFalloffSlider.OnSliderHookChange := nil;
-  ClimbRateSlider.OnSliderHookChange := nil;
-  KinkSlider.OnSliderHookChange := nil;
-  TaperRateSlider.OnSliderHookChange := nil;
-  TwistsSlider.OnSliderHookChange := nil;
-  TruncLengthSlider.OnSliderHookChange := nil;
+  NumRingsSlider.OnSliderHookChange := nil;
+  NumSegmentsSlider.OnSliderHookChange := nil;
+  UScaleSlider.OnSliderHookChange := nil;
+  VScaleSlider.OnSliderHookChange := nil;
+  XScaleSlider.OnSliderHookChange := nil;
+  YScaleSlider.OnSliderHookChange := nil;
+  ZScaleSlider.OnSliderHookChange := nil;
+  XDeformationSlider.OnSliderHookChange := nil;
+  YDeformationSlider.OnSliderHookChange := nil;
+  ZDeformationSlider.OnSliderHookChange := nil;
+  XCareenSlider.OnSliderHookChange := nil;
+  YCareenSlider.OnSliderHookChange := nil;
+  ZCareenSlider.OnSliderHookChange := nil;
+  XOffsetSlider.OnSliderHookChange := nil;
+  ZOffsetSlider.OnSliderHookChange := nil;
+  RDeformationSlider.OnSliderHookChange := nil;
+  PitRateSlider.OnSliderHookChange := nil;
+  PitElevationSlider.OnSliderHookChange := nil;
+  GroundLevelHeightSlider.OnSliderHookChange := nil;
 
-  BranchSegmentsSlider.Position := rock.mProperties.mSegments;
-  BranchLevelsSlider.Position := rock.mProperties.mLevels;
-  TruncForksSlider.Position := rock.mProperties.mRockSteps;
-  TextureVMultiplierSlider.Position := rock.mProperties.mVMultiplier;
-  TwigScaleSlider.Position := rock.mProperties.mTwigScale;
-  InitialLengthSlider.Position := rock.mProperties.mInitialBranchLength;
-  LenFalloffRateSlider.Position := rock.mProperties.mLengthFalloffFactor;
-  LenFalloffPowerSlider.Position := rock.mProperties.mLengthFalloffPower;
-  MaxClumpingSlider.Position := rock.mProperties.mClumpMax;
-  MinClumpingSlider.Position := rock.mProperties.mClumpMin;
-  SymmetrySlider.Position := rock.mProperties.mBranchFactor;
-  DropSlider.Position := rock.mProperties.mDropAmount;
-  GrowthSlider.Position := rock.mProperties.mGrowAmount;
-  SweepSlider.Position := rock.mProperties.mSweepAmount;
-  TruncRadiusSlider.Position := rock.mProperties.mMaxRadius;
-  RadiusFalloffSlider.Position := rock.mProperties.mRadiusFalloffRate;
-  ClimbRateSlider.Position := rock.mProperties.mClimbRate;
-  KinkSlider.Position := rock.mProperties.mTrunkKink;
-  TaperRateSlider.Position := rock.mProperties.mTaperRate;
-  TwistsSlider.Position := rock.mProperties.mRadiusFalloffRate;
-  TruncLengthSlider.Position := rock.mProperties.mTrunkLength;
+  NumRingsSlider.Position := rock.mProperties.mNumRings;
+  NumSegmentsSlider.Position := rock.mProperties.mNumSegments;
+  UScaleSlider.Position := rock.mProperties.mUScale;
+  VScaleSlider.Position := rock.mProperties.mVScale;
+  XScaleSlider.Position := rock.mProperties.mXScale;
+  YScaleSlider.Position := rock.mProperties.mYScale;
+  ZScaleSlider.Position := rock.mProperties.mZScale;
+  XDeformationSlider.Position := rock.mProperties.mXDeformFactor;
+  YDeformationSlider.Position := rock.mProperties.mYDeformFactor;
+  ZDeformationSlider.Position := rock.mProperties.mZDeformFactor;
+  XCareenSlider.Position := rock.mProperties.mXCareen;
+  YCareenSlider.Position := rock.mProperties.mYCareen;
+  ZCareenSlider.Position := rock.mProperties.mZCareen;
+  XOffsetSlider.Position := rock.mProperties.mXOffset;
+  ZOffsetSlider.Position := rock.mProperties.mZOffset;
+  RDeformationSlider.Position := rock.mProperties.mRDeformFactor;
+  PitRateSlider.Position := rock.mProperties.mPitRate;
+  PitElevationSlider.Position := rock.mProperties.mPitElevation;
+  GroundLevelHeightSlider.Position := rock.mProperties.mGroundLevelHeight;
 
-  BranchSegmentsPaintBox.Invalidate;
-  BranchLevelsPaintBox.Invalidate;
-  TruncForksPaintBox.Invalidate;
-  TextureVMultiplierPaintBox.Invalidate;
-  TwigScalePaintBox.Invalidate;
-  InitialLengthPaintBox.Invalidate;
-  LenFalloffRatePaintBox.Invalidate;
-  LenFalloffPowerPaintBox.Invalidate;
-  MaxClumpingPaintBox.Invalidate;
-  MinClumpingPaintBox.Invalidate;
-  SymmetryPaintBox.Invalidate;
-  DropPaintBox.Invalidate;
-  GrowthPaintBox.Invalidate;
-  SweepPaintBox.Invalidate;
-  TruncRadiusPaintBox.Invalidate;
-  RadiusFalloffPaintBox.Invalidate;
-  ClimbRatePaintBox.Invalidate;
-  KinkPaintBox.Invalidate;
-  TaperRatePaintBox.Invalidate;
-  TwistsPaintBox.Invalidate;
-  TruncLengthPaintBox.Invalidate;
+  RecalcUVCheckBox.Checked := rock.mProperties.mRecalcUV;
 
-  BranchSegmentsSlider.OnSliderHookChange := ControlsToRock;
-  BranchLevelsSlider.OnSliderHookChange := ControlsToRock;
-  TruncForksSlider.OnSliderHookChange := ControlsToRock;
-  TextureVMultiplierSlider.OnSliderHookChange := ControlsToRock;
-  TwigScaleSlider.OnSliderHookChange := ControlsToRock;
-  InitialLengthSlider.OnSliderHookChange := ControlsToRock;
-  LenFalloffRateSlider.OnSliderHookChange := ControlsToRock;
-  LenFalloffPowerSlider.OnSliderHookChange := ControlsToRock;
-  MaxClumpingSlider.OnSliderHookChange := ControlsToRock;
-  MinClumpingSlider.OnSliderHookChange := ControlsToRock;
-  SymmetrySlider.OnSliderHookChange := ControlsToRock;
-  DropSlider.OnSliderHookChange := ControlsToRock;
-  GrowthSlider.OnSliderHookChange := ControlsToRock;
-  SweepSlider.OnSliderHookChange := ControlsToRock;
-  TruncRadiusSlider.OnSliderHookChange := ControlsToRock;
-  RadiusFalloffSlider.OnSliderHookChange := ControlsToRock;
-  ClimbRateSlider.OnSliderHookChange := ControlsToRock;
-  KinkSlider.OnSliderHookChange := ControlsToRock;
-  TaperRateSlider.OnSliderHookChange := ControlsToRock;
-  TwistsSlider.OnSliderHookChange := ControlsToRock;
-  TruncLengthSlider.OnSliderHookChange := ControlsToRock;
+  NumRingsPaintBox.Invalidate;
+  NumSegmentsPaintBox.Invalidate;
+  UScalePaintBox.Invalidate;
+  VScalePaintBox.Invalidate;
+  XScalePaintBox.Invalidate;
+  YScalePaintBox.Invalidate;
+  ZScalePaintBox.Invalidate;
+  XDeformationPaintBox.Invalidate;
+  YDeformationPaintBox.Invalidate;
+  ZDeformationPaintBox.Invalidate;
+  XCareenPaintBox.Invalidate;
+  YCareenPaintBox.Invalidate;
+  ZCareenPaintBox.Invalidate;
+  XOffsetPaintBox.Invalidate;
+  ZOffsetPaintBox.Invalidate;
+  RDeformationPaintBox.Invalidate;
+  PitRatePaintBox.Invalidate;
+  PitElevationPaintBox.Invalidate;
+  GroundLevelHeightPaintBox.Invalidate;
+
+  NumRingsSlider.OnSliderHookChange := ControlsToRock;
+  NumSegmentsSlider.OnSliderHookChange := ControlsToRock;
+  UScaleSlider.OnSliderHookChange := ControlsToRock;
+  VScaleSlider.OnSliderHookChange := ControlsToRock;
+  XScaleSlider.OnSliderHookChange := ControlsToRock;
+  YScaleSlider.OnSliderHookChange := ControlsToRock;
+  ZScaleSlider.OnSliderHookChange := ControlsToRock;
+  XDeformationSlider.OnSliderHookChange := ControlsToRock;
+  YDeformationSlider.OnSliderHookChange := ControlsToRock;
+  ZDeformationSlider.OnSliderHookChange := ControlsToRock;
+  XCareenSlider.OnSliderHookChange := ControlsToRock;
+  YCareenSlider.OnSliderHookChange := ControlsToRock;
+  ZCareenSlider.OnSliderHookChange := ControlsToRock;
+  XOffsetSlider.OnSliderHookChange := ControlsToRock;
+  ZOffsetSlider.OnSliderHookChange := ControlsToRock;
+  RDeformationSlider.OnSliderHookChange := ControlsToRock;
+  PitRateSlider.OnSliderHookChange := ControlsToRock;
+  PitElevationSlider.OnSliderHookChange := ControlsToRock;
+  GroundLevelHeightSlider.OnSliderHookChange := ControlsToRock;
 end;
 
 procedure TForm1.SlidersToLabels;
 begin
-  BranchSegmentsLabel.Caption := Format('%d', [Round(BranchSegmentsSlider.Position / 2) * 2]);
-  BranchLevelsLabel.Caption := Format('%d', [Round(BranchLevelsSlider.Position)]);
-  TruncForksLabel.Caption := Format('%d', [Round(TruncForksSlider.Position)]);
-  TextureVMultiplierLabel.Caption := Format('%1.3f', [TextureVMultiplierSlider.Position]);
-  TwigScaleLabel.Caption := Format('%1.3f', [TwigScaleSlider.Position]);
-  InitialLengthLabel.Caption := Format('%1.3f', [InitialLengthSlider.Position]);
-  LenFalloffRateLabel.Caption := Format('%1.3f', [LenFalloffRateSlider.Position]);
-  LenFalloffPowerLabel.Caption := Format('%1.3f', [LenFalloffPowerSlider.Position]);
-  MaxClumpingLabel.Caption := Format('%1.3f', [MaxClumpingSlider.Position]);
-  MinClumpingLabel.Caption := Format('%1.3f', [MinClumpingSlider.Position]);
-  SymmetryLabel.Caption := Format('%1.3f', [SymmetrySlider.Position]);
-  DropLabel.Caption := Format('%1.3f', [DropSlider.Position]);
-  GrowthLabel.Caption := Format('%1.3f', [GrowthSlider.Position]);
-  SweepLabel.Caption := Format('%1.3f', [SweepSlider.Position]);
-  TruncRadiusLabel.Caption := Format('%1.3f', [TruncRadiusSlider.Position]);
-  RadiusFalloffLabel.Caption := Format('%1.3f', [RadiusFalloffSlider.Position]);
-  ClimbRateLabel.Caption := Format('%1.3f', [ClimbRateSlider.Position]);
-  KinkLabel.Caption := Format('%1.3f', [KinkSlider.Position]);
-  TaperRateLabel.Caption := Format('%1.3f', [TaperRateSlider.Position]);
-  TwistsLabel.Caption := Format('%1.3f', [TwistsSlider.Position]);
-  TruncLengthLabel.Caption := Format('%1.3f', [TruncLengthSlider.Position]);
+  NumRingsLabel.Caption := Format('%d', [Round(NumRingsSlider.Position)]);
+  NumSegmentsLabel.Caption := Format('%d', [Round(NumSegmentsSlider.Position)]);
+  UScaleLabel.Caption := Format('%1.3f', [UScaleSlider.Position]);
+  VScaleLabel.Caption := Format('%1.3f', [VScaleSlider.Position]);
+  XScaleLabel.Caption := Format('%1.3f', [XScaleSlider.Position]);
+  YScaleLabel.Caption := Format('%1.3f', [YScaleSlider.Position]);
+  ZScaleLabel.Caption := Format('%1.3f', [ZScaleSlider.Position]);
+  XDeformationLabel.Caption := Format('%1.3f', [XDeformationSlider.Position]);
+  YDeformationLabel.Caption := Format('%1.3f', [YDeformationSlider.Position]);
+  ZDeformationLabel.Caption := Format('%1.3f', [ZDeformationSlider.Position]);
+  XCareenLabel.Caption := Format('%1.3f', [XCareenSlider.Position]);
+  YCareenLabel.Caption := Format('%1.3f', [YCareenSlider.Position]);
+  ZCareenLabel.Caption := Format('%1.3f', [ZCareenSlider.Position]);
+  XOffsetLabel.Caption := Format('%1.3f', [XOffsetSlider.Position]);
+  ZOffsetLabel.Caption := Format('%1.3f', [ZOffsetSlider.Position]);
+  RDeformationLabel.Caption := Format('%1.3f', [RDeformationSlider.Position]);
+  PitRateLabel.Caption := Format('%1.3f', [PitRateSlider.Position]);
+  PitElevationLabel.Caption := Format('%1.3f', [PitElevationSlider.Position]);
+  GroundLevelHeightLabel.Caption := Format('%1.3f', [GroundLevelHeightSlider.Position]);
 end;
 
 procedure TForm1.RockToControls;
@@ -1300,6 +1228,8 @@ begin
     Exit;
 
   SeedEdit.Text := IntToStr(rock.mProperties.mSeed);
+  RecalcUVCheckBox.Checked := rock.mProperties.mRecalcUV;
+
   RockToSliders;
   SlidersToLabels;
 end;
@@ -1311,28 +1241,27 @@ begin
 
   SaveUndo;
   SlidersToLabels;
-  rock.mProperties.mSeed := StrToIntDef(SeedEdit.Text, 262);
-  rock.mProperties.mSegments := Round(BranchSegmentsSlider.Position / 2) * 2;
-  rock.mProperties.mLevels := Round(BranchLevelsSlider.Position);
-  rock.mProperties.mRockSteps := Round(TruncForksSlider.Position);
-  rock.mProperties.mVMultiplier := TextureVMultiplierSlider.Position;
-  rock.mProperties.mTwigScale := TwigScaleSlider.Position;
-  rock.mProperties.mInitialBranchLength := InitialLengthSlider.Position;
-  rock.mProperties.mLengthFalloffFactor := LenFalloffRateSlider.Position;
-  rock.mProperties.mLengthFalloffPower := LenFalloffPowerSlider.Position;
-  rock.mProperties.mClumpMax := MaxClumpingSlider.Position;
-  rock.mProperties.mClumpMin := MinClumpingSlider.Position;
-  rock.mProperties.mBranchFactor := SymmetrySlider.Position;
-  rock.mProperties.mDropAmount := DropSlider.Position;
-  rock.mProperties.mGrowAmount := GrowthSlider.Position;
-  rock.mProperties.mSweepAmount := SweepSlider.Position;
-  rock.mProperties.mMaxRadius := TruncRadiusSlider.Position;
-  rock.mProperties.mRadiusFalloffRate := RadiusFalloffSlider.Position;
-  rock.mProperties.mClimbRate := ClimbRateSlider.Position;
-  rock.mProperties.mTrunkKink := KinkSlider.Position;
-  rock.mProperties.mTaperRate := TaperRateSlider.Position;
-  rock.mProperties.mRadiusFalloffRate := TwistsSlider.Position;
-  rock.mProperties.mTrunkLength := TruncLengthSlider.Position;
+  rock.mProperties.mSeed := StrToIntDef(SeedEdit.Text, 661);
+  rock.mProperties.mNumRings := Round(NumRingsSlider.Position);
+  rock.mProperties.mNumSegments := Round(NumSegmentsSlider.Position);
+  rock.mProperties.mUScale := UScaleSlider.Position;
+  rock.mProperties.mVScale := VScaleSlider.Position;
+  rock.mProperties.mXScale := XScaleSlider.Position;
+  rock.mProperties.mYScale := YScaleSlider.Position;
+  rock.mProperties.mZScale := ZScaleSlider.Position;
+  rock.mProperties.mXDeformFactor := XDeformationSlider.Position;
+  rock.mProperties.mYDeformFactor := YDeformationSlider.Position;
+  rock.mProperties.mZDeformFactor := ZDeformationSlider.Position;
+  rock.mProperties.mXCareen := XCareenSlider.Position;
+  rock.mProperties.mYCareen := YCareenSlider.Position;
+  rock.mProperties.mZCareen := ZCareenSlider.Position;
+  rock.mProperties.mXOffset := XOffsetSlider.Position;
+  rock.mProperties.mZOffset := ZOffsetSlider.Position;
+  rock.mProperties.mRDeformFactor := RDeformationSlider.Position;
+  rock.mProperties.mPitRate := PitRateSlider.Position;
+  rock.mProperties.mPitElevation := PitElevationSlider.Position;
+  rock.mProperties.mGroundLevelHeight := GroundLevelHeightSlider.Position;
+
   needsrecalc := True;
   changed := True;
 end;
@@ -1340,7 +1269,7 @@ end;
 procedure TForm1.SeedEditChange(Sender: TObject);
 begin
   SaveUndo;
-  rock.mProperties.mSeed := StrToIntDef(SeedEdit.Text, 262);
+  rock.mProperties.mSeed := StrToIntDef(SeedEdit.Text, 661);
   needsrecalc := True;
   changed := True;
 end;
@@ -1388,8 +1317,7 @@ begin
   f := TExportSpriteForm.Create(nil);
   try
     f.rock := rock;
-    f.twigtex.Canvas.StretchDraw(Rect(0, 0, f.twigtex.Width, f.twigtex.Height), TwigImage.Picture.Graphic);
-    f.trunktex.Canvas.StretchDraw(Rect(0, 0, f.trunktex.Width, f.trunktex.Height), TrunkImage.Picture.Graphic);
+    f.rocktex.Canvas.StretchDraw(Rect(0, 0, f.rocktex.Width, f.rocktex.Height), RockImage.Picture.Graphic);
     f.PrepareTextures;
     f.ShowModal;
     if f.ModalResult = mrOK then
@@ -1405,7 +1333,7 @@ var
   ename: string;
   vox_typ: string;
   sz: integer;
-  twigtex, trunktex: TBitmap;
+  rocktex: TBitmap;
   f: TExportVoxelForm;
 begin
   GetMem(buf, SizeOf(voxelbuffer_t));
@@ -1413,17 +1341,12 @@ begin
   try
     f := TExportVoxelForm.Create(nil);
     try
-      twigtex := TBitmap.Create;
-      twigtex.Width := 256;
-      twigtex.Height := 256;
-      twigtex.PixelFormat := pf32bit;
-      trunktex := TBitmap.Create;
-      trunktex.Width := 256;
-      trunktex.Height := 256;
-      trunktex.PixelFormat := pf32bit;
-      twigtex.Canvas.StretchDraw(Rect(0, 0, twigtex.Width, twigtex.Height), TwigImage.Picture.Graphic);
-      trunktex.Canvas.StretchDraw(Rect(0, 0, trunktex.Width, trunktex.Height), TrunkImage.Picture.Graphic);
-      f.SetRockVoxelParams(rock, buf, twigtex, trunktex);
+      rocktex := TBitmap.Create;
+      rocktex.Width := 256;
+      rocktex.Height := 256;
+      rocktex.PixelFormat := pf32bit;
+      rocktex.Canvas.StretchDraw(Rect(0, 0, rocktex.Width, rocktex.Height), RockImage.Picture.Graphic);
+      f.SetRockVoxelParams(rock, buf, rocktex);
       f.ShowModal;
       if f.ModalResult = mrOK then
       begin
@@ -1444,8 +1367,7 @@ begin
         else
           VXE_ExportVoxelToDDVOX(buf, sz, ename);
       end;
-      twigtex.Free;
-      trunktex.Free;
+      rocktex.Free;
     finally
       f.Free;
     end;
@@ -1453,6 +1375,14 @@ begin
     Screen.Cursor := crDefault;
   end;
   FreeMem(buf, SizeOf(voxelbuffer_t));
+end;
+
+procedure TForm1.RecalcUVCheckBoxClick(Sender: TObject);
+begin
+  SaveUndo;
+  rock.mProperties.mRecalcUV := RecalcUVCheckBox.Checked;
+  needsrecalc := True;
+  changed := True;
 end;
 
 end.

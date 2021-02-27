@@ -67,7 +67,7 @@ type
     { Private declarations }
   protected
     rock: rock_t;
-    twigtex, trunktex: TBitmap;
+    rocktex: TBitmap;
     vox: voxelbuffer_p;
     procedure UpdateControls;
     procedure CreateVoxel;
@@ -75,7 +75,7 @@ type
     { Public declarations }
     voxsize: integer;
     procedure SetRockVoxelParams(const arock: rock_t; const avox: voxelbuffer_p;
-      atwigtex, atrunktex: TBitmap);
+      arocktex: TBitmap);
   end;
 
 implementation
@@ -92,8 +92,7 @@ var
   i: integer;
 begin
   rock := nil;
-  twigtex := nil;
-  trunktex := nil;
+  rocktex := nil;
   vox := nil;
 
   DoubleBuffered := True;
@@ -127,19 +126,18 @@ begin
 end;
 
 procedure TExportVoxelForm.SetRockVoxelParams(const arock: rock_t; const avox: voxelbuffer_p;
-  atwigtex, atrunktex: TBitmap);
+  arocktex: TBitmap);
 begin
   rock := arock;
   vox  := avox;
-  twigtex := atwigtex;
-  trunktex := atrunktex;
+  rocktex := arocktex;
   CreateVoxel;
   UpdateControls;
 end;
 
 procedure TExportVoxelForm.CreateVoxel;
 begin
-  if (rock = nil) or (vox = nil) or (trunktex = nil) or (twigtex = nil) then
+  if (rock = nil) or (vox = nil) or (rocktex = nil) then
     Exit;
 
   Screen.Cursor := crHourglass;
@@ -151,7 +149,7 @@ begin
     else
       voxsize := 256;
     end;
-    DT_CreateVoxelFromRock(rock, vox, voxsize, trunktex, twigtex);
+    DT_CreateVoxelFromRock(rock, vox, voxsize, rocktex);
   finally
     Screen.Cursor := crDefault;
   end;
@@ -177,7 +175,7 @@ var
   x, y: integer;
   ln: PLongWordArray;
 begin
-  if (rock = nil) or (vox = nil) or (trunktex = nil) or (twigtex = nil) then
+  if (rock = nil) or (vox = nil) or (rocktex = nil) then
     Exit;
 
   b := TBitmap.Create;
