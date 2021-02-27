@@ -59,8 +59,7 @@ var
   pt_rendredtriangles: integer = 0;
 
 var
-  trunktexture: TGLuint = 0;
-  twigtexture: TGLuint = 0;
+  rocktexture: TGLuint = 0;
 
 function gld_CreateTexture(const pic: TPicture; const transparent: boolean): TGLUint;
 
@@ -76,8 +75,8 @@ uses
 procedure ResetCamera;
 begin
   camera.x := 0.0;
-  camera.y := -3.0;
-  camera.z := -6.0;
+  camera.y := -1.0;
+  camera.z := -4.0;
   camera.ax := 0.0;
   camera.ay := 0.0;
   camera.az := 0.0;
@@ -284,7 +283,7 @@ begin
   glDisable(GL_BLEND);
   glDisable(GL_ALPHA_TEST);
 
-  glBindTexture(GL_TEXTURE_2D, trunktexture);
+  glBindTexture(GL_TEXTURE_2D, rocktexture);
 
   pt_rendredtriangles := 0;
   glRenderFaces(t.mVertCount, t.mFaceCount, t.mVert, t.mFace);
