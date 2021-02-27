@@ -159,7 +159,11 @@ var
         if IsIntInRange(z, 0, voxsize - 1) then
         begin
           iu := Round(tex.Width * tri[idx].u) mod tex.Width;
+          if iu < 0 then
+            iu := -iu;
           iv := Round(tex.Height * tri[idx].v) mod tex.Height;
+          if iv < 0 then
+            iv := -iv;
           pv := @vox[x, y, z];
           pv^ := tex.Canvas.Pixels[iu, iv];
           if opaque then
