@@ -50,8 +50,8 @@ type
 
 // Bigger values = better accuracy
 const
-  MAXRINGS = 32;
-  MAXSEGMENTS = 32;
+  MAXRINGS = 33;
+  MAXSEGMENTS = 33;
 
 type
   UVmatrixLookUp_t = array[0..MAXRINGS - 1, 0..MAXSEGMENTS] of integer;
@@ -94,8 +94,7 @@ type
     mXOffset: single; // X axis offset
     mZOffset: single; // Z axis offset
     mPitRate: single; // Pit rate
-    mPitScaleMin: single; // Pit scale minimum
-    mPitScaleMax: single; // Pit scale miximum
+    mPitElevation: single; // Pit deformation elevation
     mGroundLevelFactor: single; // Close to ground level control
     mXCareen: single; // X axis careen
     mYCareen: single; // X axis careen
@@ -227,7 +226,7 @@ end;
 // properties_t
 constructor properties_t.CreateDefault;
 begin
-  DefaultValues(262);
+  DefaultValues(661);
 end;
 
 constructor properties_t.Create(
@@ -310,17 +309,16 @@ begin
   mXScale := 1.0;
   mYScale := 1.0;
   mZScale := 1.0;
-  mXDeformFactor := 0.0;
-  mYDeformFactor := 0.0;
-  mZDeformFactor := 0.0;
-  mRDeformFactor := 0.0;
-  mNumRings := 5;
-  mNumSegments := 10;
+  mXDeformFactor := 0.05;
+  mYDeformFactor := 0.05;
+  mZDeformFactor := 0.05;
+  mRDeformFactor := 0.5;
+  mNumRings := 4;
+  mNumSegments := 7;
   mXOffset := 0.0;
   mZOffset := 0.0;
-  mPitRate := 0.0;
-  mPitScaleMin := 1.0;
-  mPitScaleMax := 1.0;
+  mPitRate := 0.2;
+  mPitElevation := 0.9;
   mGroundLevelFactor := 1.0;
   mXCareen := 0.0;
   mYCareen := 0.0;
@@ -480,8 +478,8 @@ begin
     mFace[idx].x := A[idx];
     mFace[idx].y := A[idx + 1];
     mFace[idx].z := A[idx + 2];
-    mFace[idx].topring := min3i(mVert[idx].ring, mVert[idx + 1].ring, mVert[idx + 2].ring);
-    mFace[idx].bottomring := max3i(mVert[idx].ring, mVert[idx + 1].ring, mVert[idx + 2].ring);
+    mFace[idx].topring := min3i(mVert[A[idx]].ring, mVert[A[idx + 1]].ring, mVert[A[idx + 2]].ring);
+    mFace[idx].bottomring := max3i(mVert[A[idx]].ring, mVert[A[idx + 1]].ring, mVert[A[idx + 2]].ring);
   end;
 end;
 
@@ -656,8 +654,48 @@ begin
       mVert[i].z := mVert[i].z * scale;
 end;
 
-procedure rock_t.apply_pits;
+function mean3f(const a, b, c: single): single;
 begin
+  Result := (a + b + c) / 3;
+end;
+
+procedure rock_t.apply_pits;
+var
+  i: integer;
+  rate: single;
+  x, y, z, u, v: single;
+  pA, pB, pC, p0: integer;
+begin
+  rate := mProperties.mPitRate;
+  if rate = 0.0 then
+    Exit;
+
+  for i := mFaceCount - 1 downto 0 do
+    if (mFace[i].topring >= 0) and (mFace[i].bottomring >= 0) then
+      if mProperties.random(0) <= rate then
+      begin
+        pA := mFace[i].x;
+        pB := mFace[i].y;
+        pC := mFace[i].z;
+        x := mean3f(mVert[pA].x, mVert[pB].x, mVert[pC].x);
+        y := mean3f(mVert[pA].y, mVert[pB].y, mVert[pC].y);
+        z := mean3f(mVert[pA].z, mVert[pB].z, mVert[pC].z);
+        u := mean3f(mVert[pA].u, mVert[pB].u, mVert[pC].u);
+        v := mean3f(mVert[pA].v, mVert[pB].v, mVert[pC].v);
+
+        p0 := AddVert(x, y, z, u, v, -1, -1);
+        mVert[p0] := scaleVec(mVert[p0], mProperties.mPitElevation);
+        mFace[i].z := p0;
+
+        mFaceCount := mFaceCount + 2;
+        SetLength(mFace, mFaceCount);
+        mFace[mFaceCount - 2].x := pB;
+        mFace[mFaceCount - 2].y := pC;
+        mFace[mFaceCount - 2].z := p0;
+        mFace[mFaceCount - 1].x := pC;
+        mFace[mFaceCount - 1].y := pA;
+        mFace[mFaceCount - 1].z := p0;
+      end;
 end;
 
 procedure rock_t.apply_groundlevelfactor;
@@ -672,15 +710,15 @@ begin
   apply_xyzdeformation;
   apply_xyzcareen;
   apply_rdeformation;
-  apply_xzoffsets;
-  apply_xyzscale;
-  apply_pits;
-  apply_groundlevelfactor;
   if mProperties.mRecalcUV then
   begin
     fix_uvscale;
     apply_uvscale;
   end;
+  apply_xzoffsets;
+  apply_xyzscale;
+  apply_pits;
+  apply_groundlevelfactor;
 end;
 
 procedure rock_t.init;
