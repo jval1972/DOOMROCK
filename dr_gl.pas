@@ -254,7 +254,7 @@ var
   i: integer;
   procedure _render_rover(const r: integer);
   begin
-    glTexCoord2f(mVert[r].u, mVert[r].v);
+    glTexCoord2f(-mVert[r].u, -mVert[r].v);
     glvertex3f(mVert[r].x, mVert[r].y, mVert[r].z);
   end;
 begin

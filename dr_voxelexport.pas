@@ -58,7 +58,7 @@ var
   begin
     tri[g].x := mVert[r].x * scale + ofs;
     tri[g].y := voxsize - 1.0 - mVert[r].y * scale;
-    tri[g].z := mVert[r].z * scale + ofs;
+    tri[g].z := voxsize - 1.0 - mVert[r].z * scale - ofs;
     tri[g].u := mVert[r].u;
     tri[g].v := mVert[r].v;
   end;

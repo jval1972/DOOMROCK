@@ -25,7 +25,6 @@
 //  Site  : https://sourceforge.net/projects/doom-rock/
 //------------------------------------------------------------------------------
 
-
 unit procrock;
 
 interface

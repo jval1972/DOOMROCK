@@ -190,8 +190,8 @@ begin
   ftheta2 := opt_theta2 / OPT_TO_FLOAT;
   if ftheta2 < 0.0 then
     ftheta2 := 0.0
-  else if ftheta2 > PI / 4 then
-    ftheta2 := PI / 4;
+  else if ftheta2 > PI / 8 then
+    ftheta2 := PI / 8;
 
   if opt_spritepal in [0..4] then
     PatchRadioGroup.ItemIndex := opt_spritepal;
@@ -271,7 +271,7 @@ var
   c, m, m2: matrix_t;
 begin
   device_clear(@device);
-  camera_at_zero(@device, fviewdist, 0, 0);
+  camera_at_zero(@device, fviewdist, 0.5, 0);
   matrix_set_rotate(@m, 0.0, 0.0, 1.0, ftheta);
   matrix_set_rotate(@m2, 0.0, 1.0, 0.0, ftheta2);
   matrix_mul(@c, @m, @m2);
@@ -342,11 +342,11 @@ end;
 
 procedure TExportSpriteForm.Theta2IncButton1Click(Sender: TObject);
 begin
-  if ftheta2 < PI / 4 then
+  if ftheta2 < PI / 8 then
   begin
     ftheta2 := ftheta2 + PI / 32;
-    if ftheta2 > PI / 4 then
-      ftheta2 := PI / 4;
+    if ftheta2 > PI / 8 then
+      ftheta2 := PI / 8;
     needs3dupdate := True;
     UpdateControls;
     PaintBox1.Invalidate;

@@ -13135,7 +13135,7 @@ object ExportSpriteForm: TExportSpriteForm
       Height = 21
       MaxLength = 5
       TabOrder = 1
-      Text = '10000'
+      Text = '11000'
       OnKeyPress = CheckNumericEdit
     end
     object RadiusEdit: TEdit
@@ -13145,7 +13145,7 @@ object ExportSpriteForm: TExportSpriteForm
       Height = 21
       MaxLength = 3
       TabOrder = 2
-      Text = '32'
+      Text = '64'
       OnKeyPress = CheckNumericEdit
     end
     object HeightEdit: TEdit
