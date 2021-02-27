@@ -33,7 +33,7 @@ interface
 type
   fvec5_t = record
     x, y, z, u, v: single;
-    ring: integer;
+    ring, seg: integer;
   end;
   fvec5_p = ^fvec5_t;
   fvec5_a = array[0..$FFFF] of fvec5_t;
@@ -47,6 +47,14 @@ type
   ivec3_p = ^ivec3_t;
   ivec3_a = array[0..$FFFF] of ivec3_t;
   ivec3_pa = ^ivec3_a;
+
+// Bigger values = better accuracy
+const
+  MAXRINGS = 32;
+  MAXSEGMENTS = 32;
+
+type
+  UVmatrixLookUp_t = array[0..MAXRINGS - 1, 0..MAXSEGMENTS] of integer;
 
 type
   properties_t = class
@@ -92,6 +100,7 @@ type
     mXCareen: single; // X axis careen
     mYCareen: single; // X axis careen
     mZCareen: single; // X axis careen
+    mRecalcUV: boolean; // Recalculate UV
     mSeed: integer;
     mRseed: integer;
     constructor CreateDefault; virtual;
@@ -127,9 +136,11 @@ type
 
   rock_t = class
   protected
+    uvmatrixlookup: UVmatrixLookUp_t;
     procedure init;
-    function AddVert(const x, y, z, u, v: single; const ring: integer): integer;
+    function AddVert(const x, y, z, u, v: single; const ring, seg: integer): integer;
     procedure generate_hemisphere;
+    procedure fix_uvscale;
     procedure apply_uvscale;
     procedure apply_xyzdeformation;
     procedure apply_xyzcareen;
@@ -151,11 +162,6 @@ type
     procedure generate;
   end;
 
-// Bigger values = better accuracy
-const
-  MAXRINGS = 32;
-  MAXSEGMENTS = 32;
-  
 implementation
 
 uses
@@ -180,7 +186,17 @@ begin
   result.z := z;
 end;
 
-function fv3length(const a: fvec5_t): single;
+function fv5dist(const a1, a2: fvec5_t): single;
+var
+  dx, dy, dz: single;
+begin
+  dx := a1.x - a2.x;
+  dy := a1.y - a2.y;
+  dz := a1.z - a2.z;
+  result := sqrt(dx * dx + dy * dy + dz * dz);
+end;
+
+function fv5length(const a: fvec5_t): single;
 begin
   result := sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
 end;
@@ -189,7 +205,7 @@ function fv3normalize(const a: fvec5_t): fvec5_t;
 var
   l: single;
 begin
-  l := fv3length(a);
+  l := fv5length(a);
   result := a;
   if l <> 0.0 then
   begin
@@ -309,6 +325,7 @@ begin
   mXCareen := 0.0;
   mYCareen := 0.0;
   mZCareen := 0.0;
+  mRecalcUV := True;
 end;
 
 function properties_t.random(aFixed: single): single;
@@ -342,7 +359,7 @@ end;
 const
   EPSILON = 0.000001;
 
-function rock_t.AddVert(const x, y, z, u, v: single; const ring: integer): integer;
+function rock_t.AddVert(const x, y, z, u, v: single; const ring, seg: integer): integer;
 var
   i: integer;
 begin
@@ -364,6 +381,8 @@ begin
   mVert[Result].u := u;
   mVert[Result].v := v;
   mVert[Result].ring := ring;
+  mVert[Result].seg := seg;
+  uvmatrixlookup[ring, seg] := Result;
 end;
 
 function min3i(const x1, x2, x3: integer): integer;
@@ -405,6 +424,10 @@ begin
   numrings := mProperties.mNumRings * 2;
   numsegments := mProperties.mNumSegments;
 
+  for ring := 0 to numrings div 2 - 1 do
+    for seg := 0 to numsegments do
+      uvmatrixlookup[ring, seg] := 0;
+
   mVertCount := 0;
   SetLength(mVert, mVertCount);
 
@@ -434,17 +457,17 @@ begin
       vec.x := x0;
       vec.y := y0;
       vec.z := z0;
-      vec.u := -x0 / 2 + 0.5;
-      vec.v := -z0 / 2 + 0.5;
-      A[idx] := AddVert(vec.x, vec.y, vec.z, vec.u, vec.v, ring);
+      vec.u := -x0 / 2;// + 0.5;
+      vec.v := -z0 / 2;// + 0.5;
+      A[idx] := AddVert(vec.x, vec.y, vec.z, vec.u, vec.v, ring, seg);
       inc(idx);
 
       vec.x := x1;
       vec.y := y1;
       vec.z := z1;
-      vec.u := -x1 / 2 + 0.5;
-      vec.v := -z1 / 2 + 0.5;
-      A[idx] := AddVert(vec.x, vec.y, vec.z, vec.u, vec.v, ring + 1);
+      vec.u := -x1 / 2;// + 0.5;
+      vec.v := -z1 / 2;// + 0.5;
+      A[idx] := AddVert(vec.x, vec.y, vec.z, vec.u, vec.v, ring + 1, seg);
       inc(idx);
     end;
   end;
@@ -460,18 +483,45 @@ begin
     mFace[idx].topring := min3i(mVert[idx].ring, mVert[idx + 1].ring, mVert[idx + 2].ring);
     mFace[idx].bottomring := max3i(mVert[idx].ring, mVert[idx + 1].ring, mVert[idx + 2].ring);
   end;
-
-{  for idx := 0 to mVertCount - 1 do
-  begin
-    mVert[idx].x := mVert[idx].x + mProperties.random(0) / 5;
-    if abs(mVert[idx].y) > EPSILON then
-      mVert[idx].y := mVert[idx].y + mProperties.random(0) / 5;
-    mVert[idx].z := mVert[idx].z + mProperties.random(0) / 5;
-//    mVert[idx].u := -mVert[idx].x / 2 + 0.5;
-//    mVert[idx].v := -mVert[idx].z / 2 + 0.5;
-    mVert[idx] := scaleVec(mVert[idx], 1.1 - mProperties.random(0) * 0.2);
-  end;}
 end;
+
+procedure rock_t.fix_uvscale;
+var
+  ring, seg: integer;
+  numrings: integer;
+  numsegments: integer;
+  LENGTHS: array[0..MAXRINGS - 1] of single;
+  len, totallen: single;
+  v1, v2: integer;
+  theta: single;
+begin
+  numrings := mProperties.mNumRings * 2;
+  numsegments := mProperties.mNumSegments;
+
+  LENGTHS[0] := 0.0;
+  for seg := 0 to numsegments do
+  begin
+    totallen := 0.0;
+    for ring := 1 to numrings div 2 do
+    begin
+      v1 := uvmatrixlookup[ring, seg];
+      v2 := uvmatrixlookup[ring - 1, seg];
+      len := fv5dist(mVert[v1], mVert[v2]);
+      totallen := totallen + len;
+      LENGTHS[ring] := totallen;
+    end;
+    for ring := 1 to numrings div 2 do
+    begin
+      v1 := uvmatrixlookup[ring, seg];
+      theta := ArcTan2(mVert[v1].z, mVert[v1].x);
+      mVert[v1].u := sin(theta) * (LENGTHS[ring] / totallen) + 0.5;
+      mVert[v1].v := cos(theta) * (LENGTHS[ring] / totallen) + 0.5;
+    end;
+  end;
+  mVert[uvmatrixlookup[0, 0]].u := 0.5;
+  mVert[uvmatrixlookup[0, 0]].v := 0.5;
+end;
+
 
 procedure rock_t.apply_uvscale;
 var
@@ -481,12 +531,12 @@ begin
   scale := mProperties.mUScale;
   if scale <> 1.0 then
     for i := 0 to mVertCount - 1 do
-      mVert[i].u := (mVert[i].u - 0.5) * scale;
+      mVert[i].u := (mVert[i].u - 0.5) * scale + 0.5;
 
   scale := mProperties.mVScale;
   if scale <> 1.0 then
     for i := 0 to mVertCount - 1 do
-      mVert[i].v := (mVert[i].v - 0.5) * scale;
+      mVert[i].v := (mVert[i].v - 0.5) * scale + 0.5;
 end;
 
 procedure rock_t.apply_xyzdeformation;
@@ -513,6 +563,8 @@ begin
           mVert[i].y := mVert[i].y - mProperties.random(0) * factor
         else
           mVert[i].y := mVert[i].y + mProperties.random(0) * factor;
+        if mVert[i].y < 0.0 then
+          mVert[i].y := 0.0;
       end;
 
   factor := mProperties.mZDeformFactor;
@@ -540,7 +592,11 @@ begin
   if factor <> 0.0 then
     for i := 0 to mVertCount - 1 do
       if abs(mVert[i].y) > EPSILON then
+      begin
         mVert[i].y := mVert[i].y + mProperties.random(0) * factor;
+        if mVert[i].y < 0.0 then
+          mVert[i].y := 0.0;
+      end;
 
   factor := mProperties.mZCareen;
   if factor <> 0.0 then
@@ -611,6 +667,7 @@ end;
 procedure rock_t.generate;
 begin
   generate_hemisphere;
+  fix_uvscale;
   apply_uvscale;
   apply_xyzdeformation;
   apply_xyzcareen;
@@ -619,6 +676,11 @@ begin
   apply_xyzscale;
   apply_pits;
   apply_groundlevelfactor;
+  if mProperties.mRecalcUV then
+  begin
+    fix_uvscale;
+    apply_uvscale;
+  end;
 end;
 
 procedure rock_t.init;
