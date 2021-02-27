@@ -89,6 +89,9 @@ type
     mPitScaleMin: single; // Pit scale minimum
     mPitScaleMax: single; // Pit scale miximum
     mGroundLevelFactor: single; // Close to ground level control
+    mXCareen: single; // X axis careen
+    mYCareen: single; // X axis careen
+    mZCareen: single; // X axis careen
     mSeed: integer;
     mRseed: integer;
     constructor CreateDefault; virtual;
@@ -125,8 +128,16 @@ type
   rock_t = class
   protected
     procedure init;
-    function AddVert(const x, y, z, u, v: single): integer;
-    procedure generate_sphere;
+    function AddVert(const x, y, z, u, v: single; const ring: integer): integer;
+    procedure generate_hemisphere;
+    procedure apply_uvscale;
+    procedure apply_xyzdeformation;
+    procedure apply_xyzcareen;
+    procedure apply_rdeformation;
+    procedure apply_xzoffsets;
+    procedure apply_xyzscale;
+    procedure apply_pits;
+    procedure apply_groundlevelfactor;
   public
     mProperties: properties_t;
     mVertCount: integer;
@@ -140,6 +151,11 @@ type
     procedure generate;
   end;
 
+// Bigger values = better accuracy
+const
+  MAXRINGS = 32;
+  MAXSEGMENTS = 32;
+  
 implementation
 
 uses
@@ -290,6 +306,9 @@ begin
   mPitScaleMin := 1.0;
   mPitScaleMax := 1.0;
   mGroundLevelFactor := 1.0;
+  mXCareen := 0.0;
+  mYCareen := 0.0;
+  mZCareen := 0.0;
 end;
 
 function properties_t.random(aFixed: single): single;
@@ -320,14 +339,9 @@ begin
   SetLength(mFace, 0);
 end;
 
-// Bigger values = better accuracy
 const
-  MAXRINGS = 32;
-  MAXSEGMENTS = 32;
-
   EPSILON = 0.000001;
 
-function rock_t.AddVert(const x, y, z, u, v: single): integer;
 function rock_t.AddVert(const x, y, z, u, v: single; const ring: integer): integer;
 var
   i: integer;
@@ -422,7 +436,6 @@ begin
       vec.z := z0;
       vec.u := -x0 / 2 + 0.5;
       vec.v := -z0 / 2 + 0.5;
-      A[idx] := AddVert(vec.x, vec.y, vec.z, vec.u, vec.v);
       A[idx] := AddVert(vec.x, vec.y, vec.z, vec.u, vec.v, ring);
       inc(idx);
 
@@ -431,18 +444,10 @@ begin
       vec.z := z1;
       vec.u := -x1 / 2 + 0.5;
       vec.v := -z1 / 2 + 0.5;
-      A[idx] := AddVert(vec.x, vec.y, vec.z, vec.u, vec.v);
       A[idx] := AddVert(vec.x, vec.y, vec.z, vec.u, vec.v, ring + 1);
       inc(idx);
     end;
   end;
-
-{  for idx := 0 to GetArrayLength(A) - 1 do
-  begin
-    A[idx].x := (A[idx].x * radius) + x;
-    A[idx].y := (A[idx].y * radius) + y;
-    A[idx].z := (A[idx].z * radius) + z;
-  end;}
 
   mFaceCount := numrings * (numsegments + 1) - 2;
   SetLength(mFace, mFaceCount);
@@ -456,7 +461,7 @@ begin
     mFace[idx].bottomring := max3i(mVert[idx].ring, mVert[idx + 1].ring, mVert[idx + 2].ring);
   end;
 
-  for idx := 0 to mVertCount - 1 do
+{  for idx := 0 to mVertCount - 1 do
   begin
     mVert[idx].x := mVert[idx].x + mProperties.random(0) / 5;
     if abs(mVert[idx].y) > EPSILON then
@@ -465,12 +470,155 @@ begin
 //    mVert[idx].u := -mVert[idx].x / 2 + 0.5;
 //    mVert[idx].v := -mVert[idx].z / 2 + 0.5;
     mVert[idx] := scaleVec(mVert[idx], 1.1 - mProperties.random(0) * 0.2);
+  end;}
+end;
+
+procedure rock_t.apply_uvscale;
+var
+  i: integer;
+  scale: single;
+begin
+  scale := mProperties.mUScale;
+  if scale <> 1.0 then
+    for i := 0 to mVertCount - 1 do
+      mVert[i].u := (mVert[i].u - 0.5) * scale;
+
+  scale := mProperties.mVScale;
+  if scale <> 1.0 then
+    for i := 0 to mVertCount - 1 do
+      mVert[i].v := (mVert[i].v - 0.5) * scale;
+end;
+
+procedure rock_t.apply_xyzdeformation;
+var
+  i: integer;
+  factor: single;
+begin
+  factor := mProperties.mXDeformFactor;
+  if factor <> 0.0 then
+    for i := 0 to mVertCount - 1 do
+    begin
+      if mProperties.random(0) < 0.5 then
+        mVert[i].x := mVert[i].x - mProperties.random(0) * factor
+      else
+        mVert[i].x := mVert[i].x + mProperties.random(0) * factor;
+    end;
+
+  factor := mProperties.mYDeformFactor;
+  if factor <> 0.0 then
+    for i := 0 to mVertCount - 1 do
+      if abs(mVert[i].y) > EPSILON then
+      begin
+        if mProperties.random(0) < 0.5 then
+          mVert[i].y := mVert[i].y - mProperties.random(0) * factor
+        else
+          mVert[i].y := mVert[i].y + mProperties.random(0) * factor;
+      end;
+
+  factor := mProperties.mZDeformFactor;
+  if factor <> 0.0 then
+    for i := 0 to mVertCount - 1 do
+    begin
+      if mProperties.random(0) < 0.5 then
+        mVert[i].z := mVert[i].z - mProperties.random(0) * factor
+      else
+        mVert[i].z := mVert[i].z + mProperties.random(0) * factor;
+    end;
+end;
+
+procedure rock_t.apply_xyzcareen;
+var
+  i: integer;
+  factor: single;
+begin
+  factor := mProperties.mXCareen;
+  if factor <> 0.0 then
+    for i := 0 to mVertCount - 1 do
+      mVert[i].x := mVert[i].x + mProperties.random(0) * factor;
+
+  factor := mProperties.mYCareen;
+  if factor <> 0.0 then
+    for i := 0 to mVertCount - 1 do
+      if abs(mVert[i].y) > EPSILON then
+        mVert[i].y := mVert[i].y + mProperties.random(0) * factor;
+
+  factor := mProperties.mZCareen;
+  if factor <> 0.0 then
+    for i := 0 to mVertCount - 1 do
+      mVert[i].z := mVert[i].z + mProperties.random(0) * factor;
+end;
+
+procedure rock_t.apply_rdeformation;
+var
+  i: integer;
+  factor: single;
+  f: single;
+begin
+  factor := mProperties.mRDeformFactor;
+  if factor <> 0.0 then
+  begin
+    f := 1.0 + factor;
+    for i := 0 to mVertCount - 1 do
+      mVert[i] := scaleVec(mVert[i], f - mProperties.random(0) * factor);
   end;
+end;
+
+procedure rock_t.apply_xzoffsets;
+var
+  i: integer;
+  offset: single;
+begin
+  offset := mProperties.mXOffset;
+  if offset <> 0.0 then
+    for i := 0 to mVertCount - 1 do
+      mVert[i].x := mVert[i].x + offset;
+
+  offset := mProperties.mZOffset;
+  if offset <> 0.0 then
+    for i := 0 to mVertCount - 1 do
+      mVert[i].z := mVert[i].z + offset;
+end;
+
+procedure rock_t.apply_xyzscale;
+var
+  i: integer;
+  scale: single;
+begin
+  scale := mProperties.mXScale;
+  if scale <> 1.0 then
+    for i := 0 to mVertCount - 1 do
+      mVert[i].x := mVert[i].x * scale;
+
+  scale := mProperties.mYScale;
+  if scale <> 1.0 then
+    for i := 0 to mVertCount - 1 do
+      mVert[i].y := mVert[i].y * scale;
+
+  scale := mProperties.mZScale;
+  if scale <> 1.0 then
+    for i := 0 to mVertCount - 1 do
+      mVert[i].z := mVert[i].z * scale;
+end;
+
+procedure rock_t.apply_pits;
+begin
+end;
+
+procedure rock_t.apply_groundlevelfactor;
+begin
 end;
 
 procedure rock_t.generate;
 begin
-  generate_sphere;
+  generate_hemisphere;
+  apply_uvscale;
+  apply_xyzdeformation;
+  apply_xyzcareen;
+  apply_rdeformation;
+  apply_xzoffsets;
+  apply_xyzscale;
+  apply_pits;
+  apply_groundlevelfactor;
 end;
 
 procedure rock_t.init;
