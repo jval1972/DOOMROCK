@@ -59,27 +59,6 @@ type
 type
   properties_t = class
   public
-    mClumpMax: single;
-    mClumpMin: single;
-    mLengthFalloffFactor: single;
-    mLengthFalloffPower: single;
-    mBranchFactor: single;
-    mRadiusFalloffRate: single;
-    mClimbRate: single;
-    mTrunkKink: single;
-    mMaxRadius: single;
-    mRockSteps: integer;
-    mTaperRate: single;
-    mTwistRate: single;
-    mSegments: integer;
-    mLevels: integer;
-    mSweepAmount: single;
-    mInitialBranchLength: single;
-    mTrunkLength: single;
-    mDropAmount: single;
-    mGrowAmount: single;
-    mVMultiplier: single;
-    mTwigScale: single;
     mUScale: single; // U texture coordinate scale
     mVScale: single; // V texture coordinate scale
     mXScale: single; // X axis scale
@@ -95,7 +74,7 @@ type
     mZOffset: single; // Z axis offset
     mPitRate: single; // Pit rate
     mPitElevation: single; // Pit deformation elevation
-    mGroundLevelFactor: single; // Close to ground level control
+    mGroundLevelHeight: single; // Close to ground level increase
     mXCareen: single; // X axis careen
     mYCareen: single; // X axis careen
     mZCareen: single; // X axis careen
@@ -104,27 +83,26 @@ type
     mRseed: integer;
     constructor CreateDefault; virtual;
     constructor Create(
-      aClumpMax: single;
-      aClumpMin: single;
-      aLengthFalloffFactor: single;
-      aLengthFalloffPower: single;
-      aBranchFactor: single;
-      aRadiusFalloffRate: single;
-      aClimbRate: single;
-      aTrunkKink: single;
-      aMaxRadius: single;
-      aRockSteps: integer;
-      aTaperRate: single;
-      aTwistRate: single;
-      aSegments: integer;
-      aLevels: integer;
-      aSweepAmount: single;
-      aInitialBranchLength: single;
-      aTrunkLength: single;
-      aDropAmount: single;
-      aGrowAmount: single;
-      aVMultiplier: single;
-      aTwigScale: single;
+      aUScale: single; // U texture coordinate scale
+      aVScale: single; // V texture coordinate scale
+      aXScale: single; // X axis scale
+      aYScale: single; // Y axis scale
+      aZScale: single; // Z axis scale
+      aXDeformFactor: single; // X axis deformation
+      aYDeformFactor: single; // Y axis deformation
+      aZDeformFactor: single; // Z axis deformation
+      aRDeformFactor: single; // Radius deformation
+      aNumRings: integer; // Number of rings
+      aNumSegments: integer; // Number of segments
+      aXOffset: single; // X axis offset
+      aZOffset: single; // Z axis offset
+      aPitRate: single; // Pit rate
+      aPitElevation: single; // Pit deformation elevation
+      aGroundLevelHeight: single; // Close to ground level increase
+      aXCareen: single; // X axis careen
+      aYCareen: single; // X axis careen
+      aZCareen: single; // X axis careen
+      aRecalcUV: boolean; // Recalculate UV
       aSeed: integer;
       aRseed: integer
     ); virtual;
@@ -147,7 +125,7 @@ type
     procedure apply_xzoffsets;
     procedure apply_xyzscale;
     procedure apply_pits;
-    procedure apply_groundlevelfactor;
+    procedure apply_groundlevelheight;
   public
     mProperties: properties_t;
     mVertCount: integer;
@@ -230,79 +208,57 @@ begin
 end;
 
 constructor properties_t.Create(
-  aClumpMax: single;
-  aClumpMin: single;
-  aLengthFalloffFactor: single;
-  aLengthFalloffPower: single;
-  aBranchFactor: single;
-  aRadiusFalloffRate: single;
-  aClimbRate: single;
-  aTrunkKink: single;
-  aMaxRadius: single;
-  aRockSteps: integer;
-  aTaperRate: single;
-  aTwistRate: single;
-  aSegments: integer;
-  aLevels: integer;
-  aSweepAmount: single;
-  aInitialBranchLength: single;
-  aTrunkLength: single;
-  aDropAmount: single;
-  aGrowAmount: single;
-  aVMultiplier: single;
-  aTwigScale: single;
+  aUScale: single; // U texture coordinate scale
+  aVScale: single; // V texture coordinate scale
+  aXScale: single; // X axis scale
+  aYScale: single; // Y axis scale
+  aZScale: single; // Z axis scale
+  aXDeformFactor: single; // X axis deformation
+  aYDeformFactor: single; // Y axis deformation
+  aZDeformFactor: single; // Z axis deformation
+  aRDeformFactor: single; // Radius deformation
+  aNumRings: integer; // Number of rings
+  aNumSegments: integer; // Number of segments
+  aXOffset: single; // X axis offset
+  aZOffset: single; // Z axis offset
+  aPitRate: single; // Pit rate
+  aPitElevation: single; // Pit deformation elevation
+  aGroundLevelHeight: single; // Close to ground level increase
+  aXCareen: single; // X axis careen
+  aYCareen: single; // X axis careen
+  aZCareen: single; // X axis careen
+  aRecalcUV: boolean; // Recalculate UV
   aSeed: integer;
   aRseed: integer
 );
 begin
+  mUScale := aUScale;
+  mVScale := aVScale;
+  mXScale := aXScale;
+  mYScale := aYScale;
+  mZScale := aZScale;
+  mXDeformFactor := aXDeformFactor;
+  mYDeformFactor := aYDeformFactor;
+  mZDeformFactor := aZDeformFactor;
+  mRDeformFactor := aRDeformFactor;
+  mNumRings := aNumRings;
+  mNumSegments := aNumSegments;
+  mXOffset := aXOffset;
+  mZOffset := aZOffset;
+  mPitRate := aPitRate;
+  mPitElevation := aPitElevation;
+  mGroundLevelHeight := aGroundLevelHeight;
+  mXCareen := aXCareen;
+  mYCareen := aYCareen;
+  mZCareen := aZCareen;
+  mRecalcUV := aRecalcUV;
   mSeed := aSeed;
-  mSegments := aSegments;
-  mLevels := aLevels;
-  mVMultiplier := aVMultiplier;
-  mTwigScale := aTwigScale;
-  mInitialBranchLength := aInitialBranchLength;
-  mLengthFalloffFactor := aLengthFalloffFactor;
-  mLengthFalloffPower := aLengthFalloffPower;
-  mClumpMax := aClumpMax;
-  mClumpMin := aClumpMin;
-  mBranchFactor := aBranchFactor;
-  mDropAmount := aDropAmount;
-  mGrowAmount := aGrowAmount;
-  mSweepAmount := aSweepAmount;
-  mMaxRadius := aMaxRadius;
-  mClimbRate := aClimbRate;
-  mTrunkKink := aTrunkKink;
-  mRockSteps := aRockSteps;
-  mTaperRate := aTaperRate;
-  mRadiusFalloffRate := aRadiusFalloffRate;
-  mTwistRate := aTwistRate;
-  mTrunkLength := aTrunkLength;
+  mRseed := aRseed;
 end;
 
 procedure properties_t.DefaultValues(const seed: integer);
 begin
   mSeed := seed;
-  mSegments := 6;
-  mLevels := 5;
-  mVMultiplier := 0.36;
-  mTwigScale := 0.39;
-  mInitialBranchLength := 0.49;
-  mLengthFalloffFactor := 0.85;
-  mLengthFalloffPower := 0.99;
-  mClumpMax := 0.454;
-  mClumpMin := 0.404;
-  mBranchFactor := 2.45;
-  mDropAmount := -0.1;
-  mGrowAmount := 0.235;
-  mSweepAmount := 0.01;
-  mMaxRadius := 0.139;
-  mClimbRate := 0.371;
-  mTrunkKink := 0.093;
-  mRockSteps := 5;
-  mTaperRate := 0.947;
-  mRadiusFalloffRate := 0.73;
-  mTwistRate := 3.02;
-  mTrunkLength := 2.4;
 
   mUScale := 1.0;
   mVScale := 1.0;
@@ -319,7 +275,7 @@ begin
   mZOffset := 0.0;
   mPitRate := 0.2;
   mPitElevation := 0.9;
-  mGroundLevelFactor := 1.0;
+  mGroundLevelHeight := 0.0;
   mXCareen := 0.0;
   mYCareen := 0.0;
   mZCareen := 0.0;
@@ -698,8 +654,18 @@ begin
       end;
 end;
 
-procedure rock_t.apply_groundlevelfactor;
+procedure rock_t.apply_groundlevelheight;
+var
+  i: integer;
+  h: single;
 begin
+  h := mProperties.mGroundLevelHeight;
+  if h = 0.0 then
+    Exit;
+
+  for i := 0 to mVertCount - 1 do
+    if mVert[i].ring < mProperties.mNumRings then
+      mVert[i].y := mVert[i].y + h;
 end;
 
 procedure rock_t.generate;
@@ -710,6 +676,7 @@ begin
   apply_xyzdeformation;
   apply_xyzcareen;
   apply_rdeformation;
+  apply_groundlevelheight;
   if mProperties.mRecalcUV then
   begin
     fix_uvscale;
@@ -718,7 +685,6 @@ begin
   apply_xzoffsets;
   apply_xyzscale;
   apply_pits;
-  apply_groundlevelfactor;
 end;
 
 procedure rock_t.init;
