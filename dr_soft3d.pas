@@ -118,6 +118,7 @@ type
     max_u: float; // tex_width - 1
     max_v: float; // tex_height - 1
     render_state: integer;
+    texture_state: integer;
     background: IUINT32;
     foreground: IUINT32;
   end;
@@ -128,6 +129,10 @@ const
   RENDER_STATE_COLOR = 2;
   RENDER_STATE_TEXTURE_SOLID = 4;
   RENDER_STATE_TEXTURE_ALPHAZERO = 8;
+
+const
+  TEXTURE_STATE_CLAMP = 0;
+  TEXTURE_STATE_REPEAT = 1;
 
 const
   TEXTURESIZE = 256;
@@ -712,6 +717,7 @@ begin
   device.height := height;
   transform_init(@device.transform, width, height);
   device.render_state := RENDER_STATE_TEXTURE_SOLID;
+  device.texture_state := TEXTURE_STATE_REPEAT;
 end;
 
 procedure device_destroy(const device: Pdevice_t);
@@ -889,8 +895,22 @@ begin
   v := v * device.max_v;
   x := Trunc(u + 0.5);
   y := Trunc(v + 0.5);
-  x := CMID(x, 0, device.tex_width - 1);
-  y := CMID(y, 0, device.tex_height - 1);
+  if device.texture_state = TEXTURE_STATE_REPEAT then
+  begin
+    if x < 0 then
+      x := (-x) mod device.tex_width
+    else
+      x := x mod device.tex_width;
+    if y < 0 then
+      y := (-y) mod device.tex_width
+    else
+      y := y mod device.tex_width;
+  end
+  else
+  begin
+    x := CMID(x, 0, device.tex_width - 1);
+    y := CMID(y, 0, device.tex_height - 1);
+  end;
   Result := device.texture[y][x];
 end;
 
