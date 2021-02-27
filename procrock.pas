@@ -69,6 +69,19 @@ type
     mGrowAmount: single;
     mVMultiplier: single;
     mTwigScale: single;
+    mUScale: single; // U texture coordinate scale
+    mVScale: single; // V texture coordinate scale
+    mXScale: single; // X axis scale
+    mYScale: single; // Y axis scale
+    mZScale: single; // Z axis scale
+    mXDeformFactor: single; // X axis deformation
+    mYDeformFactor: single; // Y axis deformation
+    mZDeformFactor: single; // Z axis deformation
+    mRDeformFactor: single; // Radius deformation
+    mNumRings: integer; // Number of rings
+    mNumSegments: integer; // Number of segments
+    mXOffset: single; // X axis offset
+    mZOffset: single; // Z axis offset
     mSeed: integer;
     mRseed: integer;
     constructor CreateDefault; virtual;
@@ -106,6 +119,7 @@ type
   protected
     procedure init;
     function AddVert(const x, y, z, u, v: single): integer;
+    procedure generate_sphere;
   public
     mProperties: properties_t;
     mVertCount: integer;
@@ -251,6 +265,20 @@ begin
   mRadiusFalloffRate := 0.73;
   mTwistRate := 3.02;
   mTrunkLength := 2.4;
+
+  mUScale := 1.0;
+  mVScale := 1.0;
+  mXScale := 1.0;
+  mYScale := 1.0;
+  mZScale := 1.0;
+  mXDeformFactor := 0.0;
+  mYDeformFactor := 0.0;
+  mZDeformFactor := 0.0;
+  mRDeformFactor := 0.0;
+  mNumRings := 5;
+  mNumSegments := 10;
+  mXOffset := 0.0;
+  mZOffset := 0.0;
 end;
 
 function properties_t.random(aFixed: single): single;
@@ -283,8 +311,8 @@ end;
 
 // Bigger values = better accuracy
 const
-  NUMRINGS = 8;
-  NUMSEGMENTS = 6;
+  MAXRINGS = 32;
+  MAXSEGMENTS = 32;
 
   EPSILON = 0.000001;
 
@@ -311,7 +339,7 @@ begin
   mVert[Result].v := v;
 end;
 
-procedure rock_t.generate;
+procedure rock_t.generate_sphere;
 var
   ring, seg: integer;
   fDeltaRingAngle: single;
@@ -323,15 +351,20 @@ var
   z0, z1: single;
   idx: integer;
   vec: fvec5_t;
-  A: array[0..NUMRINGS * (NUMSEGMENTS + 1) - 1] of integer;
+  A: array[0..MAXRINGS * (MAXSEGMENTS + 1) - 1] of integer;
+  numrings: integer;
+  numsegments: integer;
 begin
   mProperties.mRseed := mProperties.mSeed;
-  
+
+  numrings := mProperties.mNumRings * 2;
+  numsegments := mProperties.mNumSegments;
+
   mVertCount := 0;
   SetLength(mVert, mVertCount);
 
-  fDeltaRingAngle := pi / NUMRINGS;
-  fDeltaSegAngle  := 2 * pi / NUMSEGMENTS;
+  fDeltaRingAngle := pi / numrings;
+  fDeltaSegAngle  := 2 * pi / numsegments;
 
   idx := 0;
 
@@ -344,7 +377,7 @@ begin
     y1 := Cos((ring + 1) * fDeltaRingAngle);
 
     // Generate the group of segments for the current ring
-    for seg := 0 to NUMSEGMENTS do
+    for seg := 0 to numsegments do
     begin
       ss := Sin(seg * fDeltaSegAngle);
       sc := Cos(seg * fDeltaSegAngle);
@@ -356,16 +389,16 @@ begin
       vec.x := x0;
       vec.y := y0;
       vec.z := z0;
-      vec.u := -4*x0 / 2 + 0.5;
-      vec.v := -4*z0 / 2 + 0.5;
+      vec.u := -x0 / 2 + 0.5;
+      vec.v := -z0 / 2 + 0.5;
       A[idx] := AddVert(vec.x, vec.y, vec.z, vec.u, vec.v);
       inc(idx);
 
       vec.x := x1;
       vec.y := y1;
       vec.z := z1;
-      vec.u := -4*x1 / 2 + 0.5;
-      vec.v := -4*z1 / 2 + 0.5;
+      vec.u := -x1 / 2 + 0.5;
+      vec.v := -z1 / 2 + 0.5;
       A[idx] := AddVert(vec.x, vec.y, vec.z, vec.u, vec.v);
       inc(idx);
     end;
@@ -378,7 +411,7 @@ begin
     A[idx].z := (A[idx].z * radius) + z;
   end;}
 
-  mFaceCount := NUMRINGS * (NUMSEGMENTS + 1) - 2;
+  mFaceCount := numrings * (numsegments + 1) - 2;
   SetLength(mFace, mFaceCount);
 
   for idx := 0 to mFaceCount - 1 do
@@ -398,6 +431,11 @@ begin
 //    mVert[idx].v := -mVert[idx].z / 2 + 0.5;
     mVert[idx] := scaleVec(mVert[idx], 1.1 - mProperties.random(0) * 0.2);
   end;
+end;
+
+procedure rock_t.generate;
+begin
+  generate_sphere;
 end;
 
 procedure rock_t.init;
