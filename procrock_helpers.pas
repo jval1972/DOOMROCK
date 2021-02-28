@@ -69,6 +69,7 @@ begin
     s.Write(mSeed, SizeOf(integer));
     s.Write(mRseed, SizeOf(integer));
     s.Write(mComplete, SizeOf(boolean));
+    s.Write(mYOffset, SizeOf(single));
   end;
 end;
 
@@ -76,6 +77,7 @@ procedure PT_LoadPropertiesBinary(const p: properties_t; const s: TStream);
 begin
   with p do
   begin
+    DefaultValues(0);
     s.Read(mVScale, SizeOf(single));
     s.Read(mXScale, SizeOf(single));
     s.Read(mYScale, SizeOf(single));
@@ -97,7 +99,11 @@ begin
     s.Read(mRecalcUV, SizeOf(boolean));
     s.Read(mSeed, SizeOf(integer));
     s.Read(mRseed, SizeOf(integer));
-    s.Read(mComplete, SizeOf(boolean));
+    if s.Position < s.Size then
+    begin
+      s.Read(mComplete, SizeOf(boolean));
+      s.Read(mYOffset, SizeOf(single));
+    end;
   end;
 end;
 

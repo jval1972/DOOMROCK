@@ -14066,100 +14066,120 @@ object Form1: TForm1
         end
         object Label16: TLabel
           Left = 8
-          Top = 264
+          Top = 280
           Width = 69
           Height = 13
           Caption = 'Z axis Offset: '
         end
         object ZOffsetPaintBox: TPaintBox
           Left = 104
-          Top = 264
+          Top = 280
           Width = 113
           Height = 12
         end
         object ZOffsetLabel: TLabel
           Left = 224
-          Top = 264
+          Top = 280
           Width = 12
           Height = 13
           Caption = '...'
         end
         object RDeformationLabel: TLabel
           Left = 224
-          Top = 280
+          Top = 296
           Width = 12
           Height = 13
           Caption = '...'
         end
         object RDeformationPaintBox: TPaintBox
           Left = 104
-          Top = 280
+          Top = 296
           Width = 113
           Height = 12
         end
         object Label17: TLabel
           Left = 8
-          Top = 280
+          Top = 296
           Width = 83
           Height = 13
           Caption = 'Radius Variance: '
         end
         object Label18: TLabel
           Left = 8
-          Top = 296
+          Top = 312
           Width = 45
           Height = 13
           Caption = 'Pit Rate: '
         end
         object PitRatePaintBox: TPaintBox
           Left = 104
-          Top = 296
+          Top = 312
           Width = 113
           Height = 12
         end
         object PitRateLabel: TLabel
           Left = 224
-          Top = 296
+          Top = 312
           Width = 12
           Height = 13
           Caption = '...'
         end
         object PitElevationLabel: TLabel
           Left = 224
-          Top = 312
+          Top = 328
           Width = 12
           Height = 13
           Caption = '...'
         end
         object PitElevationPaintBox: TPaintBox
           Left = 104
-          Top = 312
+          Top = 328
           Width = 113
           Height = 12
         end
         object Label19: TLabel
           Left = 8
-          Top = 312
+          Top = 328
           Width = 66
           Height = 13
           Caption = 'Pit Elevation: '
         end
         object Label20: TLabel
           Left = 8
-          Top = 328
+          Top = 344
           Width = 98
           Height = 13
           Caption = 'Ground Height Add: '
         end
         object GroundLevelHeightPaintBox: TPaintBox
           Left = 104
-          Top = 328
+          Top = 344
           Width = 113
           Height = 12
         end
         object GroundLevelHeightLabel: TLabel
           Left = 224
-          Top = 328
+          Top = 344
+          Width = 12
+          Height = 13
+          Caption = '...'
+        end
+        object Label21: TLabel
+          Left = 8
+          Top = 264
+          Width = 69
+          Height = 13
+          Caption = 'Y axis Offset: '
+        end
+        object YOffsetPaintBox: TPaintBox
+          Left = 104
+          Top = 264
+          Width = 113
+          Height = 12
+        end
+        object YOffsetLabel: TLabel
+          Left = 224
+          Top = 264
           Width = 12
           Height = 13
           Caption = '...'
@@ -14178,7 +14198,7 @@ object Form1: TForm1
         end
         object RecalcUVCheckBox: TCheckBox
           Left = 8
-          Top = 352
+          Top = 368
           Width = 201
           Height = 17
           Caption = 'Recalc UV after deformations'
@@ -14187,7 +14207,7 @@ object Form1: TForm1
         end
         object CompleteRockCheckBox: TCheckBox
           Left = 8
-          Top = 368
+          Top = 384
           Width = 97
           Height = 17
           Caption = 'Complete rock'

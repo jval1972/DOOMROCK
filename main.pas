@@ -151,6 +151,8 @@ type
     ZCareenLabel: TLabel;
     XOffsetPaintBox: TPaintBox;
     XOffsetLabel: TLabel;
+    YOffsetPaintBox: TPaintBox;
+    YOffsetLabel: TLabel;
     ZOffsetPaintBox: TPaintBox;
     ZOffsetLabel: TLabel;
     RDeformationPaintBox: TPaintBox;
@@ -168,6 +170,7 @@ type
     Voxel1: TMenuItem;
     RecalcUVCheckBox: TCheckBox;
     CompleteRockCheckBox: TCheckBox;
+    Label21: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure NewButton1Click(Sender: TObject);
@@ -240,6 +243,7 @@ type
     YCareenSlider: TSliderHook;
     ZCareenSlider: TSliderHook;
     XOffsetSlider: TSliderHook;
+    YOffsetSlider: TSliderHook;
     ZOffsetSlider: TSliderHook;
     RDeformationSlider: TSliderHook;
     PitRateSlider: TSliderHook;
@@ -454,6 +458,10 @@ begin
   XOffsetSlider := TSliderHook.Create(XOffsetPaintBox);
   XOffsetSlider.Min := -0.5;
   XOffsetSlider.Max := 0.5;
+
+  YOffsetSlider := TSliderHook.Create(YOffsetPaintBox);
+  YOffsetSlider.Min := -0.5;
+  YOffsetSlider.Max := 0.5;
 
   ZOffsetSlider := TSliderHook.Create(ZOffsetPaintBox);
   ZOffsetSlider.Min := -0.5;
@@ -709,6 +717,7 @@ begin
   YCareenSlider.Free;
   ZCareenSlider.Free;
   XOffsetSlider.Free;
+  YOffsetSlider.Free;
   ZOffsetSlider.Free;
   RDeformationSlider.Free;
   PitRateSlider.Free;
@@ -1132,6 +1141,7 @@ begin
   YCareenSlider.OnSliderHookChange := nil;
   ZCareenSlider.OnSliderHookChange := nil;
   XOffsetSlider.OnSliderHookChange := nil;
+  YOffsetSlider.OnSliderHookChange := nil;
   ZOffsetSlider.OnSliderHookChange := nil;
   RDeformationSlider.OnSliderHookChange := nil;
   PitRateSlider.OnSliderHookChange := nil;
@@ -1152,6 +1162,7 @@ begin
   YCareenSlider.Position := rock.mProperties.mYCareen;
   ZCareenSlider.Position := rock.mProperties.mZCareen;
   XOffsetSlider.Position := rock.mProperties.mXOffset;
+  YOffsetSlider.Position := rock.mProperties.mYOffset;
   ZOffsetSlider.Position := rock.mProperties.mZOffset;
   RDeformationSlider.Position := rock.mProperties.mRDeformFactor;
   PitRateSlider.Position := rock.mProperties.mPitRate;
@@ -1175,6 +1186,7 @@ begin
   YCareenPaintBox.Invalidate;
   ZCareenPaintBox.Invalidate;
   XOffsetPaintBox.Invalidate;
+  YOffsetPaintBox.Invalidate;
   ZOffsetPaintBox.Invalidate;
   RDeformationPaintBox.Invalidate;
   PitRatePaintBox.Invalidate;
@@ -1195,6 +1207,7 @@ begin
   YCareenSlider.OnSliderHookChange := ControlsToRock;
   ZCareenSlider.OnSliderHookChange := ControlsToRock;
   XOffsetSlider.OnSliderHookChange := ControlsToRock;
+  YOffsetSlider.OnSliderHookChange := ControlsToRock;
   ZOffsetSlider.OnSliderHookChange := ControlsToRock;
   RDeformationSlider.OnSliderHookChange := ControlsToRock;
   PitRateSlider.OnSliderHookChange := ControlsToRock;
@@ -1218,6 +1231,7 @@ begin
   YCareenLabel.Caption := Format('%1.3f', [YCareenSlider.Position]);
   ZCareenLabel.Caption := Format('%1.3f', [ZCareenSlider.Position]);
   XOffsetLabel.Caption := Format('%1.3f', [XOffsetSlider.Position]);
+  YOffsetLabel.Caption := Format('%1.3f', [YOffsetSlider.Position]);
   ZOffsetLabel.Caption := Format('%1.3f', [ZOffsetSlider.Position]);
   RDeformationLabel.Caption := Format('%1.3f', [RDeformationSlider.Position]);
   PitRateLabel.Caption := Format('%1.3f', [PitRateSlider.Position]);
@@ -1260,6 +1274,7 @@ begin
   rock.mProperties.mYCareen := YCareenSlider.Position;
   rock.mProperties.mZCareen := ZCareenSlider.Position;
   rock.mProperties.mXOffset := XOffsetSlider.Position;
+  rock.mProperties.mYOffset := YOffsetSlider.Position;
   rock.mProperties.mZOffset := ZOffsetSlider.Position;
   rock.mProperties.mRDeformFactor := RDeformationSlider.Position;
   rock.mProperties.mPitRate := PitRateSlider.Position;

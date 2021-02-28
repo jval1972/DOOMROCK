@@ -70,6 +70,7 @@ type
     mNumRings: integer; // Number of rings
     mNumSegments: integer; // Number of segments
     mXOffset: single; // X axis offset
+    mYOffset: single; // Y axis offset
     mZOffset: single; // Z axis offset
     mPitRate: single; // Pit rate
     mPitElevation: single; // Pit deformation elevation
@@ -95,6 +96,7 @@ type
       aNumRings: integer; // Number of rings
       aNumSegments: integer; // Number of segments
       aXOffset: single; // X axis offset
+      aYOffset: single; // Y axis offset
       aZOffset: single; // Z axis offset
       aPitRate: single; // Pit rate
       aPitElevation: single; // Pit deformation elevation
@@ -221,6 +223,7 @@ constructor properties_t.Create(
   aNumRings: integer; // Number of rings
   aNumSegments: integer; // Number of segments
   aXOffset: single; // X axis offset
+  aYOffset: single; // Y axis offset
   aZOffset: single; // Z axis offset
   aPitRate: single; // Pit rate
   aPitElevation: single; // Pit deformation elevation
@@ -246,6 +249,7 @@ begin
   mNumRings := aNumRings;
   mNumSegments := aNumSegments;
   mXOffset := aXOffset;
+  mYOffset := aYOffset;
   mZOffset := aZOffset;
   mPitRate := aPitRate;
   mPitElevation := aPitElevation;
@@ -275,6 +279,7 @@ begin
   mNumRings := 4;
   mNumSegments := 7;
   mXOffset := 0.0;
+  mYOffset := 0.0;
   mZOffset := 0.0;
   mPitRate := 0.2;
   mPitElevation := 0.9;
@@ -597,6 +602,23 @@ begin
   if offset <> 0.0 then
     for i := 0 to mVertCount - 1 do
       mVert[i].x := mVert[i].x + offset;
+
+  offset := mProperties.mYOffset;
+  if offset <> 0.0 then
+    for i := 0 to mVertCount - 1 do
+    begin
+      if not mproperties.mComplete then
+      begin
+        if mVert[i].y > 0.0 then
+        begin
+          mVert[i].y := mVert[i].y + offset;
+          if mVert[i].y < 0.0 then
+            mVert[i].y := 0.0;
+        end;
+      end
+      else
+        mVert[i].y := mVert[i].y + offset;
+    end;
 
   offset := mProperties.mZOffset;
   if offset <> 0.0 then
