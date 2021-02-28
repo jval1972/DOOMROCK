@@ -78,6 +78,7 @@ type
     mYCareen: single; // X axis careen
     mZCareen: single; // X axis careen
     mRecalcUV: boolean; // Recalculate UV
+    mComplete: boolean; // "Complete" rock
     mSeed: integer;
     mRseed: integer;
     constructor CreateDefault; virtual;
@@ -102,6 +103,7 @@ type
       aYCareen: single; // X axis careen
       aZCareen: single; // X axis careen
       aRecalcUV: boolean; // Recalculate UV
+      aComplete: boolean; // "Complete" rock
       aSeed: integer;
       aRseed: integer
     ); virtual;
@@ -227,6 +229,7 @@ constructor properties_t.Create(
   aYCareen: single; // X axis careen
   aZCareen: single; // X axis careen
   aRecalcUV: boolean; // Recalculate UV
+  aComplete: boolean; // "Complete" rock
   aSeed: integer;
   aRseed: integer
 );
@@ -251,6 +254,7 @@ begin
   mYCareen := aYCareen;
   mZCareen := aZCareen;
   mRecalcUV := aRecalcUV;
+  mComplete := aComplete;
   mSeed := aSeed;
   mRseed := aRseed;
 end;
@@ -279,6 +283,7 @@ begin
   mYCareen := 0.0;
   mZCareen := 0.0;
   mRecalcUV := True;
+  mComplete := False;
 end;
 
 function properties_t.random(aFixed: single): single;
@@ -371,6 +376,7 @@ var
   A: array[0..MAXRINGS * (MAXSEGMENTS + 1) - 1] of integer;
   numrings: integer;
   numsegments: integer;
+  i: integer;
 begin
   mProperties.mRseed := mProperties.mSeed;
 
@@ -384,7 +390,11 @@ begin
   mVertCount := 0;
   SetLength(mVert, mVertCount);
 
-  fDeltaRingAngle := pi / numrings;
+  if mproperties.mComplete then
+    fDeltaRingAngle := 2 * pi / numrings
+  else
+    fDeltaRingAngle := pi / numrings;
+
   fDeltaSegAngle  := 2 * pi / numsegments;
 
   idx := 0;
@@ -428,14 +438,18 @@ begin
   mFaceCount := numrings * (numsegments + 1) - 2;
   SetLength(mFace, mFaceCount);
 
-  for idx := 0 to mFaceCount - 1 do
+  for i := 0 to mFaceCount - 1 do
   begin
-    mFace[idx].x := A[idx];
-    mFace[idx].y := A[idx + 1];
-    mFace[idx].z := A[idx + 2];
-    mFace[idx].topring := min3i(mVert[A[idx]].ring, mVert[A[idx + 1]].ring, mVert[A[idx + 2]].ring);
-    mFace[idx].bottomring := max3i(mVert[A[idx]].ring, mVert[A[idx + 1]].ring, mVert[A[idx + 2]].ring);
+    mFace[i].x := A[i];
+    mFace[i].y := A[i + 1];
+    mFace[i].z := A[i + 2];
+    mFace[i].topring := min3i(mVert[A[i]].ring, mVert[A[i + 1]].ring, mVert[A[i + 2]].ring);
+    mFace[i].bottomring := max3i(mVert[A[i]].ring, mVert[A[i + 1]].ring, mVert[A[i + 2]].ring);
   end;
+
+  if mproperties.mComplete then
+    for i := 0 to mVertCount - 1 do
+      mVert[i].y := mVert[i].y + 0.5;
 end;
 
 procedure rock_t.fix_uvscale;
@@ -516,8 +530,9 @@ begin
           mVert[i].y := mVert[i].y - mProperties.random(0) * factor
         else
           mVert[i].y := mVert[i].y + mProperties.random(0) * factor;
-        if mVert[i].y < 0.0 then
-          mVert[i].y := 0.0;
+        if not mproperties.mComplete then
+          if mVert[i].y < 0.0 then
+            mVert[i].y := 0.0;
       end;
 
   factor := mProperties.mZDeformFactor;
@@ -547,8 +562,9 @@ begin
       if abs(mVert[i].y) > EPSILON then
       begin
         mVert[i].y := mVert[i].y + mProperties.random(0) * factor;
-        if mVert[i].y < 0.0 then
-          mVert[i].y := 0.0;
+        if not mproperties.mComplete then
+          if mVert[i].y < 0.0 then
+            mVert[i].y := 0.0;
       end;
 
   factor := mProperties.mZCareen;

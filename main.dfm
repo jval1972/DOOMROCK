@@ -14185,6 +14185,15 @@ object Form1: TForm1
           TabOrder = 1
           OnClick = RecalcUVCheckBoxClick
         end
+        object CompleteRockCheckBox: TCheckBox
+          Left = 8
+          Top = 368
+          Width = 97
+          Height = 17
+          Caption = 'Complete rock'
+          TabOrder = 2
+          OnClick = CompleteRockCheckBoxClick
+        end
       end
       object TabSheet2: TTabSheet
         Caption = 'Texture'

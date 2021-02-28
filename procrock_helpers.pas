@@ -68,6 +68,7 @@ begin
     s.Write(mRecalcUV, SizeOf(boolean));
     s.Write(mSeed, SizeOf(integer));
     s.Write(mRseed, SizeOf(integer));
+    s.Write(mComplete, SizeOf(boolean));
   end;
 end;
 
@@ -96,6 +97,7 @@ begin
     s.Read(mRecalcUV, SizeOf(boolean));
     s.Read(mSeed, SizeOf(integer));
     s.Read(mRseed, SizeOf(integer));
+    s.Read(mComplete, SizeOf(boolean));
   end;
 end;
 

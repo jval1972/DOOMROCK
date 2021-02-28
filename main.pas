@@ -167,6 +167,7 @@ type
     N1: TMenuItem;
     Voxel1: TMenuItem;
     RecalcUVCheckBox: TCheckBox;
+    CompleteRockCheckBox: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure NewButton1Click(Sender: TObject);
@@ -210,6 +211,7 @@ type
     procedure Sprite1Click(Sender: TObject);
     procedure Voxel1Click(Sender: TObject);
     procedure RecalcUVCheckBoxClick(Sender: TObject);
+    procedure CompleteRockCheckBoxClick(Sender: TObject);
   private
     { Private declarations }
     ffilename: string;
@@ -1157,6 +1159,7 @@ begin
   GroundLevelHeightSlider.Position := rock.mProperties.mGroundLevelHeight;
 
   RecalcUVCheckBox.Checked := rock.mProperties.mRecalcUV;
+  CompleteRockCheckBox.Checked := rock.mProperties.mComplete;
 
   NumRingsPaintBox.Invalidate;
   NumSegmentsPaintBox.Invalidate;
@@ -1229,6 +1232,7 @@ begin
 
   SeedEdit.Text := IntToStr(rock.mProperties.mSeed);
   RecalcUVCheckBox.Checked := rock.mProperties.mRecalcUV;
+  CompleteRockCheckBox.Checked := rock.mProperties.mComplete;
 
   RockToSliders;
   SlidersToLabels;
@@ -1381,6 +1385,14 @@ procedure TForm1.RecalcUVCheckBoxClick(Sender: TObject);
 begin
   SaveUndo;
   rock.mProperties.mRecalcUV := RecalcUVCheckBox.Checked;
+  needsrecalc := True;
+  changed := True;
+end;
+
+procedure TForm1.CompleteRockCheckBoxClick(Sender: TObject);
+begin
+  SaveUndo;
+  rock.mProperties.mComplete := CompleteRockCheckBox.Checked;
   needsrecalc := True;
   changed := True;
 end;
