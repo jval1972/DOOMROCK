@@ -395,7 +395,7 @@ begin
   mVertCount := 0;
   SetLength(mVert, mVertCount);
 
-  if mproperties.mComplete then
+  if mProperties.mComplete then
     fDeltaRingAngle := 2 * pi / numrings
   else
     fDeltaRingAngle := pi / numrings;
@@ -452,7 +452,7 @@ begin
     mFace[i].bottomring := max3i(mVert[A[i]].ring, mVert[A[i + 1]].ring, mVert[A[i + 2]].ring);
   end;
 
-  if mproperties.mComplete then
+  if mProperties.mComplete then
     for i := 0 to mVertCount - 1 do
       mVert[i].y := mVert[i].y + 0.5;
 end;
@@ -470,28 +470,72 @@ begin
   numrings := mProperties.mNumRings * 2;
   numsegments := mProperties.mNumSegments;
 
-  LENGTHS[0] := 0.0;
-  for seg := 0 to numsegments do
+  if mProperties.mComplete then
   begin
-    totallen := 0.0;
-    for ring := 1 to numrings div 2 do
+    LENGTHS[0] := 0.0;
+    for seg := 0 to numsegments do
     begin
-      v1 := uvmatrixlookup[ring, seg];
-      v2 := uvmatrixlookup[ring - 1, seg];
-      len := fv5dist(mVert[v1], mVert[v2]);
-      totallen := totallen + len;
-      LENGTHS[ring] := totallen;
+      totallen := 0.0;
+      for ring := 1 to (numrings div 2) div 2 do
+      begin
+        v1 := uvmatrixlookup[ring, seg];
+        v2 := uvmatrixlookup[ring - 1, seg];
+        len := fv5dist(mVert[v1], mVert[v2]);
+        totallen := totallen + len;
+        LENGTHS[ring] := totallen;
+      end;
+      for ring := 1 to (numrings div 2) div 2 do
+      begin
+        v1 := uvmatrixlookup[ring, seg];
+        theta := ArcTan2(mVert[v1].z, mVert[v1].x);
+        mVert[v1].u := sin(theta) * (LENGTHS[ring] / totallen) + 0.5;
+        mVert[v1].v := cos(theta) * (LENGTHS[ring] / totallen) + 0.5;
+      end;
+      totallen := 0.0;
+      for ring := numrings div 2 downto (numrings div 2) div 2 + 1  do
+      begin
+        v1 := uvmatrixlookup[ring, seg];
+        v2 := uvmatrixlookup[ring - 1, seg];
+        len := fv5dist(mVert[v1], mVert[v2]);
+        totallen := totallen + len;
+        LENGTHS[ring] := totallen;
+      end;
+      for ring := numrings div 2 downto (numrings div 2) div 2 + 1 do
+      begin
+        v1 := uvmatrixlookup[ring, seg];
+        theta := ArcTan2(mVert[v1].z, mVert[v1].x);
+        mVert[v1].u := sin(theta) * (LENGTHS[ring] / totallen) + 0.5;
+        mVert[v1].v := cos(theta) * (LENGTHS[ring] / totallen) + 0.5;
+      end;
     end;
-    for ring := 1 to numrings div 2 do
+    mVert[uvmatrixlookup[0, 0]].u := 0.5;
+    mVert[uvmatrixlookup[0, 0]].v := 0.5;
+  end
+  else
+  begin
+    LENGTHS[0] := 0.0;
+    for seg := 0 to numsegments do
     begin
-      v1 := uvmatrixlookup[ring, seg];
-      theta := ArcTan2(mVert[v1].z, mVert[v1].x);
-      mVert[v1].u := sin(theta) * (LENGTHS[ring] / totallen) + 0.5;
-      mVert[v1].v := cos(theta) * (LENGTHS[ring] / totallen) + 0.5;
+      totallen := 0.0;
+      for ring := 1 to numrings div 2 do
+      begin
+        v1 := uvmatrixlookup[ring, seg];
+        v2 := uvmatrixlookup[ring - 1, seg];
+        len := fv5dist(mVert[v1], mVert[v2]);
+        totallen := totallen + len;
+        LENGTHS[ring] := totallen;
+      end;
+      for ring := 1 to numrings div 2 do
+      begin
+        v1 := uvmatrixlookup[ring, seg];
+        theta := ArcTan2(mVert[v1].z, mVert[v1].x);
+        mVert[v1].u := sin(theta) * (LENGTHS[ring] / totallen) + 0.5;
+        mVert[v1].v := cos(theta) * (LENGTHS[ring] / totallen) + 0.5;
+      end;
     end;
+    mVert[uvmatrixlookup[0, 0]].u := 0.5;
+    mVert[uvmatrixlookup[0, 0]].v := 0.5;
   end;
-  mVert[uvmatrixlookup[0, 0]].u := 0.5;
-  mVert[uvmatrixlookup[0, 0]].v := 0.5;
 end;
 
 
@@ -535,7 +579,7 @@ begin
           mVert[i].y := mVert[i].y - mProperties.random(0) * factor
         else
           mVert[i].y := mVert[i].y + mProperties.random(0) * factor;
-        if not mproperties.mComplete then
+        if not mProperties.mComplete then
           if mVert[i].y < 0.0 then
             mVert[i].y := 0.0;
       end;
@@ -567,7 +611,7 @@ begin
       if abs(mVert[i].y) > EPSILON then
       begin
         mVert[i].y := mVert[i].y + mProperties.random(0) * factor;
-        if not mproperties.mComplete then
+        if not mProperties.mComplete then
           if mVert[i].y < 0.0 then
             mVert[i].y := 0.0;
       end;
@@ -607,7 +651,7 @@ begin
   if offset <> 0.0 then
     for i := 0 to mVertCount - 1 do
     begin
-      if not mproperties.mComplete then
+      if not mProperties.mComplete then
       begin
         if mVert[i].y > 0.0 then
         begin
