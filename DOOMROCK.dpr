@@ -58,7 +58,8 @@ uses
   frm_exportvoxel in 'frm_exportvoxel.pas' {ExportVoxelForm},
   dr_md2 in 'dr_md2.pas',
   dr_riangulation in 'dr_riangulation.pas',
-  clipper in 'clipper.pas';
+  clipper in 'clipper.pas',
+  dr_ddmodel in 'dr_ddmodel.pas';
 
 {$R *.res}
 
