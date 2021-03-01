@@ -942,6 +942,7 @@ procedure rock_t.init;
 begin
   SetLength(mVert, 0);
   SetLength(mFace, 0);
+  SetLength(mVertUsage, 0);
 
   mVertCount := 0;
   mFaceCount := 0;

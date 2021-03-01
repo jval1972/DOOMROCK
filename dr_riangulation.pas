@@ -71,7 +71,7 @@ unit dr_riangulation;
 {$overflowchecks off}
 {$rangechecks off}
 
-{$define FASTER}// For faster results, sacrificing triangulation quality for a bit better speed performance
+{.$define FASTER}// For faster results, sacrificing triangulation quality for a bit better speed performance
 
 {$undef FASTONLY}// For only fast seidel-algorithm-based variant
 
