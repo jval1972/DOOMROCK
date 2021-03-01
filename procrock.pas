@@ -492,7 +492,7 @@ begin
         mVert[v1].v := cos(theta) * (LENGTHS[ring] / totallen) + 0.5;
       end;
       totallen := 0.0;
-      for ring := numrings div 2 downto (numrings div 2) div 2 + 1  do
+      for ring := numrings div 2 downto (numrings div 2) div 2  do
       begin
         v1 := uvmatrixlookup[ring, seg];
         v2 := uvmatrixlookup[ring - 1, seg];
@@ -500,7 +500,7 @@ begin
         totallen := totallen + len;
         LENGTHS[ring] := totallen;
       end;
-      for ring := numrings div 2 downto (numrings div 2) div 2 + 1 do
+      for ring := numrings div 2 downto (numrings div 2) div 2 do
       begin
         v1 := uvmatrixlookup[ring, seg];
         theta := ArcTan2(mVert[v1].z, mVert[v1].x);
