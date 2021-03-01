@@ -1497,7 +1497,7 @@ begin
     f.PrepareTextures;
     f.ShowModal;
     if f.ModalResult = mrOK then
-      f.DoExportSpriteWAD;
+      f.DoExportSprite;
   finally
     f.Free;
   end;

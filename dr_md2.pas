@@ -425,6 +425,7 @@ begin
   maxy := -100000.0;
   minz := 100000.0;
   maxz := -100000.0;
+
   for i := 0 to rock.mVertCount - 1 do
   begin
     if rock.mVert[i].x < minx then
@@ -502,6 +503,7 @@ begin
   h.framesize := strm.Position - h.ofs_frames;
 
   h.ofs_glcmds := strm.Position - start;
+
   for i := 0 to rock.mFaceCount - 1 do
   begin
     glcmd := 3;

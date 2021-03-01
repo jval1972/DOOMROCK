@@ -111,7 +111,11 @@ type
 
 function ZipCRC32(const Data: string): LongWord;
 
-function AddDataToPK3(const pk3: TPK3Writer; const entryname, data: string): boolean;
+function AddStringDataToPK3(const pk3: TPK3Writer; const entryname, data: string): boolean;
+
+function AddFileToPK3(const pk3: TPK3Writer; const entryname, fname: string): boolean;
+
+function AddBinaryDataToPK3(const pk3: TPK3Writer; const entryname: string; const data: Pointer; const datasize: integer): boolean;
 
 implementation
 
@@ -419,7 +423,7 @@ begin
   Result := Result xor $FFFFFFFF;
 end;
 
-function AddDataToPK3(const pk3: TPK3Writer; const entryname, data: string): boolean;
+function AddStringDataToPK3(const pk3: TPK3Writer; const entryname, data: string): boolean;
 var
   idx: integer;
 begin
@@ -432,6 +436,41 @@ begin
   end
   else
     Result := False;
+end;
+
+function AddFileToPK3(const pk3: TPK3Writer; const entryname, fname: string): boolean;
+var
+  p: PByteArray;
+  fs: TFileStream;
+begin
+  Result := False;
+  if not FileExists(fname) then
+    Exit;
+
+  fs := TFileStream.Create(fname, fmOpenRead);
+  try
+    GetMem(p, fs.Size);
+    fs.Read(p^, fs.Size);
+    Result := AddBinaryDataToPK3(pk3, entryname, p, fs.Size);
+    FreeMem(p);
+  finally
+    fs.Free;
+  end;
+
+end;
+
+function AddBinaryDataToPK3(const pk3: TPK3Writer; const entryname: string; const data: Pointer; const datasize: integer): boolean;
+var
+  sdata: string;
+  p: PByteArray;
+  i: integer;
+begin
+  SetLength(sdata, datasize);
+  p := data;
+  for i := 0 to datasize - 1 do
+    sdata[i + 1] := Chr(p[i]);
+  Result := AddStringDataToPK3(pk3, entryname, sdata);
+  sdata := '';
 end;
 
 end.

@@ -111,12 +111,16 @@ type
     procedure DoUpdate3d;
     procedure UpdateControls;
     function CheckOKtoGO: boolean;
+  protected
+    function IsWAD: boolean;
+    procedure DoExportSpriteWAD;
+    procedure DoExportSpritePK3;
   public
     { Public declarations }
     rock: rock_t;
     rocktex: TBitmap;
     procedure PrepareTextures;
-    procedure DoExportSpriteWAD;
+    procedure DoExportSprite;
   end;
 
 implementation
@@ -134,6 +138,9 @@ uses
   dr_ddmodel,
   dr_voxels,
   dr_voxelexport,
+  dr_pk3writer,
+  dr_md2,
+  pngimage,
   frm_spriteprefix;
 
 const
@@ -245,6 +252,7 @@ procedure TExportSpriteForm.FileNameEditChange(Sender: TObject);
 begin
   if Trim(FileNameEdit.Text) = '' then
     Button1.Enabled := False;
+  ModelGroupBox.Visible := (ScriptRadioGroup.ItemIndex = 0) or (not IsWAD and (ScriptRadioGroup.ItemIndex = 1));
 end;
 
 procedure TExportSpriteForm.RenderFaces(const mVertCount, mFaceCount: integer;
@@ -419,6 +427,7 @@ end;
 procedure TExportSpriteForm.Timer1Timer(Sender: TObject);
 begin
   Button1.Enabled := CheckOKtoGO;
+  ModelGroupBox.Visible := (ScriptRadioGroup.ItemIndex = 0) or (not IsWAD and (ScriptRadioGroup.ItemIndex = 1));
 end;
 
 procedure TExportSpriteForm.CheckNumericEdit(Sender: TObject;
@@ -435,7 +444,7 @@ procedure TExportSpriteForm.ScriptRadioGroupClick(Sender: TObject);
 begin
   ScriptParametersGroupBox.Visible := ScriptRadioGroup.ItemIndex <> 2;
   VoxelGroupBox.Visible := ScriptRadioGroup.ItemIndex = 0;
-  ModelGroupBox.Visible := ScriptRadioGroup.ItemIndex = 0;
+  ModelGroupBox.Visible := (ScriptRadioGroup.ItemIndex = 0) or (not IsWAD and (ScriptRadioGroup.ItemIndex = 0));
 end;
 
 procedure TExportSpriteForm.PrepareTextures;
@@ -463,6 +472,19 @@ begin
       ln[x] := RGB(r, g, b);
     end;
   end;
+end;
+
+function TExportSpriteForm.IsWAD: boolean;
+begin
+  Result := UpperCase(ExtractFileExt(FileNameEdit.Text)) = '.WAD';
+end;
+
+procedure TExportSpriteForm.DoExportSprite;
+begin
+  if IsWAD then
+    DoExportSpriteWAD
+  else
+    DoExportSpritePK3;
 end;
 
 procedure TExportSpriteForm.DoExportSpriteWAD;
@@ -656,6 +678,223 @@ begin
     wad.SaveToFile(FileNameEdit.Text);
   finally
     wad.Free;
+  end;
+  Screen.Cursor := crDefault;
+end;
+
+procedure TExportSpriteForm.DoExportSpritePK3;
+var
+  pk3: TPK3Writer;
+  wad: TWADWriter;
+  script: TStringList;
+  name: string;
+  stmp: string;
+  i: integer;
+  ms: TMemoryStream;
+  b: TBitmap;
+  vox: voxelbuffer_p;
+  voxsize: integer;
+  modsize: integer;
+  w, h: integer;
+  modeldef: string;
+  png: TPngObject;
+begin
+  Screen.Cursor := crHourGlass;
+  pk3 := TPK3Writer.Create;
+  try
+    ms := TMemoryStream.Create;
+    try
+      PT_SavePropertiesBinary(rock.mProperties, ms);
+      AddBinaryDataToPK3(pk3, PrefixEdit.Text + '.rock', ms.Memory, ms.Size);
+    finally
+      ms.Free;
+    end;
+
+    script := TStringList.Create;
+    try
+      if ScriptRadioGroup.ItemIndex <> 2 then
+      begin
+        stmp := Trim(ActorNameEdit.Text);
+        name := '';
+        for i := 1 to Length(stmp) do
+          if stmp[i] <> ' ' then
+            name := name + stmp[i];
+        script.Add('ACTOR ' + stmp + ' ' + EditorNumberEdit.Text);
+        script.Add('{');
+        script.Add('  Health 10000');
+        script.Add('  Radius ' + RadiusEdit.Text);
+        script.Add('  Height ' + HeightEdit.Text);
+        script.Add('  Mass 100000');
+        if SolidCheckBox.Checked then
+          script.Add('  +SOLID');
+        script.Add('  States');
+        script.Add('  {');
+        script.Add('  Spawn:');
+        stmp := PrefixEdit.Text;
+        script.Add('    ' + stmp[1] + stmp[2] + stmp[3] + stmp[4] + ' ' + stmp[5] + ' -1');
+        script.Add('  }');
+        script.Add('}');
+        if ScriptRadioGroup.ItemIndex = 0 then
+          AddStringDataToPK3(pk3, 'ACTORDEF.txt', script.Text)
+        else
+          AddStringDataToPK3(pk3, 'DECORATE.txt', script.Text);
+      end;
+    finally
+      script.Free;
+    end;
+
+    wad := TWADWriter.Create;
+    try
+      wad.AddSeparator('S_START');
+      b := TBitmap.Create;
+      try
+        b.Width := 256;
+        b.Height := 255;
+        b.PixelFormat := pf32bit;
+        b.Canvas.Draw(0, 0, buffer);
+        for i := 0 to 255 do
+          b.Canvas.Pixels[i, 0] := RGB(0, 0, 0);
+        case PatchRadioGroup.ItemIndex of
+        0: ms := BmpAsPatch(b, @DoomPaletteRaw);
+        1: ms := BmpAsPatch(b, @HereticPaletteRaw);
+        2: ms := BmpAsPatch(b, @HexenPaletteRaw);
+        3: ms := BmpAsPatch(b, @StrifePaletteRaw);
+        else
+          ms := BmpAsPatch(b, @RadixPaletteRaw);
+        end;
+        wad.AddData(PrefixEdit.Text + '0', ms.Memory, ms.Size);
+        ms.Free;
+      finally
+        b.Free;
+      end;
+      wad.AddSeparator('S_END');
+
+      ms := TMemoryStream.Create;
+      try
+        wad.SaveToStream(ms);
+        AddBinaryDataToPK3(pk3, PrefixEdit.Text + '.wad', ms.Memory, ms.Size);
+      finally
+        ms.Free;
+      end;
+    finally
+      wad.Free;
+    end;
+
+    if ScriptRadioGroup.ItemIndex = 0 then
+    begin
+      if GenerateVoxelCheckBox.Checked then
+      begin
+        GetMem(vox, SizeOf(voxelbuffer_t));
+
+        if voxRadioButton64x64.Checked then
+          voxsize := 64
+        else if voxRadioButton128x128.Checked then
+          voxsize := 128
+        else if voxRadioButton128x128.Checked then
+          voxsize := 256
+        else
+        begin
+          w := 2 * StrToIntDef(RadiusEdit.Text, 64);
+          h := StrToIntDef(HeightEdit.Text, 128);
+          if w > h then
+            voxsize := w
+          else
+            voxsize := h;
+          if voxsize > 256 then
+            voxsize := 256;
+        end;
+
+        DT_CreateVoxelFromRock(rock, vox, voxsize, rocktex);
+
+        VXE_ExportVoxelToDDVOX(vox, voxsize, 'vxtmp');
+        AddFileToPK3(pk3, 'VOXELS\' + PrefixEdit.Text + '.ddvox', 'vxtmp');
+        DeleteFile('vxtmp');
+        AddStringDataToPK3(pk3, 'VOXELS\VOXELDEF.txt', 'voxeldef ' + PrefixEdit.Text + '.ddvox replace sprite ' + PrefixEdit.Text);
+        FreeMem(vox, SizeOf(voxelbuffer_t));
+      end;
+      if GenerateModelCheckBox.Checked then
+      begin
+        png := TPngObject.Create;
+        png.Assign(rocktex);
+        ms := TMemoryStream.Create;
+        png.SaveToStream(ms);
+        png.Free;
+        AddBinaryDataToPK3(pk3, 'MODELS\' + PrefixEdit.Text + '_MODEL.PNG', ms.Memory, ms.Size);
+        ms.Free;
+
+        AddStringDataToPK3(pk3, 'MODELS\' + PrefixEdit.Text + '.DDMODEL', GetDDModelDeclaration(rock));
+
+        w := 2 * StrToIntDef(RadiusEdit.Text, 64);
+        h := StrToIntDef(HeightEdit.Text, 128);
+        if w > h then
+          modsize := w
+        else
+          modsize := h;
+
+        modeldef := '';
+        modeldef := modeldef + 'modeldef "' + PrefixEdit.Text + '.DDMODEL' + '"'#13#10;
+        modeldef := modeldef + '{'#13#10;
+        modeldef := modeldef + '  xoffset 0.0'#13#10;
+        modeldef := modeldef + '  yoffset 0.0'#13#10;
+        modeldef := modeldef + '  zoffset 0.0'#13#10;
+        modeldef := modeldef + '  xscale ' + IntToStr(modsize) + #13#10;
+        modeldef := modeldef + '  yscale ' + IntToStr(modsize) + #13#10;
+        modeldef := modeldef + '  zscale ' + IntToStr(modsize) + #13#10;
+        modeldef := modeldef + '}'#13#10;
+        modeldef := modeldef + #13#10;
+        modeldef := modeldef + 'state S_' + ActorNameEdit.Text + '0'#13#10;
+        modeldef := modeldef + '{'#13#10;
+        modeldef := modeldef + '  model "' + PrefixEdit.Text + '.DDMODEL' + '"'#13#10;
+        modeldef := modeldef + '  texture "' + PrefixEdit.Text + '_MODEL.PNG' + '"'#13#10;
+        modeldef := modeldef + '  frame 0'#13#10;
+        modeldef := modeldef + '}'#13#10;
+        AddStringDataToPK3(pk3, 'MODELS\MODELDEF.txt', modeldef);
+      end;
+    end;
+
+    if ScriptRadioGroup.ItemIndex = 1 then
+    begin
+      if GenerateModelCheckBox.Checked then
+      begin
+        png := TPngObject.Create;
+        png.Assign(rocktex);
+        ms := TMemoryStream.Create;
+        png.SaveToStream(ms);
+        png.Free;
+        AddBinaryDataToPK3(pk3, 'MODELS\' + ActorNameEdit.Text + '\' + PrefixEdit.Text + '_MODEL.PNG', ms.Memory, ms.Size);
+        ms.Free;
+
+        ms := TMemoryStream.Create;
+        SaveRockToMD2Stream(rock, ms, PrefixEdit.Text);
+        AddBinaryDataToPK3(pk3, 'MODELS\' + ActorNameEdit.Text + '\' + PrefixEdit.Text + '.MD2', ms.Memory, ms.Size);
+        ms.Free;
+
+        w := 2 * StrToIntDef(RadiusEdit.Text, 64);
+        h := StrToIntDef(HeightEdit.Text, 128);
+        if w > h then
+          modsize := w
+        else
+          modsize := h;
+
+        modeldef := '';
+        modeldef := modeldef + 'model ' + ActorNameEdit.Text  + #13#10;
+        modeldef := modeldef + '{'#13#10;
+        modeldef := modeldef + '  Path "MODELS/' + ActorNameEdit.Text + '"'#13#10;
+        modeldef := modeldef + '  Model 0 "' + PrefixEdit.Text + '.MD2"'#13#10;
+        modeldef := modeldef + '  Skin 0 "' + PrefixEdit.Text + '_MODEL.PNG"'#13#10;
+        modeldef := modeldef + '  Scale ' + Format('%1.5f %1.5f %1.5f', [modsize / 512, modsize / 512, modsize / 512]) + #13#10;
+        stmp := PrefixEdit.Text;
+        modeldef := modeldef + '  Frame ' + stmp[1] + stmp[2] + stmp[3] + stmp[4] + ' ' + stmp[5] + ' 0 "default0"'#13#10;
+        modeldef := modeldef + '}'#13#10;
+        modeldef := modeldef + #13#10;
+        AddStringDataToPK3(pk3, 'MODELDEF.txt', modeldef);
+      end;
+    end;
+
+    BackupFile(FileNameEdit.Text);
+    pk3.SaveToFile(FileNameEdit.Text);
+  finally
+    pk3.Free;
   end;
   Screen.Cursor := crDefault;
 end;
