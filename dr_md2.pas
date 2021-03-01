@@ -37,7 +37,7 @@ procedure SaveRockToMD2Stream(const rock: rock_t; const strm: TStream; const nam
 implementation
 
 uses
-  dr_riangulation;
+  dr_triangulation;
 
 const
   NUMVERTEXNORMALS = 162;
