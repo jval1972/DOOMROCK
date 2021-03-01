@@ -55,7 +55,10 @@ uses
   dr_voxelizer in 'dr_voxelizer.pas',
   dr_voxels in 'dr_voxels.pas',
   dr_voxelexport in 'dr_voxelexport.pas',
-  frm_exportvoxel in 'frm_exportvoxel.pas' {ExportVoxelForm};
+  frm_exportvoxel in 'frm_exportvoxel.pas' {ExportVoxelForm},
+  dr_md2 in 'dr_md2.pas',
+  dr_riangulation in 'dr_riangulation.pas',
+  clipper in 'clipper.pas';
 
 {$R *.res}
 
