@@ -56,7 +56,7 @@ var
     procedure _render_rover(const r: integer);
     begin
       AddLine(Format('    glTexCoord2f(%1.6f, %1.6f);', [-mVert[r].u, -mVert[r].v]));
-      AddLine(Format('    glvertex3f(%1.6f, %1.6f, %1.6f);', [(mVert[r].x - minx + dx) / scale, mVert[r].y / scale, (mVert[r].z - minz + dz) / scale]));
+      AddLine(Format('    glvertex3f(%1.6f, %1.6f, %1.6f);', [(mVert[r].x - minx - dx / 2) / scale, mVert[r].y / scale, (mVert[r].z - minz - dz / 2) / scale]));
     end;
   begin
     AddLine('  glBegin(GL_TRIANGLES);');
