@@ -13255,8 +13255,8 @@ object ExportSpriteForm: TExportSpriteForm
     end
   end
   object SaveDialog1: TSaveDialog
-    DefaultExt = 'wad'
-    Filter = 'WAD Files (*.wad)|*.wad|PK3 Files (*.pk3)|*.pk3'
+    DefaultExt = 'pk3'
+    Filter = 'PK3 Files (*.pk3)|*.pk3|WAD Files (*.wad)|*.wad'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
     Left = 552
     Top = 40
