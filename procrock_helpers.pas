@@ -78,6 +78,8 @@ begin
     s.Write(mZPositiveCut, SizeOf(single));
     s.Write(mUOffset, SizeOf(single));
     s.Write(mVOffset, SizeOf(single));
+    s.Write(mRecessRate, SizeOf(single));
+    s.Write(mRecessStrength, SizeOf(single));
   end;
 end;
 
@@ -119,6 +121,8 @@ begin
       s.Read(mZPositiveCut, SizeOf(single));
       s.Read(mUOffset, SizeOf(single));
       s.Read(mVOffset, SizeOf(single));
+      s.Read(mRecessRate, SizeOf(single));
+      s.Read(mRecessStrength, SizeOf(single));
     end;
   end;
 end;
@@ -151,20 +155,8 @@ begin
   for i := 0 to t.mVertCount - 1 do
     Add('v ' + F2S(t.mVert[i].x) + ' ' + F2S(t.mVert[i].y) + ' ' +  F2S(t.mVert[i].z) + #13#10);
 
-{  for i := 0 to t.mTwigVertCount - 1 do
-    Add('v ' + F2S(t.mTwigVert[i].x) + ' ' + F2S(t.mTwigVert[i].y) + ' ' + F2S(t.mTwigVert[i].z) + #13#10);}
-
-{  for i := 0 to t.mVertCount - 1 do
-    Add('vn ' + F2S(t.mNormal[i].x) + ' ' +  F2S(t.mNormal[i].y) + ' ' + F2S(t.mNormal[i].z) + #13#10);}
-
-{  for i := 0 to t.mTwigVertCount - 1 do
-    Add('vn ' + F2S(t.mTwigNormal[i].x) + ' ' + F2S(t.mTwigNormal[i].y) + ' ' + F2S(t.mTwigNormal[i].z) + #13#10);}
-
   for i := 0 to t.mVertCount - 1 do
     Add('vt ' + F2S(t.mVert[i].u) + ' ' + F2S(t.mVert[i].v) + #13#10);
-
-{  for i := 0 to t.mTwigVertCount - 1 do
-    Add('vt ' + F2S(t.mTwigUV[i].u) + ' ' + F2S(t.mTwigUV[i].v) + #13#10);}
 
   Add('g rock\nusemtl rock'#13#10);
   for i := 0 to t.mFaceCount - 1 do
@@ -174,15 +166,6 @@ begin
     c := t.mFace[i].z + 1;
     Add(Format('f %d/%d/%d %d/%d/%d %d/%d/%d'#13#10, [a, a, a, b, b, b, c, c, c]));
   end;
-
-{  Add('g twig\nusemtl twig'#13#10);
-  for i := 0 to t.mTwigFaceCount - 1 do
-  begin
-    a := t.mTwigFace[i].x + t.mVertCount + 1;
-    b := t.mTwigFace[i].y + t.mVertCount + 1;
-    c := t.mTwigFace[i].z + t.mVertCount + 1;
-    Add(Format('f %d/%d/%d %d/%d/%d %d/%d/%d'#13#10, [a, a, a, b, b, b, c, c, c]));
-  end;}
 
   for i := 1 to Length(buf) do
     s.Write(buf[i], SizeOf(char));
