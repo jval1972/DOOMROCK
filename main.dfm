@@ -1,8 +1,8 @@
 object Form1: TForm1
-  Left = 314
-  Top = 124
+  Left = 187
+  Top = 60
   Width = 914
-  Height = 657
+  Height = 684
   Caption = 'DOOMROCK Sprite Generator'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12859,11 +12859,11 @@ object Form1: TForm1
   object Splitter1: TSplitter
     Left = 265
     Top = 40
-    Height = 539
+    Height = 566
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 579
+    Top = 606
     Width = 898
     Height = 19
     Panels = <
@@ -13700,7 +13700,7 @@ object Form1: TForm1
     Left = 0
     Top = 40
     Width = 265
-    Height = 539
+    Height = 566
     Align = alLeft
     BevelOuter = bvNone
     Caption = ' '
@@ -13709,7 +13709,7 @@ object Form1: TForm1
       Left = 0
       Top = 0
       Width = 265
-      Height = 539
+      Height = 566
       ActivePage = TabSheet1
       Align = alClient
       TabOrder = 0
@@ -13848,80 +13848,80 @@ object Form1: TForm1
         end
         object Label6: TLabel
           Left = 8
-          Top = 104
+          Top = 136
           Width = 63
           Height = 13
           Caption = 'X axis Scale: '
         end
         object XScalePaintBox: TPaintBox
           Left = 104
-          Top = 104
+          Top = 136
           Width = 113
           Height = 12
         end
         object XScaleLabel: TLabel
           Left = 224
-          Top = 104
+          Top = 136
           Width = 12
           Height = 13
           Caption = '...'
         end
         object YScaleLabel: TLabel
           Left = 224
-          Top = 120
+          Top = 152
           Width = 12
           Height = 13
           Caption = '...'
         end
         object YScalePaintBox: TPaintBox
           Left = 104
-          Top = 120
+          Top = 152
           Width = 113
           Height = 12
         end
         object Label7: TLabel
           Left = 8
-          Top = 120
+          Top = 152
           Width = 63
           Height = 13
           Caption = 'Y axis Scale: '
         end
         object Label8: TLabel
           Left = 8
-          Top = 136
+          Top = 168
           Width = 63
           Height = 13
           Caption = 'Z axis Scale: '
         end
         object ZScalePaintBox: TPaintBox
           Left = 104
-          Top = 136
+          Top = 168
           Width = 113
           Height = 12
         end
         object ZScaleLabel: TLabel
           Left = 224
-          Top = 136
+          Top = 168
           Width = 12
           Height = 13
           Caption = '...'
         end
         object XDeformationLabel: TLabel
           Left = 224
-          Top = 152
+          Top = 184
           Width = 12
           Height = 13
           Caption = '...'
         end
         object XDeformationPaintBox: TPaintBox
           Left = 104
-          Top = 152
+          Top = 184
           Width = 113
           Height = 12
         end
         object Label9: TLabel
           Left = 8
-          Top = 152
+          Top = 184
           Width = 97
           Height = 13
           Caption = 'X axis Deformation: '
@@ -13934,7 +13934,7 @@ object Form1: TForm1
         end
         object Label10: TLabel
           Left = 8
-          Top = 168
+          Top = 200
           Width = 97
           Height = 13
           Caption = 'Y axis Deformation: '
@@ -13947,33 +13947,33 @@ object Form1: TForm1
         end
         object YDeformationPaintBox: TPaintBox
           Left = 104
-          Top = 168
+          Top = 200
           Width = 113
           Height = 12
         end
         object YDeformationLabel: TLabel
           Left = 224
-          Top = 168
+          Top = 200
           Width = 12
           Height = 13
           Caption = '...'
         end
         object ZDeformationLabel: TLabel
           Left = 224
-          Top = 184
+          Top = 216
           Width = 12
           Height = 13
           Caption = '...'
         end
         object ZDeformationPaintBox: TPaintBox
           Left = 104
-          Top = 184
+          Top = 216
           Width = 113
           Height = 12
         end
         object Label11: TLabel
           Left = 8
-          Top = 184
+          Top = 216
           Width = 97
           Height = 13
           Caption = 'Z axis Deformation: '
@@ -13986,323 +13986,363 @@ object Form1: TForm1
         end
         object Label12: TLabel
           Left = 8
-          Top = 200
+          Top = 232
           Width = 70
           Height = 13
           Caption = 'X axis Careen:'
         end
         object XCareenPaintBox: TPaintBox
           Left = 104
-          Top = 200
+          Top = 232
           Width = 113
           Height = 12
         end
         object XCareenLabel: TLabel
           Left = 224
-          Top = 200
+          Top = 232
           Width = 12
           Height = 13
           Caption = '...'
         end
         object YCareenLabel: TLabel
           Left = 224
-          Top = 216
+          Top = 248
           Width = 12
           Height = 13
           Caption = '...'
         end
         object YCareenPaintBox: TPaintBox
           Left = 104
-          Top = 216
+          Top = 248
           Width = 113
           Height = 12
         end
         object Label13: TLabel
           Left = 8
-          Top = 216
+          Top = 248
           Width = 73
           Height = 13
           Caption = 'Y axis Careen: '
         end
         object Label14: TLabel
           Left = 8
-          Top = 232
+          Top = 264
           Width = 73
           Height = 13
           Caption = 'Z axis Careen: '
         end
         object ZCareenPaintBox: TPaintBox
           Left = 104
-          Top = 232
+          Top = 264
           Width = 113
           Height = 12
         end
         object ZCareenLabel: TLabel
           Left = 224
-          Top = 232
+          Top = 264
           Width = 12
           Height = 13
           Caption = '...'
         end
         object XOffsetLabel: TLabel
           Left = 224
-          Top = 248
+          Top = 280
           Width = 12
           Height = 13
           Caption = '...'
         end
         object XOffsetPaintBox: TPaintBox
           Left = 104
-          Top = 248
+          Top = 280
           Width = 113
           Height = 12
         end
         object Label15: TLabel
           Left = 8
-          Top = 248
+          Top = 280
           Width = 69
           Height = 13
           Caption = 'X axis Offset: '
         end
         object Label16: TLabel
           Left = 8
-          Top = 280
+          Top = 312
           Width = 69
           Height = 13
           Caption = 'Z axis Offset: '
         end
         object ZOffsetPaintBox: TPaintBox
           Left = 104
-          Top = 280
+          Top = 312
           Width = 113
           Height = 12
         end
         object ZOffsetLabel: TLabel
           Left = 224
-          Top = 280
+          Top = 312
           Width = 12
           Height = 13
           Caption = '...'
         end
         object RDeformationLabel: TLabel
           Left = 224
-          Top = 296
+          Top = 328
           Width = 12
           Height = 13
           Caption = '...'
         end
         object RDeformationPaintBox: TPaintBox
           Left = 104
-          Top = 296
+          Top = 328
           Width = 113
           Height = 12
         end
         object Label17: TLabel
           Left = 8
-          Top = 296
+          Top = 328
           Width = 83
           Height = 13
           Caption = 'Radius Variance: '
         end
         object Label18: TLabel
           Left = 8
-          Top = 312
+          Top = 344
           Width = 45
           Height = 13
           Caption = 'Pit Rate: '
         end
         object PitRatePaintBox: TPaintBox
           Left = 104
-          Top = 312
+          Top = 344
           Width = 113
           Height = 12
         end
         object PitRateLabel: TLabel
           Left = 224
-          Top = 312
+          Top = 344
           Width = 12
           Height = 13
           Caption = '...'
         end
         object PitElevationLabel: TLabel
           Left = 224
-          Top = 328
+          Top = 360
           Width = 12
           Height = 13
           Caption = '...'
         end
         object PitElevationPaintBox: TPaintBox
           Left = 104
-          Top = 328
+          Top = 360
           Width = 113
           Height = 12
         end
         object Label19: TLabel
           Left = 8
-          Top = 328
+          Top = 360
           Width = 66
           Height = 13
           Caption = 'Pit Elevation: '
         end
         object Label20: TLabel
           Left = 8
-          Top = 344
+          Top = 376
           Width = 98
           Height = 13
           Caption = 'Ground Height Add: '
         end
         object GroundLevelHeightPaintBox: TPaintBox
           Left = 104
-          Top = 344
+          Top = 376
           Width = 113
           Height = 12
         end
         object GroundLevelHeightLabel: TLabel
           Left = 224
-          Top = 344
+          Top = 376
           Width = 12
           Height = 13
           Caption = '...'
         end
         object Label21: TLabel
           Left = 8
-          Top = 264
+          Top = 296
           Width = 69
           Height = 13
           Caption = 'Y axis Offset: '
         end
         object YOffsetPaintBox: TPaintBox
           Left = 104
-          Top = 264
+          Top = 296
           Width = 113
           Height = 12
         end
         object YOffsetLabel: TLabel
           Left = 224
-          Top = 264
+          Top = 296
           Width = 12
           Height = 13
           Caption = '...'
         end
         object Label22: TLabel
           Left = 8
-          Top = 360
+          Top = 392
           Width = 79
           Height = 13
           Caption = 'X Negative Cut: '
         end
         object XNegativeCutPaintBox: TPaintBox
           Left = 104
-          Top = 360
+          Top = 392
           Width = 113
           Height = 12
         end
         object XNegativeCutLabel: TLabel
           Left = 224
-          Top = 360
+          Top = 392
           Width = 12
           Height = 13
           Caption = '...'
         end
         object Label23: TLabel
           Left = 8
-          Top = 376
+          Top = 408
           Width = 73
           Height = 13
           Caption = 'X Positive Cut: '
         end
         object XPositiveCutPaintBox: TPaintBox
           Left = 104
-          Top = 376
+          Top = 408
           Width = 113
           Height = 12
         end
         object XPositiveCutLabel: TLabel
           Left = 224
-          Top = 376
+          Top = 408
           Width = 12
           Height = 13
           Caption = '...'
         end
         object Label24: TLabel
           Left = 8
-          Top = 392
+          Top = 424
           Width = 79
           Height = 13
           Caption = 'Y Negative Cut: '
         end
         object YNegativeCutPaintBox: TPaintBox
           Left = 104
-          Top = 392
+          Top = 424
           Width = 113
           Height = 12
         end
         object YNegativeCutLabel: TLabel
           Left = 224
-          Top = 392
+          Top = 424
           Width = 12
           Height = 13
           Caption = '...'
         end
         object YPositiveCutLabel: TLabel
           Left = 224
-          Top = 408
+          Top = 440
           Width = 12
           Height = 13
           Caption = '...'
         end
         object YPositiveCutPaintBox: TPaintBox
           Left = 104
-          Top = 408
+          Top = 440
           Width = 113
           Height = 12
         end
         object Label27: TLabel
           Left = 8
-          Top = 408
+          Top = 440
           Width = 73
           Height = 13
           Caption = 'Y Positive Cut: '
         end
         object Label25: TLabel
           Left = 8
-          Top = 424
+          Top = 456
           Width = 79
           Height = 13
           Caption = 'Z Negative Cut: '
         end
         object ZNegativeCutPaintBox: TPaintBox
           Left = 104
-          Top = 424
+          Top = 456
           Width = 113
           Height = 12
         end
         object ZNegativeCutLabel: TLabel
           Left = 224
-          Top = 424
+          Top = 456
           Width = 12
           Height = 13
           Caption = '...'
         end
         object ZPositiveCutLabel: TLabel
           Left = 224
-          Top = 440
+          Top = 472
           Width = 12
           Height = 13
           Caption = '...'
         end
         object ZPositiveCutPaintBox: TPaintBox
           Left = 104
-          Top = 440
+          Top = 472
           Width = 113
           Height = 12
         end
         object Label29: TLabel
           Left = 8
-          Top = 440
+          Top = 472
           Width = 73
           Height = 13
           Caption = 'Z Positive Cut: '
+        end
+        object Label26: TLabel
+          Left = 8
+          Top = 120
+          Width = 88
+          Height = 13
+          Caption = 'Texture V Offset: '
+        end
+        object Label28: TLabel
+          Left = 8
+          Top = 104
+          Width = 89
+          Height = 13
+          Caption = 'Texture U Offset: '
+        end
+        object UOffsetPaintBox: TPaintBox
+          Left = 104
+          Top = 104
+          Width = 113
+          Height = 12
+        end
+        object VOffsetPaintBox: TPaintBox
+          Left = 104
+          Top = 120
+          Width = 113
+          Height = 12
+        end
+        object VOffsetLabel: TLabel
+          Left = 224
+          Top = 120
+          Width = 12
+          Height = 13
+          Caption = '...'
+        end
+        object UOffsetLabel: TLabel
+          Left = 224
+          Top = 104
+          Width = 12
+          Height = 13
+          Caption = '...'
         end
         object SeedEdit: TEdit
           Left = 48
@@ -14318,7 +14358,7 @@ object Form1: TForm1
         end
         object RecalcUVCheckBox: TCheckBox
           Left = 8
-          Top = 456
+          Top = 488
           Width = 201
           Height = 17
           Caption = 'Recalc UV after deformations'
@@ -14327,7 +14367,7 @@ object Form1: TForm1
         end
         object CompleteRockCheckBox: TCheckBox
           Left = 8
-          Top = 472
+          Top = 504
           Width = 97
           Height = 17
           Caption = 'Complete rock'
@@ -16447,7 +16487,7 @@ object Form1: TForm1
     Left = 268
     Top = 40
     Width = 630
-    Height = 539
+    Height = 566
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone

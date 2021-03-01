@@ -192,6 +192,12 @@ type
     ZPositiveCutLabel: TLabel;
     ZPositiveCutPaintBox: TPaintBox;
     Label29: TLabel;
+    Label26: TLabel;
+    Label28: TLabel;
+    UOffsetPaintBox: TPaintBox;
+    VOffsetPaintBox: TPaintBox;
+    VOffsetLabel: TLabel;
+    UOffsetLabel: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure NewButton1Click(Sender: TObject);
@@ -255,6 +261,8 @@ type
     NumSegmentsSlider: TSliderHook;
     UScaleSlider: TSliderHook;
     VScaleSlider: TSliderHook;
+    UOffsetSlider: TSliderHook;
+    VOffsetSlider: TSliderHook;
     XScaleSlider: TSliderHook;
     YScaleSlider: TSliderHook;
     ZScaleSlider: TSliderHook;
@@ -449,6 +457,14 @@ begin
   VScaleSlider := TSliderHook.Create(VScalePaintBox);
   VScaleSlider.Min := 0.1;
   VScaleSlider.Max := 4.0;
+
+  UOffsetSlider := TSliderHook.Create(UOffsetPaintBox);
+  UOffsetSlider.Min := -1.0;
+  UOffsetSlider.Max := 1.0;
+
+  VOffsetSlider := TSliderHook.Create(VOffsetPaintBox);
+  VOffsetSlider.Min := -1.0;
+  VOffsetSlider.Max := 1.0;
 
   XScaleSlider := TSliderHook.Create(XScalePaintBox);
   XScaleSlider.Min := 0.5;
@@ -763,6 +779,8 @@ begin
   NumSegmentsSlider.Free;
   UScaleSlider.Free;
   VScaleSlider.Free;
+  UOffsetSlider.Free;
+  VOffsetSlider.Free;
   XScaleSlider.Free;
   YScaleSlider.Free;
   ZScaleSlider.Free;
@@ -1193,6 +1211,8 @@ begin
   NumSegmentsSlider.OnSliderHookChange := nil;
   UScaleSlider.OnSliderHookChange := nil;
   VScaleSlider.OnSliderHookChange := nil;
+  UOffsetSlider.OnSliderHookChange := nil;
+  VOffsetSlider.OnSliderHookChange := nil;
   XScaleSlider.OnSliderHookChange := nil;
   YScaleSlider.OnSliderHookChange := nil;
   ZScaleSlider.OnSliderHookChange := nil;
@@ -1220,6 +1240,8 @@ begin
   NumSegmentsSlider.Position := rock.mProperties.mNumSegments;
   UScaleSlider.Position := rock.mProperties.mUScale;
   VScaleSlider.Position := rock.mProperties.mVScale;
+  UOffsetSlider.Position := rock.mProperties.mUOffset;
+  VOffsetSlider.Position := rock.mProperties.mVOffset;
   XScaleSlider.Position := rock.mProperties.mXScale;
   YScaleSlider.Position := rock.mProperties.mYScale;
   ZScaleSlider.Position := rock.mProperties.mZScale;
@@ -1250,6 +1272,8 @@ begin
   NumSegmentsPaintBox.Invalidate;
   UScalePaintBox.Invalidate;
   VScalePaintBox.Invalidate;
+  UOffsetPaintBox.Invalidate;
+  VOffsetPaintBox.Invalidate;
   XScalePaintBox.Invalidate;
   YScalePaintBox.Invalidate;
   ZScalePaintBox.Invalidate;
@@ -1277,6 +1301,8 @@ begin
   NumSegmentsSlider.OnSliderHookChange := ControlsToRock;
   UScaleSlider.OnSliderHookChange := ControlsToRock;
   VScaleSlider.OnSliderHookChange := ControlsToRock;
+  UOffsetSlider.OnSliderHookChange := ControlsToRock;
+  VOffsetSlider.OnSliderHookChange := ControlsToRock;
   XScaleSlider.OnSliderHookChange := ControlsToRock;
   YScaleSlider.OnSliderHookChange := ControlsToRock;
   ZScaleSlider.OnSliderHookChange := ControlsToRock;
@@ -1307,6 +1333,8 @@ begin
   NumSegmentsLabel.Caption := Format('%d', [Round(NumSegmentsSlider.Position)]);
   UScaleLabel.Caption := Format('%1.3f', [UScaleSlider.Position]);
   VScaleLabel.Caption := Format('%1.3f', [VScaleSlider.Position]);
+  UOffsetLabel.Caption := Format('%1.3f', [UOffsetSlider.Position]);
+  VOffsetLabel.Caption := Format('%1.3f', [VOffsetSlider.Position]);
   XScaleLabel.Caption := Format('%1.3f', [XScaleSlider.Position]);
   YScaleLabel.Caption := Format('%1.3f', [YScaleSlider.Position]);
   ZScaleLabel.Caption := Format('%1.3f', [ZScaleSlider.Position]);
@@ -1356,6 +1384,8 @@ begin
   rock.mProperties.mNumSegments := Round(NumSegmentsSlider.Position);
   rock.mProperties.mUScale := UScaleSlider.Position;
   rock.mProperties.mVScale := VScaleSlider.Position;
+  rock.mProperties.mUOffset := UOffsetSlider.Position;
+  rock.mProperties.mVOffset := VOffsetSlider.Position;
   rock.mProperties.mXScale := XScaleSlider.Position;
   rock.mProperties.mYScale := YScaleSlider.Position;
   rock.mProperties.mZScale := ZScaleSlider.Position;

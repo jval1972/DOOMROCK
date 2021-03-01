@@ -86,6 +86,8 @@ type
     mYPositiveCut: single; // Y Positive Cut
     mZNegativeCut: single; // Z Negative Cut
     mZPositiveCut: single; // Z Positive Cut
+    mUOffset: single; // U texture coordinate offset
+    mVOffset: single; // V texture coordinate offset
     mSeed: integer;
     mRseed: integer;
     constructor CreateDefault; virtual;
@@ -118,6 +120,8 @@ type
       aYPositiveCut: single; // Y Positive Cut
       aZNegativeCut: single; // Z Negative Cut
       aZPositiveCut: single; // Z Positive Cut
+      aUOffset: single; // U texture coordinate offset
+      aVOffset: single; // V texture coordinate offset
       aSeed: integer;
       aRseed: integer
     ); virtual;
@@ -142,6 +146,7 @@ type
     procedure apply_pits;
     procedure apply_groundlevelheight;
     procedure apply_cutoff;
+    procedure apply_uvoffsets;
   public
     mProperties: properties_t;
     mVertCount: integer;
@@ -187,6 +192,17 @@ begin
   dy := a1.y - a2.y;
   dz := a1.z - a2.z;
   result := sqrt(dx * dx + dy * dy + dz * dz);
+end;
+
+function fv5sub(const a1, a2: fvec5_t): single;
+var
+  dx, dy, dz: single;
+begin
+  result.x := a1.x - a2.x;
+  result.y := a1.y - a2.y;
+  result.z := a1.z - a2.z;
+  result.u := a1.u - a2.u;
+  result.v := a1.v - a2.v;
 end;
 
 function fv5length(const a: fvec5_t): single;
@@ -252,6 +268,8 @@ constructor properties_t.Create(
   aYPositiveCut: single; // Y Positive Cut
   aZNegativeCut: single; // Z Negative Cut
   aZPositiveCut: single; // Z Positive Cut
+  aUOffset: single; // U texture coordinate offset
+  aVOffset: single; // V texture coordinate offset
   aSeed: integer;
   aRseed: integer
 );
@@ -284,6 +302,8 @@ begin
   mYPositiveCut := aYPositiveCut;
   mZNegativeCut := aZNegativeCut;
   mZPositiveCut := aZPositiveCut;
+  mUOffset := aUOffset;
+  mVOffset := aVOffset;
   mSeed := aSeed;
   mRseed := aRseed;
 end;
@@ -320,6 +340,8 @@ begin
   mYPositiveCut := 1.0;
   mZNegativeCut := 1.0;
   mZPositiveCut := 1.0;
+  mUOffset := 0.0;
+  mVOffset := 0.0;
 end;
 
 function properties_t.random(aFixed: single): single;
@@ -586,6 +608,22 @@ begin
       mVert[i].v := (mVert[i].v - 0.5) * scale + 0.5;
 end;
 
+procedure rock_t.apply_uvoffsets;
+var
+  i: integer;
+  offset: single;
+begin
+  offset := mProperties.mUOffset;
+  if offset <> 0.0 then
+    for i := 0 to mVertCount - 1 do
+      mVert[i].u := mVert[i].u + offset;
+
+  offset := mProperties.mVOffset;
+  if offset <> 0.0 then
+    for i := 0 to mVertCount - 1 do
+      mVert[i].v := mVert[i].v + offset;
+end;
+
 procedure rock_t.apply_xyzdeformation;
 var
   i: integer;
@@ -760,9 +798,13 @@ begin
         mFace[mFaceCount - 2].x := pB;
         mFace[mFaceCount - 2].y := pC;
         mFace[mFaceCount - 2].z := p0;
+        mFace[mFaceCount - 2].topring := -1;
+        mFace[mFaceCount - 2].bottomring := -1;
         mFace[mFaceCount - 1].x := pC;
         mFace[mFaceCount - 1].y := pA;
         mFace[mFaceCount - 1].z := p0;
+        mFace[mFaceCount - 1].topring := -1;
+        mFace[mFaceCount - 1].bottomring := -1;
       end;
 end;
 
@@ -857,6 +899,7 @@ begin
   apply_xzoffsets;
   apply_xyzscale;
   apply_pits;
+  apply_uvoffsets;
 end;
 
 procedure rock_t.init;

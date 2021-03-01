@@ -76,6 +76,8 @@ begin
     s.Write(mYPositiveCut, SizeOf(single));
     s.Write(mZNegativeCut, SizeOf(single));
     s.Write(mZPositiveCut, SizeOf(single));
+    s.Write(mUOffset, SizeOf(single));
+    s.Write(mVOffset, SizeOf(single));
   end;
 end;
 
@@ -115,6 +117,8 @@ begin
       s.Read(mYPositiveCut, SizeOf(single));
       s.Read(mZNegativeCut, SizeOf(single));
       s.Read(mZPositiveCut, SizeOf(single));
+      s.Read(mUOffset, SizeOf(single));
+      s.Read(mVOffset, SizeOf(single));
     end;
   end;
 end;
