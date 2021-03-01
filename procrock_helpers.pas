@@ -70,6 +70,12 @@ begin
     s.Write(mRseed, SizeOf(integer));
     s.Write(mComplete, SizeOf(boolean));
     s.Write(mYOffset, SizeOf(single));
+    s.Write(mXNegativeCut, SizeOf(single));
+    s.Write(mXPositiveCut, SizeOf(single));
+    s.Write(mYNegativeCut, SizeOf(single));
+    s.Write(mYPositiveCut, SizeOf(single));
+    s.Write(mZNegativeCut, SizeOf(single));
+    s.Write(mZPositiveCut, SizeOf(single));
   end;
 end;
 
@@ -103,6 +109,12 @@ begin
     begin
       s.Read(mComplete, SizeOf(boolean));
       s.Read(mYOffset, SizeOf(single));
+      s.Read(mXNegativeCut, SizeOf(single));
+      s.Read(mXPositiveCut, SizeOf(single));
+      s.Read(mYNegativeCut, SizeOf(single));
+      s.Read(mYPositiveCut, SizeOf(single));
+      s.Read(mZNegativeCut, SizeOf(single));
+      s.Read(mZPositiveCut, SizeOf(single));
     end;
   end;
 end;

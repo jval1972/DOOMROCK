@@ -80,6 +80,12 @@ type
     mZCareen: single; // X axis careen
     mRecalcUV: boolean; // Recalculate UV
     mComplete: boolean; // "Complete" rock
+    mXNegativeCut: single; // X Negative Cut
+    mXPositiveCut: single; // X Positive Cut
+    mYNegativeCut: single; // Y Negative Cut
+    mYPositiveCut: single; // Y Positive Cut
+    mZNegativeCut: single; // Z Negative Cut
+    mZPositiveCut: single; // Z Positive Cut
     mSeed: integer;
     mRseed: integer;
     constructor CreateDefault; virtual;
@@ -106,6 +112,12 @@ type
       aZCareen: single; // X axis careen
       aRecalcUV: boolean; // Recalculate UV
       aComplete: boolean; // "Complete" rock
+      aXNegativeCut: single; // X Negative Cut
+      aXPositiveCut: single; // X Positive Cut
+      aYNegativeCut: single; // Y Negative Cut
+      aYPositiveCut: single; // Y Positive Cut
+      aZNegativeCut: single; // Z Negative Cut
+      aZPositiveCut: single; // Z Positive Cut
       aSeed: integer;
       aRseed: integer
     ); virtual;
@@ -233,6 +245,12 @@ constructor properties_t.Create(
   aZCareen: single; // X axis careen
   aRecalcUV: boolean; // Recalculate UV
   aComplete: boolean; // "Complete" rock
+  aXNegativeCut: single; // X Negative Cut
+  aXPositiveCut: single; // X Positive Cut
+  aYNegativeCut: single; // Y Negative Cut
+  aYPositiveCut: single; // Y Positive Cut
+  aZNegativeCut: single; // Z Negative Cut
+  aZPositiveCut: single; // Z Positive Cut
   aSeed: integer;
   aRseed: integer
 );
@@ -259,6 +277,12 @@ begin
   mZCareen := aZCareen;
   mRecalcUV := aRecalcUV;
   mComplete := aComplete;
+  mXNegativeCut := aXNegativeCut;
+  mXPositiveCut := aXPositiveCut;
+  mYNegativeCut := aYNegativeCut;
+  mYPositiveCut := aYPositiveCut;
+  mZNegativeCut := aZNegativeCut;
+  mZPositiveCut := aZPositiveCut;
   mSeed := aSeed;
   mRseed := aRseed;
 end;
@@ -289,6 +313,12 @@ begin
   mZCareen := 0.0;
   mRecalcUV := True;
   mComplete := False;
+  mXNegativeCut := 1.0;
+  mXPositiveCut := 1.0;
+  mYNegativeCut := 1.0;
+  mYPositiveCut := 1.0;
+  mZNegativeCut := 1.0;
+  mZPositiveCut := 1.0;
 end;
 
 function properties_t.random(aFixed: single): single;

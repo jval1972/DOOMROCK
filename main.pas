@@ -174,6 +174,24 @@ type
     SaveDialog3: TSaveDialog;
     N3: TMenuItem;
     MD2model1: TMenuItem;
+    Label22: TLabel;
+    XNegativeCutPaintBox: TPaintBox;
+    XNegativeCutLabel: TLabel;
+    Label23: TLabel;
+    XPositiveCutPaintBox: TPaintBox;
+    XPositiveCutLabel: TLabel;
+    Label24: TLabel;
+    YNegativeCutPaintBox: TPaintBox;
+    YNegativeCutLabel: TLabel;
+    YPositiveCutLabel: TLabel;
+    YPositiveCutPaintBox: TPaintBox;
+    Label27: TLabel;
+    Label25: TLabel;
+    ZNegativeCutPaintBox: TPaintBox;
+    ZNegativeCutLabel: TLabel;
+    ZPositiveCutLabel: TLabel;
+    ZPositiveCutPaintBox: TPaintBox;
+    Label29: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure NewButton1Click(Sender: TObject);
@@ -253,6 +271,12 @@ type
     PitRateSlider: TSliderHook;
     PitElevationSlider: TSliderHook;
     GroundLevelHeightSlider: TSliderHook;
+    XNegativeCutSlider: TSliderHook;
+    XPositiveCutSlider: TSliderHook;
+    YNegativeCutSlider: TSliderHook;
+    YPositiveCutSlider: TSliderHook;
+    ZNegativeCutSlider: TSliderHook;
+    ZPositiveCutSlider: TSliderHook;
     closing: boolean;
     procedure Idle(Sender: TObject; var Done: Boolean);
     function CheckCanClose: boolean;
@@ -487,6 +511,31 @@ begin
   GroundLevelHeightSlider := TSliderHook.Create(GroundLevelHeightPaintBox);
   GroundLevelHeightSlider.Min := 0.0;
   GroundLevelHeightSlider.Max := 1.0;
+
+  XNegativeCutSlider := TSliderHook.Create(XNegativeCutPaintBox);
+  XNegativeCutSlider.Min := 0.1;
+  XNegativeCutSlider.Max := 1.0;
+
+  XPositiveCutSlider := TSliderHook.Create(XPositiveCutPaintBox);
+  XPositiveCutSlider.Min := 0.1;
+  XPositiveCutSlider.Max := 1.0;
+
+  YNegativeCutSlider := TSliderHook.Create(YNegativeCutPaintBox);
+  YNegativeCutSlider.Min := 0.1;
+  YNegativeCutSlider.Max := 1.0;
+
+  YPositiveCutSlider := TSliderHook.Create(YPositiveCutPaintBox);
+  YPositiveCutSlider.Min := 0.1;
+  YPositiveCutSlider.Max := 1.0;
+
+  ZNegativeCutSlider := TSliderHook.Create(ZNegativeCutPaintBox);
+  ZNegativeCutSlider.Min := 0.1;
+  ZNegativeCutSlider.Max := 1.0;
+
+  ZPositiveCutSlider := TSliderHook.Create(ZPositiveCutPaintBox);
+  ZPositiveCutSlider.Min := 0.1;
+  ZPositiveCutSlider.Max := 1.0;
+
 
   doCreate := True;
   if ParamCount > 0 then
@@ -728,6 +777,12 @@ begin
   PitRateSlider.Free;
   PitElevationSlider.Free;
   GroundLevelHeightSlider.Free;
+  XNegativeCutSlider.Free;
+  XPositiveCutSlider.Free;
+  YNegativeCutSlider.Free;
+  YPositiveCutSlider.Free;
+  ZNegativeCutSlider.Free;
+  ZPositiveCutSlider.Free;
 
   rock.Free;
 end;
@@ -1152,6 +1207,12 @@ begin
   PitRateSlider.OnSliderHookChange := nil;
   PitElevationSlider.OnSliderHookChange := nil;
   GroundLevelHeightSlider.OnSliderHookChange := nil;
+  XNegativeCutSlider.OnSliderHookChange := nil;
+  XPositiveCutSlider.OnSliderHookChange := nil;
+  YNegativeCutSlider.OnSliderHookChange := nil;
+  YPositiveCutSlider.OnSliderHookChange := nil;
+  ZNegativeCutSlider.OnSliderHookChange := nil;
+  ZPositiveCutSlider.OnSliderHookChange := nil;
 
   NumRingsSlider.Position := rock.mProperties.mNumRings;
   NumSegmentsSlider.Position := rock.mProperties.mNumSegments;
@@ -1173,6 +1234,12 @@ begin
   PitRateSlider.Position := rock.mProperties.mPitRate;
   PitElevationSlider.Position := rock.mProperties.mPitElevation;
   GroundLevelHeightSlider.Position := rock.mProperties.mGroundLevelHeight;
+  XNegativeCutSlider.Position := rock.mProperties.mXNegativeCut;
+  XPositiveCutSlider.Position := rock.mProperties.mXPositiveCut;
+  YNegativeCutSlider.Position := rock.mProperties.mYNegativeCut;
+  YPositiveCutSlider.Position := rock.mProperties.mYPositiveCut;
+  ZNegativeCutSlider.Position := rock.mProperties.mZNegativeCut;
+  ZPositiveCutSlider.Position := rock.mProperties.mZPositiveCut;
 
   RecalcUVCheckBox.Checked := rock.mProperties.mRecalcUV;
   CompleteRockCheckBox.Checked := rock.mProperties.mComplete;
@@ -1197,6 +1264,12 @@ begin
   PitRatePaintBox.Invalidate;
   PitElevationPaintBox.Invalidate;
   GroundLevelHeightPaintBox.Invalidate;
+  XNegativeCutPaintBox.Invalidate;
+  XPositiveCutPaintBox.Invalidate;
+  YNegativeCutPaintBox.Invalidate;
+  YPositiveCutPaintBox.Invalidate;
+  ZNegativeCutPaintBox.Invalidate;
+  ZPositiveCutPaintBox.Invalidate;
 
   NumRingsSlider.OnSliderHookChange := ControlsToRock;
   NumSegmentsSlider.OnSliderHookChange := ControlsToRock;
@@ -1218,6 +1291,12 @@ begin
   PitRateSlider.OnSliderHookChange := ControlsToRock;
   PitElevationSlider.OnSliderHookChange := ControlsToRock;
   GroundLevelHeightSlider.OnSliderHookChange := ControlsToRock;
+  XNegativeCutSlider.OnSliderHookChange := ControlsToRock;
+  XPositiveCutSlider.OnSliderHookChange := ControlsToRock;
+  YNegativeCutSlider.OnSliderHookChange := ControlsToRock;
+  YPositiveCutSlider.OnSliderHookChange := ControlsToRock;
+  ZNegativeCutSlider.OnSliderHookChange := ControlsToRock;
+  ZPositiveCutSlider.OnSliderHookChange := ControlsToRock;
 end;
 
 procedure TForm1.SlidersToLabels;
@@ -1242,6 +1321,12 @@ begin
   PitRateLabel.Caption := Format('%1.3f', [PitRateSlider.Position]);
   PitElevationLabel.Caption := Format('%1.3f', [PitElevationSlider.Position]);
   GroundLevelHeightLabel.Caption := Format('%1.3f', [GroundLevelHeightSlider.Position]);
+  XNegativeCutLabel.Caption := Format('%1.3f', [XNegativeCutSlider.Position]);
+  XPositiveCutLabel.Caption := Format('%1.3f', [XPositiveCutSlider.Position]);
+  YNegativeCutLabel.Caption := Format('%1.3f', [YNegativeCutSlider.Position]);
+  YPositiveCutLabel.Caption := Format('%1.3f', [YPositiveCutSlider.Position]);
+  ZNegativeCutLabel.Caption := Format('%1.3f', [ZNegativeCutSlider.Position]);
+  ZPositiveCutLabel.Caption := Format('%1.3f', [ZPositiveCutSlider.Position]);
 end;
 
 procedure TForm1.RockToControls;
@@ -1285,6 +1370,12 @@ begin
   rock.mProperties.mPitRate := PitRateSlider.Position;
   rock.mProperties.mPitElevation := PitElevationSlider.Position;
   rock.mProperties.mGroundLevelHeight := GroundLevelHeightSlider.Position;
+  rock.mProperties.mXNegativeCut := XNegativeCutSlider.Position;
+  rock.mProperties.mXPositiveCut := XPositiveCutSlider.Position;
+  rock.mProperties.mYNegativeCut := YNegativeCutSlider.Position;
+  rock.mProperties.mYPositiveCut := YPositiveCutSlider.Position;
+  rock.mProperties.mZNegativeCut := ZNegativeCutSlider.Position;
+  rock.mProperties.mZPositiveCut := ZPositiveCutSlider.Position;
 
   needsrecalc := True;
   changed := True;

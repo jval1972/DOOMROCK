@@ -14184,6 +14184,126 @@ object Form1: TForm1
           Height = 13
           Caption = '...'
         end
+        object Label22: TLabel
+          Left = 8
+          Top = 360
+          Width = 79
+          Height = 13
+          Caption = 'X Negative Cut: '
+        end
+        object XNegativeCutPaintBox: TPaintBox
+          Left = 104
+          Top = 360
+          Width = 113
+          Height = 12
+        end
+        object XNegativeCutLabel: TLabel
+          Left = 224
+          Top = 360
+          Width = 12
+          Height = 13
+          Caption = '...'
+        end
+        object Label23: TLabel
+          Left = 8
+          Top = 376
+          Width = 73
+          Height = 13
+          Caption = 'X Positive Cut: '
+        end
+        object XPositiveCutPaintBox: TPaintBox
+          Left = 104
+          Top = 376
+          Width = 113
+          Height = 12
+        end
+        object XPositiveCutLabel: TLabel
+          Left = 224
+          Top = 376
+          Width = 12
+          Height = 13
+          Caption = '...'
+        end
+        object Label24: TLabel
+          Left = 8
+          Top = 392
+          Width = 79
+          Height = 13
+          Caption = 'Y Negative Cut: '
+        end
+        object YNegativeCutPaintBox: TPaintBox
+          Left = 104
+          Top = 392
+          Width = 113
+          Height = 12
+        end
+        object YNegativeCutLabel: TLabel
+          Left = 224
+          Top = 392
+          Width = 12
+          Height = 13
+          Caption = '...'
+        end
+        object YPositiveCutLabel: TLabel
+          Left = 224
+          Top = 408
+          Width = 12
+          Height = 13
+          Caption = '...'
+        end
+        object YPositiveCutPaintBox: TPaintBox
+          Left = 104
+          Top = 408
+          Width = 113
+          Height = 12
+        end
+        object Label27: TLabel
+          Left = 8
+          Top = 408
+          Width = 73
+          Height = 13
+          Caption = 'Y Positive Cut: '
+        end
+        object Label25: TLabel
+          Left = 8
+          Top = 424
+          Width = 79
+          Height = 13
+          Caption = 'Z Negative Cut: '
+        end
+        object ZNegativeCutPaintBox: TPaintBox
+          Left = 104
+          Top = 424
+          Width = 113
+          Height = 12
+        end
+        object ZNegativeCutLabel: TLabel
+          Left = 224
+          Top = 424
+          Width = 12
+          Height = 13
+          Caption = '...'
+        end
+        object ZPositiveCutLabel: TLabel
+          Left = 224
+          Top = 440
+          Width = 12
+          Height = 13
+          Caption = '...'
+        end
+        object ZPositiveCutPaintBox: TPaintBox
+          Left = 104
+          Top = 440
+          Width = 113
+          Height = 12
+        end
+        object Label29: TLabel
+          Left = 8
+          Top = 440
+          Width = 73
+          Height = 13
+          Caption = 'Z Positive Cut: '
+        end
         object SeedEdit: TEdit
           Left = 48
           Top = 8
@@ -14198,7 +14318,7 @@ object Form1: TForm1
         end
         object RecalcUVCheckBox: TCheckBox
           Left = 8
-          Top = 368
+          Top = 456
           Width = 201
           Height = 17
           Caption = 'Recalc UV after deformations'
@@ -14207,7 +14327,7 @@ object Form1: TForm1
         end
         object CompleteRockCheckBox: TCheckBox
           Left = 8
-          Top = 384
+          Top = 472
           Width = 97
           Height = 17
           Caption = 'Complete rock'
