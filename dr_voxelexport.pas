@@ -82,12 +82,12 @@ var
 begin
   if t.mVertCount = 0 then
     Exit;
-  xmin := t.mFace[0].x;
-  xmax := t.mFace[0].x;
-  ymin := t.mFace[0].y;
-  ymax := t.mFace[0].y;
-  zmin := t.mFace[0].z;
-  zmax := t.mFace[0].z;
+  xmin := t.mVert[0].x;
+  xmax := t.mVert[0].x;
+  ymin := t.mVert[0].y;
+  ymax := t.mVert[0].y;
+  zmin := t.mVert[0].z;
+  zmax := t.mVert[0].z;
   for i := 1 to t.mVertCount - 1 do
   begin
     if xmin > t.mVert[i].x then
