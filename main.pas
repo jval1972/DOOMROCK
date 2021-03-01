@@ -330,6 +330,8 @@ var
 begin
   Randomize;
 
+  DecimalSeparator := '.';
+  
   pt_LoadSettingFromFile(ChangeFileExt(ParamStr(0), '.ini'));
 
   closing := False;
