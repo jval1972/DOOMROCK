@@ -198,6 +198,12 @@ type
     VOffsetPaintBox: TPaintBox;
     VOffsetLabel: TLabel;
     UOffsetLabel: TLabel;
+    Label30: TLabel;
+    RecessRatePaintBox: TPaintBox;
+    RecessRateLabel: TLabel;
+    RecessStrengthLabel: TLabel;
+    RecessStrengthPaintBox: TPaintBox;
+    Label33: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure NewButton1Click(Sender: TObject);
@@ -285,6 +291,8 @@ type
     YPositiveCutSlider: TSliderHook;
     ZNegativeCutSlider: TSliderHook;
     ZPositiveCutSlider: TSliderHook;
+    RecessRateSlider: TSliderHook;
+    RecessStrengthSlider: TSliderHook;
     closing: boolean;
     procedure Idle(Sender: TObject; var Done: Boolean);
     function CheckCanClose: boolean;
@@ -554,6 +562,13 @@ begin
   ZPositiveCutSlider.Min := 0.1;
   ZPositiveCutSlider.Max := 1.0;
 
+  RecessRateSlider := TSliderHook.Create(RecessRatePaintBox);
+  RecessRateSlider.Min := 0.0;
+  RecessRateSlider.Max := 1.0;
+
+  RecessStrengthSlider := TSliderHook.Create(RecessStrengthPaintBox);
+  RecessStrengthSlider.Min := 0.0;
+  RecessStrengthSlider.Max := 0.9;
 
   doCreate := True;
   if ParamCount > 0 then
@@ -803,6 +818,8 @@ begin
   YPositiveCutSlider.Free;
   ZNegativeCutSlider.Free;
   ZPositiveCutSlider.Free;
+  RecessRateSlider.Free;
+  RecessStrengthSlider.Free;
 
   rock.Free;
 end;
@@ -1235,6 +1252,8 @@ begin
   YPositiveCutSlider.OnSliderHookChange := nil;
   ZNegativeCutSlider.OnSliderHookChange := nil;
   ZPositiveCutSlider.OnSliderHookChange := nil;
+  RecessRateSlider.OnSliderHookChange := nil;
+  RecessStrengthSlider.OnSliderHookChange := nil;
 
   NumRingsSlider.Position := rock.mProperties.mNumRings;
   NumSegmentsSlider.Position := rock.mProperties.mNumSegments;
@@ -1264,6 +1283,8 @@ begin
   YPositiveCutSlider.Position := rock.mProperties.mYPositiveCut;
   ZNegativeCutSlider.Position := rock.mProperties.mZNegativeCut;
   ZPositiveCutSlider.Position := rock.mProperties.mZPositiveCut;
+  RecessRateSlider.Position := rock.mProperties.mRecessRate;
+  RecessStrengthSlider.Position := rock.mProperties.mRecessStrength;
 
   RecalcUVCheckBox.Checked := rock.mProperties.mRecalcUV;
   CompleteRockCheckBox.Checked := rock.mProperties.mComplete;
@@ -1296,6 +1317,8 @@ begin
   YPositiveCutPaintBox.Invalidate;
   ZNegativeCutPaintBox.Invalidate;
   ZPositiveCutPaintBox.Invalidate;
+  RecessRatePaintBox.Invalidate;
+  RecessStrengthPaintBox.Invalidate;
 
   NumRingsSlider.OnSliderHookChange := ControlsToRock;
   NumSegmentsSlider.OnSliderHookChange := ControlsToRock;
@@ -1325,6 +1348,8 @@ begin
   YPositiveCutSlider.OnSliderHookChange := ControlsToRock;
   ZNegativeCutSlider.OnSliderHookChange := ControlsToRock;
   ZPositiveCutSlider.OnSliderHookChange := ControlsToRock;
+  RecessRateSlider.OnSliderHookChange := ControlsToRock;
+  RecessStrengthSlider.OnSliderHookChange := ControlsToRock;
 end;
 
 procedure TForm1.SlidersToLabels;
@@ -1357,6 +1382,8 @@ begin
   YPositiveCutLabel.Caption := Format('%1.3f', [YPositiveCutSlider.Position]);
   ZNegativeCutLabel.Caption := Format('%1.3f', [ZNegativeCutSlider.Position]);
   ZPositiveCutLabel.Caption := Format('%1.3f', [ZPositiveCutSlider.Position]);
+  RecessRateLabel.Caption := Format('%1.3f', [RecessRateSlider.Position]);
+  RecessStrengthLabel.Caption := Format('%1.3f', [RecessStrengthSlider.Position]);
 end;
 
 procedure TForm1.RockToControls;
@@ -1408,6 +1435,8 @@ begin
   rock.mProperties.mYPositiveCut := YPositiveCutSlider.Position;
   rock.mProperties.mZNegativeCut := ZNegativeCutSlider.Position;
   rock.mProperties.mZPositiveCut := ZPositiveCutSlider.Position;
+  rock.mProperties.mRecessRate := RecessRateSlider.Position;
+  rock.mProperties.mRecessStrength := RecessStrengthSlider.Position;
 
   needsrecalc := True;
   changed := True;

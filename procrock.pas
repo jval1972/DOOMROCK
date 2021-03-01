@@ -88,6 +88,8 @@ type
     mZPositiveCut: single; // Z Positive Cut
     mUOffset: single; // U texture coordinate offset
     mVOffset: single; // V texture coordinate offset
+    mRecessRate: single; // Recess Rate
+    mRecessStrength: single; // Recess Strength
     mSeed: integer;
     mRseed: integer;
     constructor CreateDefault; virtual;
@@ -122,6 +124,8 @@ type
       aZPositiveCut: single; // Z Positive Cut
       aUOffset: single; // U texture coordinate offset
       aVOffset: single; // V texture coordinate offset
+      aRecessRate: single; // Recess Rate
+      aRecessStrength: single; // Recess Strength
       aSeed: integer;
       aRseed: integer
     ); virtual;
@@ -138,6 +142,7 @@ type
     procedure init;
     function AddVert(const x, y, z, u, v: single; const ring, seg: integer): integer;
     procedure generate_hemisphere;
+    procedure apply_recess;
     procedure fix_uvscale;
     procedure apply_uvscale;
     procedure apply_xyzdeformation;
@@ -271,6 +276,8 @@ constructor properties_t.Create(
   aZPositiveCut: single; // Z Positive Cut
   aUOffset: single; // U texture coordinate offset
   aVOffset: single; // V texture coordinate offset
+  aRecessRate: single; // Recess Rate
+  aRecessStrength: single; // Recess Strength
   aSeed: integer;
   aRseed: integer
 );
@@ -305,6 +312,8 @@ begin
   mZPositiveCut := aZPositiveCut;
   mUOffset := aUOffset;
   mVOffset := aVOffset;
+  mRecessRate := aRecessRate;
+  mRecessStrength := aRecessStrength;
   mSeed := aSeed;
   mRseed := aRseed;
 end;
@@ -343,6 +352,8 @@ begin
   mZPositiveCut := 1.0;
   mUOffset := 0.0;
   mVOffset := 0.0;
+  mRecessRate := 0.2;
+  mRecessStrength := 0.5;
 end;
 
 function properties_t.random(aFixed: single): single;
@@ -521,6 +532,40 @@ begin
   if mProperties.mComplete then
     for i := 0 to mVertCount - 1 do
       mVert[i].y := mVert[i].y + 0.5;
+end;
+
+procedure rock_t.apply_recess;
+var
+  seg: integer;
+  rate: single;
+  strength: single;
+  i: integer;
+  len: single;
+  rnd: single;
+begin
+  rate := mProperties.mRecessRate;
+  if rate <= 0.0 then
+    Exit;
+
+  strength := mProperties.mRecessStrength;
+  if strength <= 0.0 then
+    Exit;
+
+  for seg := 0 to mProperties.mNumSegments - 1 do
+    if mProperties.random(0) <= rate then
+    begin
+      for i := 0 to mVertCount - 1 do
+        if mVert[i].seg = seg then
+        begin
+          len := Sqrt(mVert[i].x * mVert[i].x + mVert[i].z * mVert[i].z);
+          rnd := mProperties.random(0);
+          if len >= 0.2 then
+          begin
+            mVert[i].x := mVert[i].x * (1.0 - strength) + rnd * mVert[i].x * strength;
+            mVert[i].z := mVert[i].z * (1.0 - strength) + rnd * mVert[i].z * strength;
+          end;
+        end;
+    end;
 end;
 
 procedure rock_t.fix_uvscale;
@@ -784,13 +829,14 @@ var
   rate: single;
   x, y, z, u, v: single;
   pA, pB, pC, p0: integer;
+  lenA, lenB, lenC: single;
 begin
   rate := mProperties.mPitRate;
   if rate = 0.0 then
     Exit;
 
   for i := mFaceCount - 1 downto 0 do
-    if (mFace[i].topring >= 0) and (mFace[i].bottomring >= 0) then
+    if (mFace[i].topring >= 1) and (mFace[i].bottomring >= 1) then
       if mProperties.random(0) <= rate then
       begin
         pA := mFace[i].x;
@@ -805,6 +851,17 @@ begin
         p0 := AddVert(x, y, z, u, v, -1, -1);
         mVert[p0] := scaleVec(mVert[p0], mProperties.mPitElevation);
         mFace[i].z := p0;
+
+        // Recalc UV
+        lenA := fv5length(fv5sub(mVert[pA], mVert[p0]));
+        lenB := fv5length(fv5sub(mVert[pB], mVert[p0]));
+        lenC := fv5length(fv5sub(mVert[pC], mVert[p0]));
+//        u := (mVert[pA].u * lenA + mVert[pB].u * lenB + mVert[pC].u * lenC) / (lenA + lenB + lenC);
+//        v := (mVert[pA].v * lenA + mVert[pB].v * lenB + mVert[pC].v * lenC) / (lenA + lenB + lenC);
+        u := (mVert[pA].u / lenA + mVert[pB].u / lenB + mVert[pC].u / lenC) / (1 / lenA + 1 / lenB + 1 / lenC);
+        v := (mVert[pA].v / lenA + mVert[pB].v / lenB + mVert[pC].v / lenC) / (1 / lenA + 1 / lenB + 1 / lenC);
+        mVert[p0].u := u;
+        mVert[p0].v := v;
 
         mFaceCount := mFaceCount + 2;
         SetLength(mFace, mFaceCount);
@@ -918,22 +975,38 @@ end;
 procedure rock_t.generate;
 begin
   generate_hemisphere;
+  mProperties.mRSeed := mProperties.mSeed;
+  apply_recess;
+  mProperties.mRSeed := mProperties.mSeed;
   fix_uvscale;
+  mProperties.mRSeed := mProperties.mSeed;
   apply_uvscale;
+  mProperties.mRSeed := mProperties.mSeed;
   apply_xyzdeformation;
+  mProperties.mRSeed := mProperties.mSeed;
   apply_xyzcareen;
+  mProperties.mRSeed := mProperties.mSeed;
   apply_rdeformation;
+  mProperties.mRSeed := mProperties.mSeed;
   apply_groundlevelheight;
+  mProperties.mRSeed := mProperties.mSeed;
   if mProperties.mRecalcUV then
   begin
     fix_uvscale;
+    mProperties.mRSeed := mProperties.mSeed;
     apply_uvscale;
+    mProperties.mRSeed := mProperties.mSeed;
   end;
   apply_cutoff;
+  mProperties.mRSeed := mProperties.mSeed;
   apply_xzoffsets;
+  mProperties.mRSeed := mProperties.mSeed;
   apply_xyzscale;
+  mProperties.mRSeed := mProperties.mSeed;
   apply_pits;
+  mProperties.mRSeed := mProperties.mSeed;
   apply_uvoffsets;
+  mProperties.mRSeed := mProperties.mSeed;
   // Self check
   self_check;
 end;

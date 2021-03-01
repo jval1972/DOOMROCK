@@ -2,7 +2,7 @@ object Form1: TForm1
   Left = 187
   Top = 60
   Width = 914
-  Height = 684
+  Height = 734
   Caption = 'DOOMROCK Sprite Generator'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12859,11 +12859,11 @@ object Form1: TForm1
   object Splitter1: TSplitter
     Left = 265
     Top = 40
-    Height = 566
+    Height = 616
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 606
+    Top = 656
     Width = 898
     Height = 19
     Panels = <
@@ -13700,7 +13700,7 @@ object Form1: TForm1
     Left = 0
     Top = 40
     Width = 265
-    Height = 566
+    Height = 616
     Align = alLeft
     BevelOuter = bvNone
     Caption = ' '
@@ -13709,7 +13709,7 @@ object Form1: TForm1
       Left = 0
       Top = 0
       Width = 265
-      Height = 566
+      Height = 616
       ActivePage = TabSheet1
       Align = alClient
       TabOrder = 0
@@ -14344,6 +14344,46 @@ object Form1: TForm1
           Height = 13
           Caption = '...'
         end
+        object Label30: TLabel
+          Left = 8
+          Top = 488
+          Width = 67
+          Height = 13
+          Caption = 'Recess Rate: '
+        end
+        object RecessRatePaintBox: TPaintBox
+          Left = 104
+          Top = 488
+          Width = 113
+          Height = 12
+        end
+        object RecessRateLabel: TLabel
+          Left = 224
+          Top = 488
+          Width = 12
+          Height = 13
+          Caption = '...'
+        end
+        object RecessStrengthLabel: TLabel
+          Left = 224
+          Top = 504
+          Width = 12
+          Height = 13
+          Caption = '...'
+        end
+        object RecessStrengthPaintBox: TPaintBox
+          Left = 104
+          Top = 504
+          Width = 113
+          Height = 12
+        end
+        object Label33: TLabel
+          Left = 8
+          Top = 504
+          Width = 86
+          Height = 13
+          Caption = 'Recess Strength: '
+        end
         object SeedEdit: TEdit
           Left = 48
           Top = 8
@@ -14358,7 +14398,7 @@ object Form1: TForm1
         end
         object RecalcUVCheckBox: TCheckBox
           Left = 8
-          Top = 488
+          Top = 528
           Width = 201
           Height = 17
           Caption = 'Recalc UV after deformations'
@@ -14367,7 +14407,7 @@ object Form1: TForm1
         end
         object CompleteRockCheckBox: TCheckBox
           Left = 8
-          Top = 504
+          Top = 544
           Width = 97
           Height = 17
           Caption = 'Complete rock'
@@ -16487,7 +16527,7 @@ object Form1: TForm1
     Left = 268
     Top = 40
     Width = 630
-    Height = 566
+    Height = 616
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
