@@ -141,6 +141,7 @@ type
     procedure apply_xyzscale;
     procedure apply_pits;
     procedure apply_groundlevelheight;
+    procedure apply_cutoff;
   public
     mProperties: properties_t;
     mVertCount: integer;
@@ -779,6 +780,65 @@ begin
       mVert[i].y := mVert[i].y + h;
 end;
 
+procedure rock_t.apply_cutoff;
+var
+  i: integer;
+  minx, maxx, miny, maxy, minz, maxz: single;
+begin
+  minx := 100000.0;
+  maxx := -100000.0;
+  miny := 100000.0;
+  maxy := -100000.0;
+  minz := 100000.0;
+  maxz := -100000.0;
+  for i := 0 to mVertCount - 1 do
+  begin
+    if mVert[i].x < minx then
+      minx := mVert[i].x;
+    if mVert[i].x > maxx then
+      maxx := mVert[i].x;
+    if mVert[i].y < miny then
+      miny := mVert[i].y;
+    if mVert[i].y > maxy then
+      maxy := mVert[i].y;
+    if mVert[i].z < minz then
+      minz := mVert[i].z;
+    if mVert[i].z > maxz then
+      maxz := mVert[i].z;
+  end;
+
+  minx := minx * mProperties.mXNegativeCut;
+  maxx := maxx * mProperties.mXPositiveCut;
+  miny := miny * mProperties.mYNegativeCut;
+  maxy := maxy * mProperties.mYPositiveCut;
+  minz := minz * mProperties.mZNegativeCut;
+  maxz := maxz * mProperties.mZPositiveCut;
+
+  for i := 0 to mVertCount - 1 do
+  begin
+    if mVert[i].x < 0.0 then
+      if mVert[i].x < minx then
+        mVert[i].x := minx;
+    if mVert[i].x > 0.0 then
+      if mVert[i].x > maxx then
+        mVert[i].x := maxx;
+
+    if mVert[i].y < 0.0 then
+      if mVert[i].y < miny then
+        mVert[i].y := miny;
+    if mVert[i].y > 0.0 then
+      if mVert[i].y > maxy then
+        mVert[i].y := maxy;
+
+    if mVert[i].z < 0.0 then
+      if mVert[i].z < minz then
+        mVert[i].z := minz;
+    if mVert[i].z > 0.0 then
+      if mVert[i].z > maxz then
+        mVert[i].z := maxz;
+  end;
+end;
+
 procedure rock_t.generate;
 begin
   generate_hemisphere;
@@ -793,6 +853,7 @@ begin
     fix_uvscale;
     apply_uvscale;
   end;
+  apply_cutoff;
   apply_xzoffsets;
   apply_xyzscale;
   apply_pits;
