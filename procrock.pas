@@ -194,9 +194,7 @@ begin
   result := sqrt(dx * dx + dy * dy + dz * dz);
 end;
 
-function fv5sub(const a1, a2: fvec5_t): single;
-var
-  dx, dy, dz: single;
+function fv5sub(const a1, a2: fvec5_t): fvec5_t;
 begin
   result.x := a1.x - a2.x;
   result.y := a1.y - a2.y;
@@ -435,6 +433,8 @@ var
   numrings: integer;
   numsegments: integer;
   i: integer;
+  cnt: integer;
+  vx, vy, vz: integer;
 begin
   mProperties.mRseed := mProperties.mSeed;
 
@@ -496,14 +496,24 @@ begin
   mFaceCount := numrings * (numsegments + 1) - 2;
   SetLength(mFace, mFaceCount);
 
+  cnt := 0;
   for i := 0 to mFaceCount - 1 do
   begin
-    mFace[i].x := A[i];
-    mFace[i].y := A[i + 1];
-    mFace[i].z := A[i + 2];
-    mFace[i].topring := min3i(mVert[A[i]].ring, mVert[A[i + 1]].ring, mVert[A[i + 2]].ring);
-    mFace[i].bottomring := max3i(mVert[A[i]].ring, mVert[A[i + 1]].ring, mVert[A[i + 2]].ring);
+    vx := A[i];
+    vy := A[i + 1];
+    vz := A[i + 2];
+    if (vx <> vy) and (vx <> vz) then
+    begin
+      mFace[i].x := vx;
+      mFace[i].y := vy;
+      mFace[i].z := vz;
+      mFace[i].topring := min3i(mVert[vx].ring, mVert[vy].ring, mVert[vz].ring);
+      mFace[i].bottomring := max3i(mVert[vx].ring, mVert[vy].ring, mVert[vz].ring);
+      inc(cnt);
+    end;
   end;
+  mFaceCount := cnt;
+  SetLength(mFace, mFaceCount);
 
   if mProperties.mComplete then
     for i := 0 to mVertCount - 1 do
