@@ -16396,9 +16396,16 @@ object Form1: TForm1
         object N1: TMenuItem
           Caption = '-'
         end
+        object MD2model1: TMenuItem
+          Caption = 'MD2 model'
+          OnClick = MD2ModelExportClick
+        end
         object ExportObjModel1: TMenuItem
           Caption = 'Obj model'
           OnClick = ExportObjModel1Click
+        end
+        object N3: TMenuItem
+          Caption = '-'
         end
         object ExportScreenshot1: TMenuItem
           Caption = 'Screenshot'
@@ -16549,6 +16556,13 @@ object Form1: TForm1
     Filter = 'Obj Models (*.obj)|*.obj'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
     Left = 524
+    Top = 88
+  end
+  object SaveDialog3: TSaveDialog
+    DefaultExt = 'md2'
+    Filter = 'MD2 Models (*.md2)|*.md2'
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
+    Left = 580
     Top = 88
   end
 end

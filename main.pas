@@ -171,6 +171,9 @@ type
     RecalcUVCheckBox: TCheckBox;
     CompleteRockCheckBox: TCheckBox;
     Label21: TLabel;
+    SaveDialog3: TSaveDialog;
+    N3: TMenuItem;
+    MD2model1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure NewButton1Click(Sender: TObject);
@@ -215,6 +218,7 @@ type
     procedure Voxel1Click(Sender: TObject);
     procedure RecalcUVCheckBoxClick(Sender: TObject);
     procedure CompleteRockCheckBoxClick(Sender: TObject);
+    procedure MD2ModelExportClick(Sender: TObject);
   private
     { Private declarations }
     ffilename: string;
@@ -283,6 +287,7 @@ uses
   dr_utils,
   dr_voxels,
   dr_palettes,
+  dr_md2,
   procrock_helpers,
   frm_exportsprite,
   frm_exportvoxel;
@@ -1410,6 +1415,18 @@ begin
   rock.mProperties.mComplete := CompleteRockCheckBox.Checked;
   needsrecalc := True;
   changed := True;
+end;
+
+procedure TForm1.MD2ModelExportClick(Sender: TObject);
+var
+  fs: TFileStream;
+begin
+  if SaveDialog3.Execute then
+  begin
+    fs := TFileStream.Create(SaveDialog3.FileName, fmCreate);
+    SaveRockToMD2Stream(rock, fs, 'rock');
+    fs.Free;
+  end;
 end;
 
 end.
