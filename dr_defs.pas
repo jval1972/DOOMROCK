@@ -63,6 +63,7 @@ var
   opt_dospritevox: integer = 0;
   opt_voxsize: integer = 128;
   opt_voxpal: integer = 0;
+  opt_dospritemodel: integer = 0;
 
 function bigstringtostring(const bs: bigstring_p): string;
 
@@ -83,7 +84,7 @@ type
   end;
 
 const
-  NUMSETTINGS = 26;
+  NUMSETTINGS = 27;
 
 var
   Settings: array[0..NUMSETTINGS - 1] of TSettingItem = (
@@ -201,6 +202,11 @@ var
       desc: 'SPRITEVOXEL';
       typeof: tstInteger;
       location: @opt_spritevox;
+    ),
+    (
+      desc: 'SPRITEMODEL';
+      typeof: tstInteger;
+      location: @opt_dospritemodel;
     ),
     (
       desc: '[Voxel Export]';

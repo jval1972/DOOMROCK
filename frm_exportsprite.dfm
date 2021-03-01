@@ -4,7 +4,7 @@ object ExportSpriteForm: TExportSpriteForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Export Sprite'
-  ClientHeight = 450
+  ClientHeight = 486
   ClientWidth = 764
   Color = clBtnFace
   Constraints.MinHeight = 480
@@ -12923,7 +12923,7 @@ object ExportSpriteForm: TExportSpriteForm
     Left = 224
     Top = 48
     Width = 193
-    Height = 185
+    Height = 153
     Caption = ' Patch Palette '
     ItemIndex = 0
     Items.Strings = (
@@ -12940,7 +12940,7 @@ object ExportSpriteForm: TExportSpriteForm
     Width = 326
     Height = 345
     Caption = ' Preview '
-    TabOrder = 5
+    TabOrder = 7
     object Panel3: TPanel
       Left = 2
       Top = 15
@@ -13041,18 +13041,18 @@ object ExportSpriteForm: TExportSpriteForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 401
+    Top = 444
     Width = 764
-    Height = 49
+    Height = 42
     Align = alBottom
     BevelOuter = bvNone
     Caption = ' '
-    TabOrder = 6
+    TabOrder = 8
     object Panel2: TPanel
       Left = 461
       Top = 0
       Width = 303
-      Height = 49
+      Height = 42
       Align = alRight
       BevelOuter = bvNone
       Caption = ' '
@@ -13084,7 +13084,7 @@ object ExportSpriteForm: TExportSpriteForm
     Left = 16
     Top = 248
     Width = 193
-    Height = 145
+    Height = 185
     Caption = ' Script Parameters '
     TabOrder = 3
     object Label3: TLabel
@@ -13158,6 +13158,16 @@ object ExportSpriteForm: TExportSpriteForm
       Text = '128'
       OnKeyPress = CheckNumericEdit
     end
+    object SolidCheckBox: TCheckBox
+      Left = 16
+      Top = 152
+      Width = 97
+      Height = 17
+      Caption = 'MF_SOLID'
+      Checked = True
+      State = cbChecked
+      TabOrder = 4
+    end
   end
   object ScriptRadioGroup: TRadioGroup
     Left = 16
@@ -13175,11 +13185,11 @@ object ExportSpriteForm: TExportSpriteForm
   end
   object VoxelGroupBox: TGroupBox
     Left = 224
-    Top = 248
+    Top = 288
     Width = 193
     Height = 145
     Caption = ' Voxel '
-    TabOrder = 7
+    TabOrder = 6
     object GenerateVoxelCheckBox: TCheckBox
       Left = 16
       Top = 24
@@ -13200,28 +13210,53 @@ object ExportSpriteForm: TExportSpriteForm
     end
     object voxRadioButton128x128: TRadioButton
       Left = 16
-      Top = 82
-      Width = 113
+      Top = 74
+      Width = 89
       Height = 17
       Caption = '128 x 128'
-      Checked = True
       TabOrder = 2
-      TabStop = True
       OnClick = voxRadioButton128x128Click
     end
     object voxRadioButton256x256: TRadioButton
       Left = 16
-      Top = 112
+      Top = 96
       Width = 113
       Height = 17
       Caption = '256 x 256'
       TabOrder = 3
       OnClick = voxRadioButton256x256Click
     end
+    object AutoVoxSizeRadioButton: TRadioButton
+      Left = 16
+      Top = 120
+      Width = 113
+      Height = 17
+      Caption = 'Auto'
+      Checked = True
+      TabOrder = 4
+      TabStop = True
+    end
+  end
+  object ModelGroupBox: TGroupBox
+    Left = 224
+    Top = 216
+    Width = 193
+    Height = 57
+    Caption = ' Model '
+    TabOrder = 5
+    object GenerateModelCheckBox: TCheckBox
+      Left = 16
+      Top = 24
+      Width = 97
+      Height = 17
+      Caption = 'Generate model'
+      TabOrder = 0
+      OnClick = GenerateVoxelCheckBoxClick
+    end
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = 'wad'
-    Filter = 'WAD Files (*.wad)|*.wad'
+    Filter = 'WAD Files (*.wad)|*.wad|PK3 Files (*.pk3)|*.pk3'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
     Left = 552
     Top = 40
@@ -13229,7 +13264,7 @@ object ExportSpriteForm: TExportSpriteForm
   object Timer1: TTimer
     Interval = 200
     OnTimer = Timer1Timer
-    Left = 512
-    Top = 384
+    Left = 504
+    Top = 376
   end
 end
