@@ -133,6 +133,8 @@ type
   rock_t = class
   protected
     uvmatrixlookup: UVmatrixLookUp_t;
+    mVertUsage: array of integer;
+    numerrors: integer;
     procedure init;
     function AddVert(const x, y, z, u, v: single; const ring, seg: integer): integer;
     procedure generate_hemisphere;
@@ -147,6 +149,7 @@ type
     procedure apply_groundlevelheight;
     procedure apply_cutoff;
     procedure apply_uvoffsets;
+    procedure self_check;
   public
     mProperties: properties_t;
     mVertCount: integer;
@@ -504,11 +507,11 @@ begin
     vz := A[i + 2];
     if (vx <> vy) and (vx <> vz) then
     begin
-      mFace[i].x := vx;
-      mFace[i].y := vy;
-      mFace[i].z := vz;
-      mFace[i].topring := min3i(mVert[vx].ring, mVert[vy].ring, mVert[vz].ring);
-      mFace[i].bottomring := max3i(mVert[vx].ring, mVert[vy].ring, mVert[vz].ring);
+      mFace[cnt].x := vx;
+      mFace[cnt].y := vy;
+      mFace[cnt].z := vz;
+      mFace[cnt].topring := min3i(mVert[vx].ring, mVert[vy].ring, mVert[vz].ring);
+      mFace[cnt].bottomring := max3i(mVert[vx].ring, mVert[vy].ring, mVert[vz].ring);
       inc(cnt);
     end;
   end;
@@ -891,6 +894,27 @@ begin
   end;
 end;
 
+procedure rock_t.self_check;
+var
+  i: integer;
+begin
+  numerrors := 0;
+  SetLength(mVertUsage, mVertCount);
+  for i := 0 to mVertCount - 1 do
+    mVertUsage[i] := 0;
+
+  for i := 0 to mFaceCount - 1 do
+  begin
+    inc(mVertUsage[mFace[i].x]);
+    inc(mVertUsage[mFace[i].y]);
+    inc(mVertUsage[mFace[i].z]);
+  end;
+
+  for i := 0 to mVertCount - 1 do
+    if mVertUsage[i] < 2 then
+      inc(numerrors);
+end;
+
 procedure rock_t.generate;
 begin
   generate_hemisphere;
@@ -910,6 +934,8 @@ begin
   apply_xyzscale;
   apply_pits;
   apply_uvoffsets;
+  // Self check
+  self_check;
 end;
 
 procedure rock_t.init;
