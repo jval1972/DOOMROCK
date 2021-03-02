@@ -99,6 +99,7 @@ type
     procedure voxRadioButton64x64Click(Sender: TObject);
     procedure voxRadioButton128x128Click(Sender: TObject);
     procedure voxRadioButton256x256Click(Sender: TObject);
+    procedure AutoVoxSizeRadioButtonClick(Sender: TObject);
   private
     { Private declarations }
     needs3dupdate: boolean;
@@ -904,6 +905,7 @@ begin
   voxRadioButton64x64.Visible := GenerateVoxelCheckBox.Checked;
   voxRadioButton128x128.Visible := GenerateVoxelCheckBox.Checked;
   voxRadioButton256x256.Visible := GenerateVoxelCheckBox.Checked;
+  AutoVoxSizeRadioButton.Visible := GenerateVoxelCheckBox.Checked;
 end;
 
 procedure TExportSpriteForm.voxRadioButton64x64Click(Sender: TObject);
@@ -911,6 +913,7 @@ begin
   voxRadioButton64x64.Checked := True;
   voxRadioButton128x128.Checked := False;
   voxRadioButton256x256.Checked := False;
+  AutoVoxSizeRadioButton.Checked := False;
 end;
 
 procedure TExportSpriteForm.voxRadioButton128x128Click(Sender: TObject);
@@ -918,6 +921,7 @@ begin
   voxRadioButton64x64.Checked := False;
   voxRadioButton128x128.Checked := True;
   voxRadioButton256x256.Checked := False;
+  AutoVoxSizeRadioButton.Checked := False;
 end;
 
 procedure TExportSpriteForm.voxRadioButton256x256Click(Sender: TObject);
@@ -925,6 +929,15 @@ begin
   voxRadioButton64x64.Checked := False;
   voxRadioButton128x128.Checked := False;
   voxRadioButton256x256.Checked := True;
+  AutoVoxSizeRadioButton.Checked := False;
+end;
+
+procedure TExportSpriteForm.AutoVoxSizeRadioButtonClick(Sender: TObject);
+begin
+  voxRadioButton64x64.Checked := False;
+  voxRadioButton128x128.Checked := False;
+  voxRadioButton256x256.Checked := False;
+  AutoVoxSizeRadioButton.Checked := True;
 end;
 
 end.

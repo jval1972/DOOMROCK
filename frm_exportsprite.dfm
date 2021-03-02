@@ -13235,6 +13235,7 @@ object ExportSpriteForm: TExportSpriteForm
       Checked = True
       TabOrder = 4
       TabStop = True
+      OnClick = AutoVoxSizeRadioButtonClick
     end
   end
   object ModelGroupBox: TGroupBox
