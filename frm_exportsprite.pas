@@ -492,11 +492,13 @@ end;
 
 function TExportSpriteForm.voxelscale: single;
 var
-  maxscale: single;
+  maxscoord: single;
   voxsize, w, h: integer;
   definitionsize: integer;
+  maxradius: single;
 begin
-  maxscale := rock.maxradius / 2;
+  maxscoord := rock.maxcoord;
+  maxradius := rock.maxdiameter / 2;
 
   w := StrToIntDef(RadiusEdit.Text, 64);
   h := StrToIntDef(HeightEdit.Text, 128);
@@ -523,16 +525,17 @@ begin
       voxsize := 256;
   end;
 
-  Result := definitionsize / voxsize * maxscale;
+//  Result := definitionsize / voxsize * maxradius;
+  Result := definitionsize / voxsize * maxscoord / maxradius;
 end;
 
 function TExportSpriteForm.md2scale: single;
 var
-  maxscale: single;
+  maxcoord: single;
   w, h: integer;
   definitionsize: integer;
 begin
-  maxscale := rock.maxscale;
+  maxcoord := rock.maxcoord;
 
   w := StrToIntDef(RadiusEdit.Text, 64);
   h := StrToIntDef(HeightEdit.Text, 128);
@@ -541,7 +544,7 @@ begin
   else
     definitionsize := h;
 
-  Result := definitionsize / 1024 * maxscale;
+  Result := definitionsize / 1024 * maxcoord;
 end;
 
 procedure TExportSpriteForm.DoExportSpriteWAD;
