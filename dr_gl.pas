@@ -325,7 +325,7 @@ begin
   for j := bm.Height - 1 downto 0 do
   begin
     line := bm.ScanLine[j];
-    for i := bm.Height - 1 downto 0 do
+    for i := bm.Width - 1 downto 0 do
     begin
       dest^ := RGBSwap(line[i]);
       inc(dest);
