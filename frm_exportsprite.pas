@@ -586,6 +586,7 @@ begin
         else if voxRadioButton128x128.Checked then
           voxsize := 128
         else if voxRadioButton128x128.Checked then
+        else if voxRadioButton256x256.Checked then
           voxsize := 256
         else
         begin
@@ -792,6 +793,7 @@ begin
         else if voxRadioButton128x128.Checked then
           voxsize := 128
         else if voxRadioButton128x128.Checked then
+        else if voxRadioButton256x256.Checked then
           voxsize := 256
         else
         begin
