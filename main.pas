@@ -253,6 +253,7 @@ type
     procedure RecalcUVCheckBoxClick(Sender: TObject);
     procedure CompleteRockCheckBoxClick(Sender: TObject);
     procedure MD2ModelExportClick(Sender: TObject);
+    procedure ApplicationEvents1Activate(Sender: TObject);
   private
     { Private declarations }
     ffilename: string;
@@ -1576,6 +1577,11 @@ begin
     SaveRockToMD2Stream(rock, fs, 'rock');
     fs.Free;
   end;
+end;
+
+procedure TForm1.ApplicationEvents1Activate(Sender: TObject);
+begin
+  glneedsupdate := True;
 end;
 
 end.

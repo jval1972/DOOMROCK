@@ -17061,6 +17061,7 @@ object Form1: TForm1
     end
   end
   object ApplicationEvents1: TApplicationEvents
+    OnActivate = ApplicationEvents1Activate
     OnIdle = ApplicationEvents1Idle
     Left = 353
     Top = 89
