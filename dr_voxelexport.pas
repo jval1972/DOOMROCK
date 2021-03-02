@@ -117,6 +117,11 @@ begin
   if abs(zmax) > scale then
     scale := abs(zmax);
   scale := 2 * scale;
+{  scale := xmax - xmin;
+  if ymax - ymin > scale then
+    scale := ymax - ymin;
+  if zmax - zmin > scale then
+    scale := zmax - zmin;}
 
   scale := (voxsize - 1) / scale;
 
