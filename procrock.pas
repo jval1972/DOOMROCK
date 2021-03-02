@@ -856,8 +856,6 @@ begin
         lenA := fv5length(fv5sub(mVert[pA], mVert[p0]));
         lenB := fv5length(fv5sub(mVert[pB], mVert[p0]));
         lenC := fv5length(fv5sub(mVert[pC], mVert[p0]));
-//        u := (mVert[pA].u * lenA + mVert[pB].u * lenB + mVert[pC].u * lenC) / (lenA + lenB + lenC);
-//        v := (mVert[pA].v * lenA + mVert[pB].v * lenB + mVert[pC].v * lenC) / (lenA + lenB + lenC);
         u := (mVert[pA].u / lenA + mVert[pB].u / lenB + mVert[pC].u / lenC) / (1 / lenA + 1 / lenB + 1 / lenC);
         v := (mVert[pA].v / lenA + mVert[pB].v / lenB + mVert[pC].v / lenC) / (1 / lenA + 1 / lenB + 1 / lenC);
         mVert[p0].u := u;
