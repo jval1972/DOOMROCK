@@ -166,6 +166,8 @@ type
     constructor Create; virtual;
     destructor Destroy; override;
     procedure generate;
+    function maxscale: single;
+    function maxradius: single;
   end;
 
 implementation
@@ -1056,5 +1058,86 @@ begin
   mFaceCount := 0;
 end;
 
+function rock_t.maxscale: single;
+var
+  minx, maxx, miny, maxy, minz, maxz: single;
+  i: integer;
+begin
+  minx := 100000.0;
+  maxx := -100000.0;
+  miny := 100000.0;
+  maxy := -100000.0;
+  minz := 100000.0;
+  maxz := -100000.0;
+  for i := 0 to mVertCount - 1 do
+  begin
+    if mVert[i].x < minx then
+      minx := mVert[i].x;
+    if mVert[i].x > maxx then
+      maxx := mVert[i].x;
+    if mVert[i].y < miny then
+      miny := mVert[i].y;
+    if mVert[i].y > maxy then
+      maxy := mVert[i].y;
+    if mVert[i].z < minz then
+      minz := mVert[i].z;
+    if mVert[i].z > maxz then
+      maxz := mVert[i].z;
+  end;
+  minx := abs(minx);
+  maxx := abs(maxx);
+  miny := abs(miny);
+  maxy := abs(maxy);
+  minz := abs(minz);
+  maxz := abs(maxz);
+  Result := minx;
+  if maxx > Result then
+    Result := maxx;
+  if miny > Result then
+    Result := miny;
+  if maxy > Result then
+    Result := maxy;
+  if minz > Result then
+    Result := minz;
+  if maxz > Result then
+    Result := maxz;
+end;
+
+function rock_t.maxradius: single;
+var
+  minx, maxx, miny, maxy, minz, maxz: single;
+  dx, dy, dz: single;
+  i: integer;
+begin
+  minx := 100000.0;
+  maxx := -100000.0;
+  miny := 100000.0;
+  maxy := -100000.0;
+  minz := 100000.0;
+  maxz := -100000.0;
+  for i := 0 to mVertCount - 1 do
+  begin
+    if mVert[i].x < minx then
+      minx := mVert[i].x;
+    if mVert[i].x > maxx then
+      maxx := mVert[i].x;
+    if mVert[i].y < miny then
+      miny := mVert[i].y;
+    if mVert[i].y > maxy then
+      maxy := mVert[i].y;
+    if mVert[i].z < minz then
+      minz := mVert[i].z;
+    if mVert[i].z > maxz then
+      maxz := mVert[i].z;
+  end;
+  dx := maxx - minx;
+  dy := maxy - miny;
+  dz := maxz - minz;
+  Result := dx;
+  if dy > Result then
+    Result := dy;
+  if dz > Result then
+    Result := dz;
+end;
 
 end.
