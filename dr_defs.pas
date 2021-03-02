@@ -43,7 +43,6 @@ const
 var
   opt_renderevniroment: Boolean = True;
   opt_renderwireframe: Boolean = False;
-  opt_rendertwig: Boolean = True;
   opt_filemenuhistory0: bigstring_t;
   opt_filemenuhistory1: bigstring_t;
   opt_filemenuhistory2: bigstring_t;
@@ -84,7 +83,7 @@ type
   end;
 
 const
-  NUMSETTINGS = 27;
+  NUMSETTINGS = 26;
 
 var
   Settings: array[0..NUMSETTINGS - 1] of TSettingItem = (
@@ -102,11 +101,6 @@ var
       desc: 'GL_RENDERWIREFRAME';
       typeof: tstBoolean;
       location: @opt_renderwireframe;
-    ),
-    (
-      desc: 'GL_RENDERTWIG';
-      typeof: tstBoolean;
-      location: @opt_rendertwig;
     ),
     (
       desc: '[File Menu History]';

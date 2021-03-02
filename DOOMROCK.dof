@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=1
 MinorVer=0
 Release=2
-Build=21
+Build=22
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=Jim Valavanis
 FileDescription=DOOMROCK Sprite Generator
-FileVersion=1.0.2.21
+FileVersion=1.0.2.22
 InternalName=DOOMROCK
 LegalCopyright=© 2021, jvalavanis@gmail.com
 LegalTrademarks=© 2021, jvalavanis@gmail.com

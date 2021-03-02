@@ -93,7 +93,6 @@ type
     HistoryItem9: TMenuItem;
     ExportScreenshot1: TMenuItem;
     Wireframe1: TMenuItem;
-    Twig1: TMenuItem;
     Renderenviroment1: TMenuItem;
     SaveDialog2: TSaveDialog;
     Sprite1: TMenuItem;
@@ -241,7 +240,6 @@ type
     procedure Copy1Click(Sender: TObject);
     procedure Options1Click(Sender: TObject);
     procedure Wireframe1Click(Sender: TObject);
-    procedure Twig1Click(Sender: TObject);
     procedure RockImageDblClick(Sender: TObject);
     procedure Renderenviroment1Click(Sender: TObject);
     procedure SeedSpeedButton1Click(Sender: TObject);
@@ -1171,18 +1169,11 @@ procedure TForm1.Options1Click(Sender: TObject);
 begin
   Renderenviroment1.Checked := opt_renderevniroment;
   Wireframe1.Checked := opt_renderwireframe;
-  Twig1.Checked := opt_rendertwig;
 end;
 
 procedure TForm1.Wireframe1Click(Sender: TObject);
 begin
   opt_renderwireframe := not opt_renderwireframe;
-  glneedsupdate := True;
-end;
-
-procedure TForm1.Twig1Click(Sender: TObject);
-begin
-  opt_rendertwig := not opt_rendertwig;
   glneedsupdate := True;
 end;
 

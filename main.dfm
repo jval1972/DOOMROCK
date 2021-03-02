@@ -14080,7 +14080,6 @@ object Form1: TForm1
     Width = 265
     Height = 590
     Align = alLeft
-    AutoSize = True
     BevelInner = bvNone
     BevelOuter = bvNone
     BorderStyle = bsNone
@@ -17046,10 +17045,6 @@ object Form1: TForm1
       object Renderenviroment1: TMenuItem
         Caption = 'Render Enviroment'
         OnClick = Renderenviroment1Click
-      end
-      object Twig1: TMenuItem
-        Caption = 'Render Twig'
-        OnClick = Twig1Click
       end
       object Wireframe1: TMenuItem
         Caption = 'Wireframe'
