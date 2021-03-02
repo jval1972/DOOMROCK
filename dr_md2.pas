@@ -328,6 +328,7 @@ var
   bottomPoints: array of TTriangulationPoint;
   bottomPoly: TTriangulationPolygons;
   bottomTris: TTriangulationTriangles;
+  bottomOrd: array[0..2] of integer;
 begin
   start := strm.Position;
 
@@ -339,7 +340,7 @@ begin
   begin
     SetLength(bottomPoly, 1);
     SetLength(bottomPoly[0], 0);
-    for i := rock.mVertCount - 1 downto 0 do
+    for i := 0 to rock.mVertCount - 1 do
       if rock.mVert[i].ring = rock.mProperties.mNumRings then
       begin
         SetLength(bottomPoly[0], Length(bottomPoly[0]) + 1);
@@ -411,11 +412,11 @@ begin
   for i := 0 to Length(bottomTris) - 1 do
   begin
     tri.index_xyz[0] := rock.mVertCount + i * 3;
-    tri.index_xyz[1] := rock.mVertCount + i * 3 + 1;
-    tri.index_xyz[2] := rock.mVertCount + i * 3 + 2;
+    tri.index_xyz[2] := rock.mVertCount + i * 3 + 1;
+    tri.index_xyz[1] := rock.mVertCount + i * 3 + 2;
     tri.index_st[0] := rock.mVertCount + i * 3;
-    tri.index_st[1] := rock.mVertCount + i * 3 + 1;
-    tri.index_st[2] := rock.mVertCount + i * 3 + 2;
+    tri.index_st[2] := rock.mVertCount + i * 3 + 1;
+    tri.index_st[1] := rock.mVertCount + i * 3 + 2;
     strm.Write(tri, SizeOf(TMD2Triangle_T));
   end;
 
@@ -478,7 +479,7 @@ begin
   strm.Write(frame, SizeOf(TMD2AliasFrame_T));
   for i := 0 to rock.mVertCount - 1 do
   begin
-    v := Round((rock.mVert[i].x - offsetx) * scalex);
+    v := 255 - Round((rock.mVert[i].x - offsetx) * scalex);
     trivert.v[0] := v;
     v := Round((rock.mVert[i].z - offsetz) * scalez);
     trivert.v[1] := v;
@@ -490,7 +491,7 @@ begin
   for i := 0 to Length(bottomTris) - 1 do
     for j := 0 to 2 do
     begin
-      v := Round((bottomTris[i][j].x - offsetx) * scalex);
+      v := 255 - Round((bottomTris[i][j].x - offsetx) * scalex);
       trivert.v[0] := v;
       v := Round((bottomTris[i][j].y - offsetz) * scalez);
       trivert.v[1] := v;
@@ -510,7 +511,7 @@ begin
     strm.Write(glcmd, SizeOf(Integer));
     glcmds.s := rock.mVert[rock.mFace[i].x].u;
     glcmds.t := rock.mVert[rock.mFace[i].x].v;
-    glcmds.index := rock.mFace[i].x;
+    glcmds.index := rock.mFace[i].z;
     strm.Write(glcmds, SizeOf(TMD2GlCmd_T));
     glcmds.s := rock.mVert[rock.mFace[i].y].u;
     glcmds.t := rock.mVert[rock.mFace[i].y].v;
@@ -522,15 +523,18 @@ begin
     strm.Write(glcmds, SizeOf(TMD2GlCmd_T));
   end;
 
+  bottomOrd[0] := 0;
+  bottomOrd[1] := 2;
+  bottomOrd[2] := 1;
   for i := 0 to Length(bottomTris) - 1 do
   begin
     glcmd := 3;
     strm.Write(glcmd, SizeOf(Integer));
     for j := 0 to 2 do
     begin
-      glcmds.s := bottomTris[i][j].x;
-      glcmds.t := bottomTris[i][j].y;
-      glcmds.index := rock.mVertCount + i * 3 + j;
+      glcmds.s := bottomTris[i][bottomOrd[j]].x;
+      glcmds.t := bottomTris[i][bottomOrd[j]].y;
+      glcmds.index := rock.mVertCount + i * 3 + bottomOrd[j];
       strm.Write(glcmds, SizeOf(TMD2GlCmd_T));
     end;
   end;

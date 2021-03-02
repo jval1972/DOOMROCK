@@ -202,6 +202,15 @@ begin
   result := sqrt(dx * dx + dy * dy + dz * dz);
 end;
 
+function fv5add(const a1, a2: fvec5_t): fvec5_t;
+begin
+  result.x := a1.x + a2.x;
+  result.y := a1.y + a2.y;
+  result.z := a1.z + a2.z;
+  result.u := a1.u + a2.u;
+  result.v := a1.v + a2.v;
+end;
+
 function fv5sub(const a1, a2: fvec5_t): fvec5_t;
 begin
   result.x := a1.x - a2.x;
@@ -209,6 +218,15 @@ begin
   result.z := a1.z - a2.z;
   result.u := a1.u - a2.u;
   result.v := a1.v - a2.v;
+end;
+
+function fv3cross(const a, b: fvec5_t): fvec5_t;
+begin
+  result.x := a.y * b.z - a.z * b.y;
+  result.y := a.z * b.x - a.x * b.z;
+  result.z := a.x * b.y - a.y * b.x;
+  result.u := 0.0;
+  result.v := 0.0;
 end;
 
 function fv5length(const a: fvec5_t): single;
@@ -448,6 +466,7 @@ var
   numsegments: integer;
   i: integer;
   cnt: integer;
+  view, v1, v2: fvec5_t;
   vx, vy, vz: integer;
 begin
   mProperties.mRseed := mProperties.mSeed;
@@ -518,12 +537,28 @@ begin
     vz := A[i + 2];
     if (vx <> vy) and (vx <> vz) then
     begin
-      mFace[cnt].x := vx;
-      mFace[cnt].y := vy;
-      mFace[cnt].z := vz;
       mFace[cnt].topring := min3i(mVert[vx].ring, mVert[vy].ring, mVert[vz].ring);
       mFace[cnt].bottomring := max3i(mVert[vx].ring, mVert[vy].ring, mVert[vz].ring);
-      inc(cnt);
+      if abs(mFace[cnt].topring - mFace[cnt].bottomring) = 1 then
+      begin
+        vec := fv3cross(fv5sub(mVert[vx], mVert[vy]), fv5sub(mVert[vy], mVert[vz]));
+        view := scaleVec(mVert[vy], 2.0);
+        v1 := fv5add(view, vec);
+        v2 := fv5sub(view, vec);
+        if fv5length(v1) < fv5length(v2) then
+        begin
+          mFace[cnt].x := vx;
+          mFace[cnt].y := vy;
+          mFace[cnt].z := vz;
+        end
+        else
+        begin
+          mFace[cnt].x := vx;
+          mFace[cnt].z := vy;
+          mFace[cnt].y := vz;
+        end;
+        inc(cnt);
+      end;
     end;
   end;
   mFaceCount := cnt;
@@ -850,7 +885,9 @@ begin
 
         p0 := AddVert(x, y, z, u, v, -1, -1);
         mVert[p0] := scaleVec(mVert[p0], mProperties.mPitElevation);
-        mFace[i].z := p0;
+        mFace[i].x := p0;
+        mFace[i].y := pA;
+        mFace[i].z := pB;
 
         // Recalc UV
         lenA := fv5length(fv5sub(mVert[pA], mVert[p0]));
@@ -863,14 +900,14 @@ begin
 
         mFaceCount := mFaceCount + 2;
         SetLength(mFace, mFaceCount);
-        mFace[mFaceCount - 2].x := pB;
-        mFace[mFaceCount - 2].y := pC;
-        mFace[mFaceCount - 2].z := p0;
+        mFace[mFaceCount - 2].x := p0;
+        mFace[mFaceCount - 2].y := pB;
+        mFace[mFaceCount - 2].z := pC;
         mFace[mFaceCount - 2].topring := -1;
         mFace[mFaceCount - 2].bottomring := -1;
-        mFace[mFaceCount - 1].x := pC;
-        mFace[mFaceCount - 1].y := pA;
-        mFace[mFaceCount - 1].z := p0;
+        mFace[mFaceCount - 1].x := p0;
+        mFace[mFaceCount - 1].y := pC;
+        mFace[mFaceCount - 1].z := pA;
         mFace[mFaceCount - 1].topring := -1;
         mFace[mFaceCount - 1].bottomring := -1;
       end;
