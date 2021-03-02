@@ -117,6 +117,7 @@ begin
   if abs(zmax) > scale then
     scale := abs(zmax);
   scale := 2 * scale;
+  scale := 2 * t.maxcoord;
 {  scale := xmax - xmin;
   if ymax - ymin > scale then
     scale := ymax - ymin;
