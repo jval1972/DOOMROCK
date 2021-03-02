@@ -166,8 +166,8 @@ type
     constructor Create; virtual;
     destructor Destroy; override;
     procedure generate;
-    function maxscale: single;
-    function maxradius: single;
+    function maxcoord: single;
+    function maxdiameter: single;
   end;
 
 implementation
@@ -1058,7 +1058,7 @@ begin
   mFaceCount := 0;
 end;
 
-function rock_t.maxscale: single;
+function rock_t.maxcoord: single;
 var
   minx, maxx, miny, maxy, minz, maxz: single;
   i: integer;
@@ -1103,7 +1103,7 @@ begin
     Result := maxz;
 end;
 
-function rock_t.maxradius: single;
+function rock_t.maxdiameter: single;
 var
   minx, maxx, miny, maxy, minz, maxz: single;
   dx, dy, dz: single;
