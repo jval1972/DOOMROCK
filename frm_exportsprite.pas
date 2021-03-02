@@ -114,6 +114,8 @@ type
     function CheckOKtoGO: boolean;
   protected
     function IsWAD: boolean;
+    function voxelscale: single;
+    function md2scale: single;
     procedure DoExportSpriteWAD;
     procedure DoExportSpritePK3;
   public
@@ -488,6 +490,60 @@ begin
     DoExportSpritePK3;
 end;
 
+function TExportSpriteForm.voxelscale: single;
+var
+  maxscale: single;
+  voxsize, w, h: integer;
+  definitionsize: integer;
+begin
+  maxscale := rock.maxradius / 2;
+
+  w := StrToIntDef(RadiusEdit.Text, 64);
+  h := StrToIntDef(HeightEdit.Text, 128);
+  if w > h then
+    definitionsize := w
+  else
+    definitionsize := h;
+
+  if voxRadioButton64x64.Checked then
+    voxsize := 64
+  else if voxRadioButton128x128.Checked then
+    voxsize := 128
+  else if voxRadioButton256x256.Checked then
+    voxsize := 256
+  else
+  begin
+    w := 2 * StrToIntDef(RadiusEdit.Text, 64);
+    h := StrToIntDef(HeightEdit.Text, 128);
+    if w > h then
+      voxsize := w
+    else
+      voxsize := h;
+    if voxsize > 256 then
+      voxsize := 256;
+  end;
+
+  Result := definitionsize / voxsize * maxscale;
+end;
+
+function TExportSpriteForm.md2scale: single;
+var
+  maxscale: single;
+  w, h: integer;
+  definitionsize: integer;
+begin
+  maxscale := rock.maxscale;
+
+  w := StrToIntDef(RadiusEdit.Text, 64);
+  h := StrToIntDef(HeightEdit.Text, 128);
+  if w > h then
+    definitionsize := w
+  else
+    definitionsize := h;
+
+  Result := definitionsize / 1024 * maxscale;
+end;
+
 procedure TExportSpriteForm.DoExportSpriteWAD;
 var
   wad: TWADWriter;
@@ -585,7 +641,6 @@ begin
           voxsize := 64
         else if voxRadioButton128x128.Checked then
           voxsize := 128
-        else if voxRadioButton128x128.Checked then
         else if voxRadioButton256x256.Checked then
           voxsize := 256
         else
@@ -608,7 +663,7 @@ begin
           wad.AddFile(PrefixEdit.Text + 'VOX', 'vxtmp');
           DeleteFile('vxtmp');
           pk3entry := pk3entry + PrefixEdit.Text + 'VOX=' + PrefixEdit.Text + '.DDVOX'#13#10;
-          wad.AddString('VOXELDEF', 'voxeldef ' + PrefixEdit.Text + '.ddvox replace sprite ' + PrefixEdit.Text);
+          wad.AddString('VOXELDEF', 'voxeldef ' + PrefixEdit.Text + '.ddvox ' + Format('scale %1.5f', [voxelscale]) + ' replace sprite ' + PrefixEdit.Text);
         end
         else
         begin
@@ -792,7 +847,6 @@ begin
           voxsize := 64
         else if voxRadioButton128x128.Checked then
           voxsize := 128
-        else if voxRadioButton128x128.Checked then
         else if voxRadioButton256x256.Checked then
           voxsize := 256
         else
@@ -812,7 +866,7 @@ begin
         VXE_ExportVoxelToDDVOX(vox, voxsize, 'vxtmp');
         AddFileToPK3(pk3, 'VOXELS\' + PrefixEdit.Text + '.ddvox', 'vxtmp');
         DeleteFile('vxtmp');
-        AddStringDataToPK3(pk3, 'VOXELS\VOXELDEF.txt', 'voxeldef ' + PrefixEdit.Text + '.ddvox replace sprite ' + PrefixEdit.Text);
+        AddStringDataToPK3(pk3, 'VOXELS\VOXELDEF.txt', 'voxeldef ' + PrefixEdit.Text + '.ddvox ' + Format('scale %1.5f', [voxelscale]) + ' replace sprite ' + PrefixEdit.Text);
         FreeMem(vox, SizeOf(voxelbuffer_t));
       end;
       if GenerateModelCheckBox.Checked then
@@ -872,20 +926,13 @@ begin
         AddBinaryDataToPK3(pk3, 'MODELS\' + ActorNameEdit.Text + '\' + PrefixEdit.Text + '.MD2', ms.Memory, ms.Size);
         ms.Free;
 
-        w := 2 * StrToIntDef(RadiusEdit.Text, 64);
-        h := StrToIntDef(HeightEdit.Text, 128);
-        if w > h then
-          modsize := w
-        else
-          modsize := h;
-
         modeldef := '';
         modeldef := modeldef + 'model ' + ActorNameEdit.Text  + #13#10;
         modeldef := modeldef + '{'#13#10;
         modeldef := modeldef + '  Path "MODELS/' + ActorNameEdit.Text + '"'#13#10;
         modeldef := modeldef + '  Model 0 "' + PrefixEdit.Text + '.MD2"'#13#10;
         modeldef := modeldef + '  Skin 0 "' + PrefixEdit.Text + '_MODEL.PNG"'#13#10;
-        modeldef := modeldef + '  Scale ' + Format('%1.5f %1.5f %1.5f', [modsize / 512, modsize / 512, modsize / 512]) + #13#10;
+        modeldef := modeldef + '  Scale ' + Format('%1.5f %1.5f %1.5f', [md2scale, md2scale, md2scale]) + #13#10;
         stmp := PrefixEdit.Text;
         modeldef := modeldef + '  Frame ' + stmp[1] + stmp[2] + stmp[3] + stmp[4] + ' ' + stmp[5] + ' 0 "default0"'#13#10;
         modeldef := modeldef + '}'#13#10;
