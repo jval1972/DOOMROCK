@@ -160,10 +160,10 @@ var
         begin
           iu := Round(tex.Width * tri[idx].u) mod tex.Width;
           if iu < 0 then
-            iu := -iu;
+            iu := tex.Width + iu;
           iv := Round(tex.Height * tri[idx].v) mod tex.Height;
           if iv < 0 then
-            iv := -iv;
+            iv := tex.Height + iv;
           pv := @vox[x, y, z];
           pv^ := tex.Canvas.Pixels[iu, iv];
           if opaque then
