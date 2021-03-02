@@ -12887,7 +12887,7 @@ object ExportSpriteForm: TExportSpriteForm
   object GeneralGroupBox: TGroupBox
     Left = 16
     Top = 48
-    Width = 193
+    Width = 201
     Height = 65
     Caption = ' General '
     TabOrder = 1
@@ -12920,9 +12920,9 @@ object ExportSpriteForm: TExportSpriteForm
     end
   end
   object PatchRadioGroup: TRadioGroup
-    Left = 224
+    Left = 232
     Top = 48
-    Width = 193
+    Width = 177
     Height = 153
     Caption = ' Patch Palette '
     ItemIndex = 0
@@ -13083,7 +13083,7 @@ object ExportSpriteForm: TExportSpriteForm
   object ScriptParametersGroupBox: TGroupBox
     Left = 16
     Top = 248
-    Width = 193
+    Width = 201
     Height = 185
     Caption = ' Script Parameters '
     TabOrder = 3
@@ -13172,21 +13172,21 @@ object ExportSpriteForm: TExportSpriteForm
   object ScriptRadioGroup: TRadioGroup
     Left = 16
     Top = 128
-    Width = 193
+    Width = 201
     Height = 105
     Caption = ' Script '
     ItemIndex = 0
     Items.Strings = (
       'ACTORDEF (DelphiDoom/RAD)'
-      'DECORATE (ZDoom)'
+      'DECORATE (ZDoom/K8Vavoom)'
       'None')
     TabOrder = 2
     OnClick = ScriptRadioGroupClick
   end
   object VoxelGroupBox: TGroupBox
-    Left = 224
+    Left = 232
     Top = 288
-    Width = 193
+    Width = 177
     Height = 145
     Caption = ' Voxel '
     TabOrder = 6
@@ -13239,9 +13239,9 @@ object ExportSpriteForm: TExportSpriteForm
     end
   end
   object ModelGroupBox: TGroupBox
-    Left = 224
+    Left = 232
     Top = 216
-    Width = 193
+    Width = 177
     Height = 57
     Caption = ' Model '
     TabOrder = 5
