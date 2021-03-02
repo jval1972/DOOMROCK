@@ -129,7 +129,7 @@ procedure TExportVoxelForm.SetRockVoxelParams(const arock: rock_t; const avox: v
   arocktex: TBitmap);
 begin
   rock := arock;
-  vox  := avox;
+  vox := avox;
   rocktex := arocktex;
   CreateVoxel;
   UpdateControls;
