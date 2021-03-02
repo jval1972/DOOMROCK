@@ -127,11 +127,11 @@ end;
 
 procedure vert_half(const v1, v2: Pmeshvertex_t; var v: meshvertex_t);
 begin
-  v.x := (v1.x + v2.x) / 2;
-  v.y := (v1.y + v2.y) / 2;
-  v.z := (v1.z + v2.z) / 2;
-  v.u := (v1.u + v2.u) / 2;
-  v.v := (v1.v + v2.v) / 2;
+  v.x := (v1.x + v2.x) * 0.5;
+  v.y := (v1.y + v2.y) * 0.5;
+  v.z := (v1.z + v2.z) * 0.5;
+  v.u := (v1.u + v2.u) * 0.5;
+  v.v := (v1.v + v2.v) * 0.5;
 end;
 
 procedure DT_VoxelizeTri(const tri: Pmeshtriangle_t; const tex: TBitmap;
