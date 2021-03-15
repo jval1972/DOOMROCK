@@ -296,8 +296,8 @@ begin
   matrix_set_rotate(@m, 0.0, 0.0, 1.0, ftheta);
   matrix_set_rotate(@m2, 0.0, 1.0, 0.0, ftheta2);
   matrix_mul(@c, @m, @m2);
-	device.transform.world := c;
-	transform_update(@device.transform);
+  device.transform.world := c;
+  transform_update(@device.transform);
   device.render_state := RENDER_STATE_TEXTURE_SOLID;
   RenderFaces(rock.mVertCount, rock.mFaceCount, rock.mVert, rock.mFace, rocktex);
 
