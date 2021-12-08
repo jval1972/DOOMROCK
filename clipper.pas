@@ -4395,7 +4395,7 @@ begin
   PointsEqual(Jr.OffPt, Jr.OutPt2.Pt) then
   begin
     //Strictly Simple join ...
-    if (OutRec1 <> OutRec2) then 
+    if (OutRec1 <> OutRec2) then
       Exit;
 
     Op1b := Jr.OutPt1.Next;

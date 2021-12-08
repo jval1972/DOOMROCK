@@ -352,7 +352,7 @@ begin
   Randomize;
 
   DecimalSeparator := '.';
-  
+
   pt_LoadSettingFromFile(ChangeFileExt(ParamStr(0), '.ini'));
 
   closing := False;
@@ -762,7 +762,7 @@ begin
     glDeleteTextures(1, @rocktexture);
     rocktexture := gld_CreateTexture(RockImage.Picture, False);
   end;
-  
+
   RockToControls;
   filemenuhistory.AddPath(fname);
   SetFileName(fname);
